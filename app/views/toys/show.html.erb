@@ -1,2 +1,8 @@
-<h1>Toys#show</h1>
-<p>Find me in app/views/toys/show.html.erb</p>
+<h1>Details, du jouet en valorisation</h1>
+<div class=container>
+  <h3>Jouet numéro <%= @toys.id %>,
+  catégorie : <%= @toys.category.name %>,
+  <%# barcode : <%= @toys.barcode %>
+  créé le : <%= @toys.created_at.day %>/<%= @toys.created_at.month %>/<%= @toys.created_at.year %>,
+  </h3>
+</div>
