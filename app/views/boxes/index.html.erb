@@ -1,6 +1,15 @@
-<h1>Boxes#index</h1>
-
-<%= @boxes.each do |box| %>
-  <%= link_to "Box numéro #{box.id}", box_path(box) %>
-  <%= box.weight %>
-<% end %>
+<div>
+  <h2>Boites en attente de traitement</h2>
+  <ul>
+    <% @boxes.each do |box| %>
+      <li>
+        <%= link_to "Box numéro #{box.id}", box_path(box) %>
+      </li>
+    <% end %>
+  </ul>
+</div>
+<br>
+<p>--------------------</p>
+<div>
+<%= link_to "Nouvelle boite", new_box_path, class: "btn btn-primary" %>
+</div>
