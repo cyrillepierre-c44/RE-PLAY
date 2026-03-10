@@ -26,7 +26,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_09_145343) do
   end
 
   create_table "boxes", force: :cascade do |t|
-      t.bigint "category_id", null: false
+    t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.boolean "electronic"
     t.datetime "updated_at", null: false
