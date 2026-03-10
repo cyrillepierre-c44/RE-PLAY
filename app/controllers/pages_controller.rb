@@ -4,6 +4,5 @@ class PagesController < ApplicationController
   end
 
  def onboarding
-  render plain: "test"
   end
 end
