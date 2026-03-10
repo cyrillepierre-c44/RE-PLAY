@@ -1,6 +1,6 @@
 <h1>Boxes#index</h1>
 
 <%= @boxes.each do |box| %>
+  <%= link_to "Box numéro #{box.id}", box_path(box) %>
   <%= box.weight %>
-  <%= box.description %>
 <% end %>
