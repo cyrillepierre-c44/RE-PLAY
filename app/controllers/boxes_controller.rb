@@ -21,10 +21,13 @@ class BoxesController < ApplicationController
   end
 
   def edit
-    @box = Box.box_set
+    @box = box_set
   end
 
   def update
+    @box = box_set
+    @box.update(box_params)
+    redirect_to box_path(@box), status: :see_other
   end
 
   def destroy
