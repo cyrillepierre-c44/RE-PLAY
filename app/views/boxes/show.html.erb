@@ -1,2 +1,13 @@
-<h1>Boxes#show</h1>
+<div>
+<h1>La boite actuelle est caractérisée par </h1>
 <%= @box.id %>
+<%= @box.electronic %>
+<%= @box.weight %>
+</div>
+<div>
+<%= link_to "nouveau jouet à partir de cette boite", new_box_path, class: "btn btn-primary mt-1" %>
+<br>
+<%= link_to "mettre à jour la boite", edit_box_path(@box), class: "btn btn-warning mt-1" %>
+<br>
+<%= link_to "supprimer la box", box_path, class: "btn btn-danger mt-1", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
+</div>

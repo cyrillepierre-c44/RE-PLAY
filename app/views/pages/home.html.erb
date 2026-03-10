@@ -1,2 +1,17 @@
 <h1>Pages#home</h1>
 <p>Find me in app/views/pages/home.html.erb</p>
+
+<div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
+<div>
+<%= link_to "index des boites", boxes_path, class: "btn btn-success" %>
+</div>
+<div>
+<%= link_to "index des jouets", toys_path, class: "btn btn-success" %>
+</div>
+</div>
+<br>
+<br>
+<div class="d-flex flex-column align-items-center gap-3 mt-3 justify-content-center">
+<%= link_to "about_us", about_us_path, class: "btn btn-success" %>
+<%= link_to "onboarding", onboarding_path, class: "btn btn-success" %>
+</div>
