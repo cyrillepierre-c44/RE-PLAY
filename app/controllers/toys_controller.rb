@@ -8,22 +8,22 @@ class ToysController < ApplicationController
     @boxes = Box.all
     @categories = Category.all
     @actions = Action.all
-    @action = Action.new
-    @action.toy_id = @toys.id
-    @action.actionable_type = "Toy"
-    @action.actionable_id = @toys.id
-    @action.user_id = current_user.id
-    @action.save
+    # @action = Action.new
+    # @action.toy_id = @toys.id
+    # @action.actionable_type = "Toy"
+    # @action.actionable_id = @toys.id
+    # @action.user_id = current_user.id
+    # @action.save
   end
 
   def new
-    @toys = Toy.new
+    @toy = Toy.new
   end
 
   def create
-    @toys = Toy.new(toy_params)
-    if @toys.save
-      redirect_to @toys
+    @toy = Toy.new(toy_params)
+    if @toy.save
+      redirect_to @toy
     else
       render :new, status: :unprocessable_entity
     end
@@ -32,13 +32,13 @@ class ToysController < ApplicationController
   def edit
     @boxes = Box.all
     @categories = Category.all
-    @actions = Action.all
-    @action = Action.new
-    @action.toy_id = @toys.id
-    @action.actionable_type = "Toy"
-    @action.actionable_id = @toys.id
-    @action.user_id = current_user.id
-    @action.save
+    # @actions = Action.all
+    # @action = Action.new
+    # @action.toy_id = @toys.id
+    # @action.actionable_type = "Toy"
+    # @action.actionable_id = @toys.id
+    # @action.user_id = current_user.id
+    # @action.save
     redirect_to toy_path(@toys)
   end
 
@@ -62,6 +62,6 @@ class ToysController < ApplicationController
   end
 
   def toy_params
-    params.require(:toy).permit(:name, :box_id, :category_id)
+    params.require(:toy).permit(:name, :box_id)
   end
 end
