@@ -5,7 +5,7 @@
 <%= @box.weight %>
 </div>
 <div>
-<%= link_to "nouveau jouet à partir de cette boite", new_box_path, class: "btn btn-primary mt-1" %>
+<%= link_to "nouveau jouet à partir de cette boite", new_box_toy_path(@box), class: "btn btn-primary mt-1" %>
 <br>
 <%= link_to "mettre à jour la boite", edit_box_path(@box), class: "btn btn-warning mt-1" %>
 <br>
