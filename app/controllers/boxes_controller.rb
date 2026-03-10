@@ -8,6 +8,7 @@ class BoxesController < ApplicationController
   end
 
   def new
+    @box = Box.new
   end
 
   def create
@@ -27,6 +28,7 @@ class BoxesController < ApplicationController
   end
 
   private
+
   def box_set
     @box = Box.find(params[:id])
   end
