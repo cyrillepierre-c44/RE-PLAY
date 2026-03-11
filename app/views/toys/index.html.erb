@@ -1,9 +1,9 @@
-<h1>Toys#index</h1>
-<p>Find me in app/views/toys/index.html.erb</p>
+<h1>Liste des jouets</h1>
+<%= link_to "index des boites", boxes_path, class: "btn btn-success" %>
 <div class=container >
   <ul>
     <% @toys.each do |toy| %>
-      <%= link_to "Jouet numéro #{toy.id}, nom: #{toy.barcode}", toy_path(toy) %>
+      <%= link_to "Jouet numéro #{toy.id}, photo: #{toy.photo}", toy_path(toy) %>
     <% end %>
   </ul>
 </div>
