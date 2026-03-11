@@ -39,10 +39,11 @@ class ToysController < ApplicationController
   end
 
   def update
-    @box = Box.find(params[:box_id])
-    @toy.box = @box
-    @toy.update(box_params)
-    redirect_to toy_path(@toy), status: :see_other
+    if @toy.update(toy_params)
+      redirect_to toy_path(@toy), status: :see_other
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy

@@ -1,6 +1,6 @@
 <div class=container >
   <div class="request-form">
-    <%= simple_form_for [@box, @toy] do |f| %>
+    <%= simple_form_for @toy.persisted? ? @toy : [@box, @toy] do |f| %>
 
       <div class="mb-3">
         <%= f.association :category,
