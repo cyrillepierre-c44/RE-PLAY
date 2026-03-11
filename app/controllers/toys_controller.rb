@@ -16,6 +16,7 @@ class ToysController < ApplicationController
     # @action.save
   end
 
+
   def new
     @toy = Toy.new
   end
