@@ -41,7 +41,6 @@ class ToysController < ApplicationController
 
   def edit
     @box = @toy.box
-    authorize @box
     authorize @toy
   end
 
