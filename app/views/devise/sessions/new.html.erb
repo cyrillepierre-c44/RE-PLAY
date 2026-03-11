@@ -1,20 +1,320 @@
-<h2>Log in</h2>
-
-<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: false,
-                autofocus: true,
-                input_html: { autocomplete: "email" } %>
-    <%= f.input :password,
-                required: false,
-                input_html: { autocomplete: "current-password" } %>
-    <%= f.input :remember_me, as: :boolean if devise_mapping.rememberable? %>
+<div class="auth-wrapper">
+  <div class="auth-background">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
   </div>
 
-  <div class="form-actions">
-    <%= f.button :submit, "Log in" %>
-  </div>
-<% end %>
+  <div class="auth-card-modern">
+    <div class="auth-illustration">
+      <div class="toy-icon">🎮</div>
+      <h1>Bon retour !</h1>
+      <p>On se reunion pour jouer ?</p>
+    </div>
 
-<%= render "devise/shared/links" %>
+    <div class="auth-form">
+      <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        <div class="form-inputs">
+          <div class="input-wrapper">
+            <span class="input-icon">✉️</span>
+            <%= f.input :email,
+                        required: false,
+                        autofocus: true,
+                        placeholder: "Ton email",
+                        label: false,
+                        input_html: {
+                          autocomplete: "email",
+                          class: "modern-input"
+                        } %>
+          </div>
+
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <%= f.input :password,
+                        required: false,
+                        placeholder: "Ton mot de passe",
+                        label: false,
+                        input_html: {
+                          autocomplete: "current-password",
+                          class: "modern-input"
+                        } %>
+          </div>
+
+          <div class="options-row">
+            <%= f.input :remember_me, as: :boolean, label: "Se souvenir de moi", input_html: { class: "modern-checkbox" }, label_html: { class: "checkbox-label" } if devise_mapping.rememberable? %>
+            <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "forgot-link" %>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.button :submit, "C'est parti ! 🚀", class: "btn-modern" %>
+        </div>
+      <% end %>
+
+      <div class="auth-footer">
+        <p>Pas encore de compte ? <%= link_to "Créer un compte", new_registration_path(resource_name), class: "signup-link" %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .auth-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .shape-1 {
+    width: 300px;
+    height: 300px;
+    background: white;
+    top: -100px;
+    left: -100px;
+    animation-delay: 0s;
+  }
+
+  .shape-2 {
+    width: 200px;
+    height: 200px;
+    background: #FFD700;
+    bottom: -50px;
+    right: -50px;
+    animation-delay: 2s;
+  }
+
+  .shape-3 {
+    width: 150px;
+    height: 150px;
+    background: #FF6B6B;
+    top: 50%;
+    right: 10%;
+    animation-delay: 4s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  .auth-card-modern {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 420px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .auth-illustration {
+    background: linear-gradient(135deg, #FF9A56 0%, #FF6B6B 50%, #FF8E53 100%);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .auth-illustration::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+
+  .toy-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .auth-illustration h1 {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .auth-illustration p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .auth-form {
+    padding: 2rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+    margin-bottom: 1.25rem;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    z-index: 1;
+  }
+
+  .modern-input {
+    width: 100%;
+    padding: 14px 16px 14px 48px !important;
+    border: 2px solid #E8E8E8 !important;
+    border-radius: 12px !important;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #F9F9F9;
+  }
+
+  .modern-input:focus {
+    border-color: #FF9A56 !important;
+    background: white !important;
+    box-shadow: 0 0 0 4px rgba(255, 154, 86, 0.15) !important;
+    outline: none;
+  }
+
+  .options-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .checkbox-label {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  .modern-checkbox:checked {
+    background-color: #FF9A56;
+    border-color: #FF9A56;
+  }
+
+  .forgot-link {
+    font-size: 0.875rem;
+    color: #FF6B6B;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .forgot-link:hover {
+    color: #FF8E53;
+    text-decoration: underline;
+  }
+
+  .btn-modern {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #FF9A56 0%, #FF6B6B 100%);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+  }
+
+  .btn-modern:active {
+    transform: translateY(-1px);
+  }
+
+  .auth-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed #eee;
+    text-align: center;
+  }
+
+  .auth-footer p {
+    margin: 0;
+    color: #666;
+    font-size: 0.95rem;
+  }
+
+  .signup-link {
+    color: #FF9A56;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .signup-link:hover {
+    color: #FF6B6B;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 480px) {
+    .auth-card-modern {
+      border-radius: 20px;
+    }
+
+    .auth-illustration {
+      padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .auth-form {
+      padding: 1.5rem;
+    }
+
+    .toy-icon {
+      font-size: 3rem;
+    }
+  }
+</style>

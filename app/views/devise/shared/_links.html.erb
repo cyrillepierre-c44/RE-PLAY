@@ -1,25 +1,176 @@
-<%- if controller_name != 'sessions' %>
-  <p><%= link_to "Log in", new_session_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <p><%= link_to "Sign up", new_registration_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-  <p><%= link_to "Forgot your password?", new_password_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
-  <p><%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
-  <p><%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <p><%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false } %></p>
+<div class="auth-extras">
+  <%- if controller_name != 'sessions' %>
+    <div class="extra-link">
+      <span class="link-emoji">👋</span>
+      <%= link_to "J'ai déjà un compte", new_session_path(resource_name), class: "casual-link" %>
+    </div>
   <% end %>
-<% end %>
+
+  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+    <div class="extra-link">
+      <span class="link-emoji">🎈</span>
+      <%= link_to "Créer un compte", new_registration_path(resource_name), class: "casual-link" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+    <div class="extra-link">
+      <span class="link-emoji">🤔</span>
+      <%= link_to "Mot de passe oublié ?", new_password_path(resource_name), class: "casual-link forgot" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <div class="extra-link">
+      <span class="link-emoji">📧</span>
+      <%= link_to "Pas reçu l'email ?", new_confirmation_path(resource_name), class: "casual-link" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+    <div class="extra-link">
+      <span class="link-emoji">🔓</span>
+      <%= link_to "Pas reçu les instructions ?", new_unlock_path(resource_name), class: "casual-link" %>
+    </div>
+  <% end %>
+
+  <%- if devise_mapping.omniauthable? %>
+    <div class="omniauth-divider">
+      <span>ou</span>
+    </div>
+    <div class="omniauth-buttons">
+      <%- resource_class.omniauth_providers.each do |provider| %>
+        <%= button_to omniauth_authorize_path(resource_name, provider), class: "btn-omni btn-omni-<%= provider.to_s.downcase %>", data: { turbo: false } do %>
+          <span class="omni-emoji">
+            <% case provider.to_s.downcase %>
+            <% when 'google' %>
+              🔵
+            <% when 'facebook' %>
+              📘
+            <% when 'github' %>
+              ⚫
+            <% else %>
+              🔗
+            <% end %>
+          </span>
+          Se connecter avec <%= OmniAuth::Utils.camelize(provider) %>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+  .auth-extras {
+    padding: 1rem 0;
+  }
+
+  .extra-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    justify-content: center;
+  }
+
+  .link-emoji {
+    font-size: 1rem;
+  }
+
+  .casual-link {
+    color: #667eea;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  }
+
+  .casual-link:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    transform: translateX(3px);
+    text-decoration: none;
+  }
+
+  .casual-link.forgot {
+    color: #999;
+    background: transparent;
+    font-weight: 500;
+    font-size: 0.85rem;
+  }
+
+  .casual-link.forgot:hover {
+    color: #FF6B6B;
+    background: rgba(255, 107, 107, 0.1);
+  }
+
+  .omniauth-divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+    color: #999;
+    font-size: 0.85rem;
+  }
+
+  .omniauth-divider::before,
+  .omniauth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ddd, transparent);
+  }
+
+  .omniauth-divider span {
+    padding: 0 1rem;
+  }
+
+  .omniauth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-omni {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 2px solid #eee;
+    background: white;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-omni:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-color: #ddd;
+  }
+
+  .omni-emoji {
+    font-size: 1.2rem;
+  }
+
+  .btn-omni-google:hover {
+    border-color: #4285F4;
+    background: rgba(66, 133, 244, 0.05);
+  }
+
+  .btn-omni-facebook:hover {
+    border-color: #1877F2;
+    background: rgba(24, 119, 242, 0.05);
+  }
+
+  .btn-omni-github:hover {
+    border-color: #333;
+    background: rgba(51, 51, 51, 0.05);
+  }
+</style>

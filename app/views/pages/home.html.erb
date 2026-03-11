@@ -1,16 +1,203 @@
-<h1>Acceuil RE-PLAY</h1>
+<% if user_signed_in? %>
+  <h1>Acceuil RE-PLAY</h1>
 
-<div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
-<div>
-<%= link_to "index des boites", boxes_path, class: "btn btn-success" %>
-</div>
-<div>
-<%= link_to "index des jouets", toys_path, class: "btn btn-success" %>
-</div>
-</div>
-<br>
-<br>
-<div class="d-flex flex-column align-items-center gap-3 mt-3 justify-content-center">
-<%= link_to "about_us", about_us_path, class: "btn btn-success" %>
-<%= link_to "onboarding", onboarding_path, class: "btn btn-success" %>
-</div>
+  <div class="container d-flex justify-content-center align-items-center gap-3 mt-3">
+  <div>
+  <%= link_to "index des boites", boxes_path, class: "btn btn-success" %>
+  </div>
+  <div>
+  <%= link_to "index des jouets", toys_path, class: "btn btn-success" %>
+  </div>
+  <br>
+  <div class="d-flex flex-column align-items-center gap-3 mt-3 justify-content-center">
+  <%= link_to "about_us", about_us_path, class: "btn btn-success" %>
+  <%= link_to "onboarding", onboarding_path, class: "btn btn-success" %>
+  </div>
+<% else %>
+  <div class="welcome-container">
+    <div class="welcome-content">
+      <div class="welcome-icon">🎮</div>
+      <h1>Bienvenue sur RE-PLAY !</h1>
+      <p class="welcome-text">Le site parfait pour gérer tes jouets et boites de jeux</p>
+
+      <div class="welcome-actions">
+        <%= link_to new_user_session_path, class: "btn btn-login" do %>
+          <span class="btn-icon">🔑</span>
+          Se connecter
+        <% end %>
+
+        <%= link_to new_user_registration_path, class: "btn btn-signup" do %>
+          <span class="btn-icon">🎉</span>
+          Créer un compte
+        <% end %>
+      </div>
+
+      <p class="welcome-guest">Ou continuez en tant que visiteur</p>
+
+      <div class="guest-links">
+        <div>
+        <%= link_to "Voir les boites", boxes_path, class: "btn btn-guest" %>
+        </div>
+        <div>
+        <%= link_to "Voir les jouets", toys_path, class: "btn btn-guest" %>
+        </div>
+    </div>
+<% end %>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+  .welcome-container {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .welcome-content {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .welcome-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .welcome-content h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .welcome-text {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+  }
+
+  .welcome-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .btn-login, .btn-signup {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 14px 28px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .btn-login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.35);
+  }
+
+  .btn-login:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.45);
+    color: white;
+  }
+
+  .btn-signup {
+    background: linear-gradient(135deg, #FF9A56 0%, #FF6B6B 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.35);
+  }
+
+  .btn-signup:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.45);
+    color: white;
+  }
+
+  .btn-icon {
+    font-size: 1.2rem;
+  }
+
+  .welcome-guest {
+    color: #999;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .welcome-guest::before,
+  .welcome-guest::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 80px;
+    height: 1px;
+    background: #ddd;
+  }
+
+  .welcome-guest::before {
+    right: calc(50% + 60px);
+  }
+
+  .welcome-guest::after {
+    left: calc(50% + 60px);
+  }
+
+  .guest-links {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-guest {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    background: white;
+    color: #666;
+    border: 2px solid #eee;
+    transition: all 0.3s ease;
+  }
+
+  .btn-guest:hover {
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 480px) {
+    .welcome-content h1 {
+      font-size: 1.8rem;
+    }
+
+    .welcome-icon {
+      font-size: 4rem;
+    }
+
+    .welcome-actions {
+      flex-direction: column;
+    }
+
+    .btn-login, .btn-signup {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
