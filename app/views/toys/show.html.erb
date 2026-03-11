@@ -1,16 +1,415 @@
-<h1>Details, du jouet en valorisation</h1>
-<%= link_to "retour à la liste des jouets", toys_path, class: "btn btn-secondary mt-1" %>
-<br>
-<div class=container>
-  <h3>Jouet numéro <%= @toy.id %>,
-  catégorie : <%= @toy.category.name %>,
-  <% if @toy.barcode.present? %>
-  barcode : <%= @toy.barcode %>,
-  <% end %>
-  créé le : <%= @toy.created_at.day %>/<%= @toy.created_at.month %>/<%= @toy.created_at.year %>,
-  </h3>
+<div class="auth-wrapper">
+  <div class="auth-background">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <div class="auth-card-modern">
+    <div class="auth-illustration signup-illustration">
+      <div class="toy-icon">🧸</div>
+      <h1>Jouet #<%= @toy.id %></h1>
+      <p>Détails du jouet</p>
+    </div>
+
+    <div class="auth-form">
+      <div class="detail-card">
+        <div class="toy-photo-large">
+          <% if @toy.photo.attached? %>
+            <%= image_tag @toy.photo, alt: "Photo du jouet #{@toy.id}" %>
+          <% else %>
+            <div class="no-photo">🧸</div>
+          <% end %>
+        </div>
+
+        <div class="detail-info">
+          <div class="detail-row">
+            <span class="detail-label">Catégorie</span>
+            <span class="detail-value category-badge"><%= @toy.category.name %></span>
+          </div>
+
+          <% if @toy.barcode.present? %>
+            <div class="detail-row">
+              <span class="detail-label">Barcode</span>
+              <span class="detail-value"><%= @toy.barcode %></span>
+            </div>
+          <% end %>
+
+          <div class="detail-row">
+            <span class="detail-label">État</span>
+            <div class="status-badges">
+              <% if @toy.clean? %}<span class="status-badge clean">✅ Propre</span><% end %>
+              <% if @toy.complete? %}<span class="status-badge complete">📦 Complet</span><% end %>
+              <% if @toy.playable? %}<span class="status-badge playable">🎮 Jouable</span><% end %>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Prix</span>
+            <span class="detail-value price"><%= @toy.price.present? ? "#{@toy.price} €" : "Non défini" %></span>
+          </div>
+
+          <% if @toy.location.present? %>
+            <div class="detail-row">
+              <span class="detail-label">Emplacement</span>
+              <span class="detail-value"><%= @toy.location %></span>
+            </div>
+          <% end %>
+
+          <div class="detail-row">
+            <span class="detail-label">Créé le</span>
+            <span class="detail-value"><%= @toy.created_at.strftime("%d/%m/%Y") %></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <% if policy(@toy).edit? %>
+          <%= link_to edit_toy_path(@toy), class: "btn-modern btn-warning" do %>
+            <span class="btn-icon">✏️</span>
+            Modifier
+          <% end %>
+        <% end %>
+
+        <% if policy(@toy).destroy? %>
+          <%= link_to toy_path(@toy), class: "btn-modern btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } do %>
+            <span class="btn-icon">🗑️</span>
+            Supprimer
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="auth-footer">
+        <%= link_to toys_path, class: "back-link" do %>
+          <span>←</span> Retour à la liste
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
-<%= link_to("Modifier", edit_toy_path(@toy), class: "btn btn-warning") if policy(@toy).edit? %>
-<br>
-<%= link_to("Supprimer", toy_path(@toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(@toy).destroy? %>
-</div>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .auth-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    font-family: 'Poppins', sans-serif;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+  }
+
+  .auth-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .shape-1 {
+    width: 280px;
+    height: 280px;
+    background: #FF6B6B;
+    top: -80px;
+    right: -80px;
+    animation-delay: 0s;
+  }
+
+  .shape-2 {
+    width: 220px;
+    height: 220px;
+    background: #4ECDC4;
+    bottom: -60px;
+    left: -60px;
+    animation-delay: 2s;
+  }
+
+  .shape-3 {
+    width: 180px;
+    height: 180px;
+    background: #FFE66D;
+    top: 40%;
+    left: 5%;
+    animation-delay: 4s;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+  }
+
+  .auth-card-modern {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 450px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .auth-illustration {
+    background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 50%, #093028 100%);
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+  }
+
+  .auth-illustration::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2.5l5 4-5 4z' fill='%23ffffff' fill-opacity='0.1'/%3E%3C/svg%3E");
+    opacity: 0.3;
+  }
+
+  .toy-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: wiggle 2s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  .auth-illustration h1 {
+    color: white;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .auth-illustration p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .auth-form {
+    padding: 2rem;
+  }
+
+  .detail-card {
+    background: #f9f9f9;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .toy-photo-large {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    overflow: hidden;
+  }
+
+  .toy-photo-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .no-photo {
+    font-size: 4rem;
+    opacity: 0.5;
+  }
+
+  .detail-info {
+    padding: 1.25rem;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+
+  .detail-label {
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .detail-value {
+    color: #333;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .category-badge {
+    background: #4ECDC4;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+
+  .status-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    justify-content: flex-end;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+
+  .status-badge.clean {
+    background: #D1FAE5;
+    color: #059669;
+  }
+
+  .status-badge.complete {
+    background: #DBEAFE;
+    color: #2563EB;
+  }
+
+  .status-badge.playable {
+    background: #FEF3C7;
+    color: #D97706;
+  }
+
+  .price {
+    font-size: 1.25rem;
+    color: #4ECDC4;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .btn-modern {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .btn-warning {
+    background: linear-gradient(135deg, #FBBF24 0%, #F59E0B 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  }
+
+  .btn-warning:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    color: white;
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+  }
+
+  .btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    color: white;
+  }
+
+  .btn-icon {
+    font-size: 1.1rem;
+  }
+
+  .auth-footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 2px dashed #eee;
+    text-align: center;
+  }
+
+  .back-link {
+    color: #4ECDC4;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .back-link:hover {
+    color: #44A08D;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 480px) {
+    .auth-card-modern {
+      border-radius: 20px;
+    }
+
+    .auth-illustration {
+      padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .auth-form {
+      padding: 1.5rem;
+    }
+
+    .toy-icon {
+      font-size: 3rem;
+    }
+
+    .detail-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

@@ -1,29 +1,157 @@
 <div class="request-form">
   <%= simple_form_for @box do |f| %>
-<div class="mb-3">
-  <%= f.input :category_id,
-    label: "Catégorie",
-    collection: Category.all,
-    prompt: "Choisir une catégorie de jouets à l'intérieur",
-    input_html: { class: "form-select" } %>
-</div>
+    <div class="form-inputs">
+      <div class="input-wrapper">
+        <span class="input-icon">📂</span>
+        <%= f.input :category_id,
+          label: false,
+          collection: Category.all,
+          prompt: "Choisir une catégorie",
+          input_html: { class: "modern-select" } %>
+      </div>
 
-    <div class="mb-3 form-check">
-      <%= f.input :electronic,
-        label: "Cocher si la boite ne contiendra que des jouets électroniques",
-        input_html: { class: "form-check-input" },
-        wrapper_html: { class: "form-check" } %>
+      <div class="checkbox-wrapper">
+        <%= f.input :electronic,
+          label: "La boîte ne contiendra que des jouets électroniques",
+          input_html: { class: "modern-checkbox" },
+          label_html: { class: "checkbox-label" },
+          wrapper_html: { class: "checkbox-container" } %>
+      </div>
+
+      <div class="input-wrapper">
+        <span class="input-icon">⚖️</span>
+        <%= f.input :weight,
+          label: false,
+          as: :numeric,
+          placeholder: "Poids (kg)",
+          input_html: { class: "modern-input", step: 0.1 } %>
+      </div>
     </div>
 
-<div class="mb-3">
-  <%= f.input :weight,
-    label: "Poids (kg)",
-    as: :numeric,
-    input_html: { class: "form-control", step: 0.1 } %>
-    </div>
-
-    <div class="d-grid gap-2">
-      <%= f.button :submit, "Soumettre", class: "btn btn-primary btn-lg" %>
+    <div class="form-actions">
+      <%= f.button :submit, "Mettre à jour ✨", class: "btn-modern" %>
     </div>
   <% end %>
 </div>
+
+<style>
+  .request-form {
+    width: 100%;
+  }
+
+  .form-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    z-index: 1;
+  }
+
+  .modern-select,
+  .modern-input {
+    width: 100%;
+    padding: 14px 16px 14px 48px !important;
+    border: 2px solid #E8E8E8 !important;
+    border-radius: 12px !important;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: #F9F9F9;
+  }
+
+  .modern-select:focus,
+  .modern-input:focus {
+    border-color: #FF9A56 !important;
+    background: white !important;
+    box-shadow: 0 0 0 4px rgba(255, 154, 86, 0.15) !important;
+    outline: none;
+  }
+
+  .modern-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+  }
+
+  .checkbox-wrapper {
+    margin-bottom: 0.5rem;
+  }
+
+  .checkbox-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .modern-checkbox {
+    width: 20px;
+    height: 20px;
+    margin-top: 0.1rem;
+    cursor: pointer;
+    accent-color: #FF9A56;
+  }
+
+  .checkbox-label {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.4;
+    cursor: pointer;
+  }
+
+  .form-actions {
+    margin-top: 1.5rem;
+  }
+
+  .btn-modern {
+    width: 100%;
+    padding: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #FF9A56 0%, #FF6B6B 100%);
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.35);
+  }
+
+  .btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.45);
+  }
+
+  .btn-modern:active {
+    transform: translateY(-1px);
+  }
+
+  /* Override simple_form default labels */
+  .form-inputs label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Error messages styling */
+  .form-inputs .error {
+    color: #EF4444;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .form-inputs .invalid {
+    border-color: #EF4444 !important;
+  }
+</style>
