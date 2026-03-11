@@ -28,14 +28,14 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def edit?
-    true
+    update?
   end
 
   def update?
-    true
+    record.actions.where(user: user).any?
   end
 
   def destroy?
-    true
+    record.actions.where(user: user).any?
   end
 end
