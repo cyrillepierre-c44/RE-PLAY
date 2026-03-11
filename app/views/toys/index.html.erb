@@ -1,6 +1,6 @@
 <h1>Liste des jouets</h1>
 <%= link_to "index des boites", boxes_path, class: "btn btn-success" %>
-<div class=container >
+<div class="container" >
   <div class="row">
     <% @toys.each do |toy| %>
       <div class="col-md-4 mb-3">
@@ -14,8 +14,8 @@
           <% end %>
           <div class="card-body">
             <%= link_to "Jouet numéro #{toy.id}", toy_path(toy), class: "btn btn-primary" %>
-              <%= link_to "Modifier", edit_toy_path(toy), class: "btn btn-warning" %>
-              <%= link_to "Supprimer", toy_path(toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
+              <%= link_to("Modifier", edit_toy_path(toy), class: "btn btn-warning") if policy(toy).edit? %>
+              <%= link_to("Supprimer", toy_path(toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(toy).destroy? %>
           </div>
         </div>
       </div>
