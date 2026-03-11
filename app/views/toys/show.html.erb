@@ -10,7 +10,7 @@
   créé le : <%= @toy.created_at.day %>/<%= @toy.created_at.month %>/<%= @toy.created_at.year %>,
   </h3>
 </div>
-<%= link_to "mettre à jour le jouet", edit_toy_path(@toy), class: "btn btn-warning mt-1" %>
+<%= link_to("Modifier", edit_toy_path(@toy), class: "btn btn-warning") if policy(@toy).edit? %>
 <br>
-<%= link_to "supprimer le jouet", toy_path(@toy), class: "btn btn-danger mt-1", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
+<%= link_to("Supprimer", toy_path(@toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(@toy).destroy? %>
 </div>
