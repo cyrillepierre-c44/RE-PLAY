@@ -57,8 +57,11 @@ class ToysController < ApplicationController
   end
 
   def destroy
+    authorize @toy
     if @toy.destroy
       redirect_to toys_path, notice: "Demande supprimée avec succès."
+      Action.create!(user: current_user, actionable: @toy,
+                     content: "#{current_user.email} à supprimé lejouet #{@toy.id}")
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
