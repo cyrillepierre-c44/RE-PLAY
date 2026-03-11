@@ -2,9 +2,11 @@ class ToysController < ApplicationController
   before_action :set_toy, only: %i[show edit update destroy]
   def index
     @toys = Toy.all
+    @toys = policy_scope(Toy)
   end
 
   def show
+    authorize @toy
     @boxes = Box.all
     @categories = Category.all
     @actions = Action.all
@@ -16,15 +18,17 @@ class ToysController < ApplicationController
     # @action.save
   end
 
-
   def new
     @toy = Toy.new
+    authorize @toy
     @box = Box.find(params[:box_id])
   end
 
   def create
     @box = Box.find(params[:box_id])
     @toy = Toy.new(toy_params)
+    authorize @toy
+    authorize @box
     @toy.box = @box
 
     if @toy.save
