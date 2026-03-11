@@ -28,14 +28,14 @@ class BoxPolicy < ApplicationPolicy
   end
 
   def edit?
-    record.user == user
+    update?
   end
 
   def update?
-    record.user == user
+    record.actions.where(user: user).any?
   end
 
   def destroy?
-    record.user == user
+    record.actions.where(user: user).any?
   end
 end
