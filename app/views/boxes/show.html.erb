@@ -1,8 +1,10 @@
 <div>
-<h1>La boite actuelle est caractérisée par </h1>
-<%= @box.id %>
-<%= @box.electronic %>
-<%= @box.weight %>
+<%= link_to "retour à la liste des boites", boxes_path, class: "btn btn-secondary mt-1" %>
+<br>
+<h1>La boite actuelle est caractérisée par: </h1>
+<H2>Numéro <%= @box.id %>,
+<%= @box.electronic ? " jouets électroniques" : " jouets non électronique" %>,
+<%= @box.weight %>(Kg).</H2>
 </div>
 <div>
 <%= link_to "nouveau jouet à partir de cette boite", new_box_toy_path(@box), class: "btn btn-primary mt-1" %>

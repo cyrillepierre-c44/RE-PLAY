@@ -1,8 +1,16 @@
 <h1>Details, du jouet en valorisation</h1>
+<%= link_to "retour à la liste des jouets", toys_path, class: "btn btn-secondary mt-1" %>
+<br>
 <div class=container>
-  <h3>Jouet numéro <%= @toys.id %>,
-  catégorie : <%= @toys.category.name %>,
-  <%# barcode : <%= @toys.barcode %>
-  créé le : <%= @toys.created_at.day %>/<%= @toys.created_at.month %>/<%= @toys.created_at.year %>,
+  <h3>Jouet numéro <%= @toy.id %>,
+  catégorie : <%= @toy.category.name %>,
+  <% if @toy.barcode.present? %>
+  barcode : <%= @toy.barcode %>,
+  <% end %>
+  créé le : <%= @toy.created_at.day %>/<%= @toy.created_at.month %>/<%= @toy.created_at.year %>,
   </h3>
+</div>
+<%= link_to "mettre à jour le jouet", edit_toy_path(@toy), class: "btn btn-warning mt-1" %>
+<br>
+<%= link_to "supprimer le jouet", toy_path(@toy), class: "btn btn-danger mt-1", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
 </div>
