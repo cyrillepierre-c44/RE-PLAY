@@ -3,7 +3,10 @@
   <ul>
     <% @boxes.each do |box| %>
       <li>
-        <%= link_to "Boite numéro #{box.id}", box_path(box) %>
+        <%= link_to "Boite numéro #{box.id},", box_path(box) %>
+        <%= "#{box.category.name}," %>
+        <%= box.electronic ? " jouets électroniques," : " jouets non électronique," %>
+        <%= "#{box.weight} Kg" %>
       </li>
     <% end %>
   </ul>
