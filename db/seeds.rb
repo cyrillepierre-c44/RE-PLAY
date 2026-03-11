@@ -29,7 +29,7 @@ categories = [
 ]
 
 categories.each do |name|
-  Category.create!(name: name)
+  Category.create!(name: )
 end
 
 puts "#{Category.count} categories created!"
