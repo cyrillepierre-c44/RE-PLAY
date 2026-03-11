@@ -32,6 +32,7 @@ class ToysController < ApplicationController
     @toy.box = @box
 
     if @toy.save
+      Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à créé le jouet n#{@toy.id}")
       redirect_to toys_path, notice: "Jouet créé avec succès.", status: :see_other
     else
       render :new, status: :unprocessable_entity
@@ -40,10 +41,15 @@ class ToysController < ApplicationController
 
   def edit
     @box = @toy.box
+    authorize @box
+    authorize @toy
   end
 
   def update
+    authorize @toy
     if @toy.update(toy_params)
+      Action.create!(user: current_user, actionable: @toy,
+                     content: "#{current_user.email} à updaté le jouet n#{@toy.id}")
       redirect_to toy_path(@toy), status: :see_other
     else
       render :edit, status: :unprocessable_entity
