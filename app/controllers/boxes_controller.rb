@@ -1,19 +1,24 @@
 class BoxesController < ApplicationController
+  before_action :set_box, only: %i[show edit update destroy]
+
   def index
-    @boxes = Box.all
+    @boxes = policy_scope(Box)
   end
 
   def show
-    @box = box_set
+    authorize @box
   end
 
   def new
     @box = Box.new
+    authorize @box
   end
 
   def create
     @box = Box.new(box_params)
-    if @box.save
+    authorize @box
+    if @box.save!
+      Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} à créé la boite n#{@box.id}")
       redirect_to boxes_path
     else
       render :new, status: :unprocessable_entity
@@ -21,19 +26,22 @@ class BoxesController < ApplicationController
   end
 
   def edit
-    @box = box_set
+    authorize @box
   end
 
   def update
-    @box = box_set
+    authorize @box
     @box.update(box_params)
+    Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} à updaté la boite n#{@box.id}")
     redirect_to box_path(@box), status: :see_other
   end
 
   def destroy
-    @box = box_set
+    authorize @box
     if @box.destroy
       redirect_to boxes_path, notice: "Demande supprimée avec succès."
+      Action.create!(user: current_user, actionable: @box,
+                     content: "#{current_user.email} à supprimé la boite n#{@box.id}")
     else
       redirect_to box_path(@box), alert: @box.errors.full_messages.to_sentence
     end
@@ -41,7 +49,7 @@ class BoxesController < ApplicationController
 
   private
 
-  def box_set
+  def set_box
     @box = Box.find(params[:id])
   end
 

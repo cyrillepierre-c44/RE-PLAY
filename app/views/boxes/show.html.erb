@@ -1,13 +1,17 @@
 <div>
-<h1>La boite actuelle est caractérisée par </h1>
-<%= @box.id %>
-<%= @box.electronic %>
-<%= @box.weight %>
+<%= link_to "retour à la liste des boites", boxes_path, class: "btn btn-secondary mt-1" %>
+<br>
+<h1>La boite actuelle est caractérisée par: </h1>
+<H2>Numéro <%= @box.id %></H2>
+<H3>
+<%= @box.category.name %>,
+<%= @box.electronic ? " jouets électroniques" : " jouets non électronique" %>,
+<%= @box.weight %>(Kg).</H3>
 </div>
 <div>
-<%= link_to "nouveau jouet à partir de cette boite", new_box_path, class: "btn btn-primary mt-1" %>
+<%= link_to "nouveau jouet à partir de cette boite", new_box_toy_path(@box), class: "btn btn-primary mt-1" %>
 <br>
-<%= link_to "mettre à jour la boite", edit_box_path(@box), class: "btn btn-warning mt-1" %>
+<%= link_to("mettre à jour la boite", edit_box_path(@box), class: "btn btn-warning mt-1") if policy(@box).edit? %>
 <br>
-<%= link_to "supprimer la box", box_path, class: "btn btn-danger mt-1", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } %>
+<%= link_to("supprimer la box", box_path(@box), class: "btn btn-danger mt-1", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(@box).destroy? %>
 </div>

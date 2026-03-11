@@ -1,9 +1,24 @@
-<h1>Toys#index</h1>
-<p>Find me in app/views/toys/index.html.erb</p>
-<div class=container >
-  <ul>
+<h1>Liste des jouets</h1>
+<%= link_to "index des boites", boxes_path, class: "btn btn-success" %>
+<div class="container" >
+  <div class="row">
     <% @toys.each do |toy| %>
-      <%= link_to "Jouet numéro #{toy.id}, nom: #{toy.barcode}", toy_path(toy) %>
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <% if toy.photo.attached? %>
+            <%= image_tag toy.photo, class: "card-img-top", alt: "Photo du jouet #{toy.id}" %>
+          <% else %>
+            <div class="card-body text-center">
+              <p class="card-text">Pas de photo</p>
+            </div>
+          <% end %>
+          <div class="card-body">
+            <%= link_to "Jouet numéro #{toy.id}", toy_path(toy), class: "btn btn-primary" %>
+              <%= link_to("Modifier", edit_toy_path(toy), class: "btn btn-warning") if policy(toy).edit? %>
+              <%= link_to("Supprimer", toy_path(toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(toy).destroy? %>
+          </div>
+        </div>
+      </div>
     <% end %>
-  </ul>
+  </div>
 </div>
