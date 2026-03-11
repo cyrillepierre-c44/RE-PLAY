@@ -3,6 +3,50 @@
     <%= simple_form_for @toy.persisted? ? @toy : [@box, @toy] do |f| %>
 
       <div class="mb-3">
+        <%= f.input :photo,
+          as: :file,
+          label: "Photo de l'objet",
+          input_html: { class: "form-control", id: "toy-photo-input", accept: "image/*" },
+          label_html: { class: "form-label" } %>
+        <div id="photo-preview" class="mt-2 text-center"></div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const photoInput = document.getElementById('toy-photo-input');
+          const previewContainer = document.getElementById('photo-preview');
+
+          if (photoInput) {
+            photoInput.addEventListener('change', function(event) {
+              previewContainer.innerHTML = '';
+
+              if (event.target.files && event.target.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                  const img = document.createElement('img');
+                  img.src = e.target.result;
+                  img.className = 'img-thumbnail';
+                  img.style.maxWidth = '200px';
+                  img.alt = 'Aperçu de la photo';
+                  previewContainer.appendChild(img);
+                };
+
+                reader.readAsDataURL(event.target.files[0]);
+              }
+            });
+          }
+        });
+      </script>
+
+      <% if @toy.photo.attached? %>
+        <div class="mb-3 text-center">
+          <%= image_tag @toy.photo, class: "img-thumbnail", style: "max-width: 200px;", alt: "Photo actuelle du jouet" %>
+          <p class="text-muted small">Photo actuelle</p>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
         <%= f.association :category,
           label: "Catégorie du jouet",
           input_html: { class: "form-control", value: @box.category.name } %>
@@ -12,14 +56,6 @@
         <%= f.input :barcode,
           label: "Identification du jouet (facultatif)",
           input_html: { class: "form-control" } %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.input :photo,
-          as: :file,
-          label: "Photo de l'objet",
-          input_html: { class: "form-control" },
-          label_html: { class: "form-label" } %>
       </div>
 
       <div class="mb-3 form-check">

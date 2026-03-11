@@ -28,7 +28,7 @@ class ToysController < ApplicationController
     @toy.box = @box
 
     if @toy.save
-      redirect_to toy_path(@toy)
+      redirect_to toys_path, notice: "Jouet créé avec succès.", status: :see_other
     else
       render :new, status: :unprocessable_entity
     end
