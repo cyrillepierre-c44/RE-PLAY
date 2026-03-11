@@ -32,6 +32,7 @@ class BoxesController < ApplicationController
   def update
     authorize @box
     @box.update(box_params)
+    Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} à updaté la boite n#{@box.id}")
     redirect_to box_path(@box), status: :see_other
   end
 
@@ -39,6 +40,8 @@ class BoxesController < ApplicationController
     authorize @box
     if @box.destroy
       redirect_to boxes_path, notice: "Demande supprimée avec succès."
+      Action.create!(user: current_user, actionable: @box,
+                     content: "#{current_user.email} à supprimé la boite n#{@box.id}")
     else
       redirect_to box_path(@box), alert: @box.errors.full_messages.to_sentence
     end
