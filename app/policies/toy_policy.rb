@@ -40,7 +40,7 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def verify?
-    true
+    user.present? && user.admin?
   end
 
   def confirm_verify?
