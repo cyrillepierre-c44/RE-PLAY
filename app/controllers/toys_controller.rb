@@ -1,5 +1,13 @@
 class ToysController < ApplicationController
+  SYSTEM_PROMPT = "Tu es un expert en vente de jouet d'occasion reconditionnés issus de dons.
+  Je travaille pour une entreprise Française, dans la zone euros, qui vend des jouets d'occasion et je souhaiterais
+  savoir à quel prix je peux les vendre en tenant compte du prix du neuf et des prix pratiqués par la concurrence.
+  Peux-tu m'aider à trouver le prix de vente de ce jouet d'occasion en te basant sur une fourchette de prix en euro.
+  Merci de me faire une réponse en chiffres uniquement et sans lettres ni unité d'argent avec la valeur
+  moyenne seulement. Par exemple : 10"
+
   before_action :set_toy, only: %i[show edit update destroy verify confirm_verify]
+  before_action :box_find, only: %i[new create]
 
   def index
     @toys = Toy.all
@@ -8,31 +16,25 @@ class ToysController < ApplicationController
 
   def show
     authorize @toy
-    @boxes = Box.all
-    @categories = Category.all
-    @actions = Action.all
-    # @action = Action.new
-    # @action.toy_id = @toys.id
-    # @action.actionable_type = "Toy"
-    # @action.actionable_id = @toys.id
-    # @action.user_id = current_user.id
-    # @action.save
   end
 
   def new
     @toy = Toy.new
     authorize @toy
-    @box = Box.find(params[:box_id])
   end
 
   def create
-    @box = Box.find(params[:box_id])
     @toy = Toy.new(toy_params)
     authorize @toy
     authorize @box
     @toy.box = @box
 
     if @toy.save
+      @ruby_llm_chat = RubyLLM.chat(model: "gpt-4o")
+      @response = @ruby_llm_chat.ask(SYSTEM_PROMPT, with: { image: @toy.photo.url })
+      @aiprice = @response.content.to_i
+      @toy.update(price: @aiprice)
+
       Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à créé le jouet n#{@toy.id}")
       redirect_to toys_path, notice: "Jouet créé avec succès.", status: :see_other
     else
@@ -85,6 +87,10 @@ class ToysController < ApplicationController
   end
 
   private
+
+  def box_find
+    @box = Box.find(params[:box_id])
+  end
 
   def set_toy
     @toy = Toy.find(params[:id])
