@@ -1,6 +1,8 @@
+<h1>formulaire de validation du jouet</h1>
+
 <div class="container" >
   <div class="request-form">
-    <%= simple_form_for @toy.persisted? ? @toy : [@box, @toy] do |f| %>
+<%= simple_form_for(@toy, url: confirm_verify_toy_path(@toy), method: :patch) do |f| %>
 
       <div class="mb-3">
         <%= f.input :photo,
@@ -94,7 +96,7 @@
       </div>
 
       <div class="d-grid gap-2">
-        <%= f.button :submit, "Soumettre", class: "btn btn-primary btn-lg" %>
+        <%= f.button :submit, "Finaliser le contrôle qualité", class: "btn btn-primary btn-lg" %>
       </div>
 
     <% end %>

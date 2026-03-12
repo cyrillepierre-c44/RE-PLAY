@@ -38,4 +38,12 @@ class ToyPolicy < ApplicationPolicy
   def destroy?
     user.present? && user.admin?
   end
+
+  def verify?
+    true
+  end
+
+  def confirm_verify?
+    verify?
+  end
 end

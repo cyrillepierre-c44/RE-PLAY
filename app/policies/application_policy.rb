@@ -36,6 +36,14 @@ class ApplicationPolicy
     false
   end
 
+  def verify?
+    false
+  end
+
+  def confirm_verify?
+    false
+  end
+
   class Scope
     def initialize(user, scope)
       @user = user
