@@ -9,4 +9,7 @@ class PagesController < ApplicationController
 
   def onboarding
   end
+
+  def enjoue
+  end
 end
