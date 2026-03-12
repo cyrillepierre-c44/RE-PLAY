@@ -11,4 +11,7 @@ class PagesController < ApplicationController
   def onboarding
     authorize :page, :onboarding?
   end
+
+  def enjoue
+  end
 end
