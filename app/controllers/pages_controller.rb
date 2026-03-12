@@ -5,9 +5,11 @@ class PagesController < ApplicationController
   end
 
   def about_us
+    authorize :page, :about_us?
   end
 
   def onboarding
+    authorize :page, :onboarding?
   end
 
   def enjoue

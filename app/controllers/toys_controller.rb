@@ -1,5 +1,6 @@
 class ToysController < ApplicationController
   before_action :set_toy, only: %i[show edit update destroy]
+
   def index
     @toys = Toy.all
     @toys = policy_scope(Toy)
@@ -41,7 +42,6 @@ class ToysController < ApplicationController
 
   def edit
     @box = @toy.box
-    authorize @box
     authorize @toy
   end
 
