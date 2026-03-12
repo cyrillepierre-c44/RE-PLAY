@@ -6,7 +6,7 @@ class ToysController < ApplicationController
   Merci de me faire une réponse en chiffres uniquement et sans lettres ni unité d'argent avec la valeur
   moyenne seulement. Par exemple : 10"
 
-  before_action :set_toy, only: %i[show edit update destroy]
+  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify]
   before_action :box_find, only: %i[new create]
 
   def index
@@ -52,7 +52,7 @@ class ToysController < ApplicationController
     if @toy.update(toy_params)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} à updaté le jouet n#{@toy.id}")
-      redirect_to toy_path(@toy), status: :see_other
+      redirect_to toy_path(@toy), status: :see_other, notice: "modifié avec succès"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -61,11 +61,28 @@ class ToysController < ApplicationController
   def destroy
     authorize @toy
     if @toy.destroy
-      redirect_to toys_path, notice: "Demande supprimée avec succès."
+      redirect_to toys_path, notice: "Jouet supprimée avec succès."
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} à supprimé lejouet #{@toy.id}")
+                     content: "#{current_user.email} à supprimé le  jouet #{@toy.id}")
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
+    end
+  end
+
+  def verify
+    @box = @toy.box
+    authorize @toy
+  end
+
+  def confirm_verify
+    authorize @toy
+    if @toy.update(toy_params)
+      Action.create!(user: current_user, actionable: @toy,
+                     content: "#{current_user.email} a validé le contrôle du jouet n#{@toy.id}")
+      redirect_to toy_path(@toy), status: :see_other, notice: "contrôle validé !"
+    else
+      @box = @toy.box
+      render :verify, status: :unprocessable_entity
     end
   end
 

@@ -6,8 +6,14 @@ Rails.application.routes.draw do
   end
 
   resources :boxes, only: [:destroy]
-  resources :toys, only: [:index, :show, :destroy, :edit, :update]
+  resources :toys, only: [:index, :show, :destroy, :edit, :update] do
+    member do
+      get :verify
+      patch :confirm_verify
+    end
+  end
 
   get "about_us", to: "pages#about_us"
   get "onboarding", to: "pages#onboarding"
+  get "enjoue", to: "pages#enjoue"
 end

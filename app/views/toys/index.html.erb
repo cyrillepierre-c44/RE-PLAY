@@ -14,8 +14,9 @@
           <% end %>
           <div class="card-body">
             <%= link_to "Jouet numéro #{toy.id}", toy_path(toy), class: "btn btn-primary" %>
-              <%= link_to("Modifier", edit_toy_path(toy), class: "btn btn-warning") if policy(toy).edit? %>
-              <%= link_to("Supprimer", toy_path(toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(toy).destroy? %>
+            <%= link_to("Controle qualité", verify_toy_path(toy), class: "btn btn-info") if policy(toy).verify? %>
+            <%= link_to("Modifier", edit_toy_path(toy), class: "btn btn-warning") if policy(toy).edit? %>
+            <%= link_to("Supprimer", toy_path(toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(toy).destroy? %>
           </div>
         </div>
       </div>
