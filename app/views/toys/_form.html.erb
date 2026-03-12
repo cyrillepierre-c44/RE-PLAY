@@ -27,7 +27,7 @@
                   const img = document.createElement('img');
                   img.src = e.target.result;
                   img.className = 'img-thumbnail';
-                  img.style.maxWidth = '200px';
+                  img.style.maxWidth = '100px';
                   img.alt = 'Aperçu de la photo';
                   previewContainer.appendChild(img);
                 };
@@ -49,7 +49,8 @@
       <div class="mb-3">
         <%= f.association :category,
           label: "Catégorie du jouet",
-          input_html: { class: "form-control", value: @box.category.name } %>
+          selected: @toy.category&.id || @box.category.id,
+          input_html: { class: "form-control" } %>
       </div>
 
       <div class="mb-3">
@@ -81,16 +82,14 @@
 
       <div class="mb-3">
         <%= f.input :price,
-          label: "Prix (€)",
-          as: :numeric,
-          input_html: { class: "form-control", step: 0.01 } %>
+          label: "Prix de vente suggéré par l'IA (en euros)",
+          input_html: { class: "form-control" } %>
       </div>
 
       <div class="mb-3">
         <%= f.input :location,
           label: "Lieu où se trouve le jouet (facultatif)",
-          as: :numeric,
-          input_html: { class: "form-control", step: 0.01 } %>
+          input_html: { class: "form-control" } %>
       </div>
 
       <div class="d-grid gap-2">

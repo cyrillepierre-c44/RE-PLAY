@@ -1,9 +1,13 @@
 class ToysController < ApplicationController
-  SYSTEM_PROMPT = "Vous êtes un expert en vente d'articles d'occasion de toutes sortes. Je travaille pour une entreprise
-qui vend des jouets d'occasion et je souhaiterais savoir à quel prix je peux les vendre. Peux-tu m'aider à trouver
-le meilleur prix d'occasion en tenant compte du prix du neuf et des prix pratiqués par la concurrence?"
+  SYSTEM_PROMPT = "Tu es un expert en vente de jouet d'occasion reconditionnés issus de dons.
+  Je travaille pour une entreprise Française, dans la zone euros, qui vend des jouets d'occasion et je souhaiterais
+  savoir à quel prix je peux les vendre en tenant compte du prix du neuf et des prix pratiqués par la concurrence.
+  Peux-tu m'aider à trouver le prix de vente de ce jouet d'occasion en te basant sur une fourchette de prix en euro.
+  Merci de me faire une réponse en chiffres uniquement et sans lettres ni unité d'argent avec la valeur
+  moyenne seulement. Par exemple : 10"
 
   before_action :set_toy, only: %i[show edit update destroy]
+  before_action :box_find, only: %i[new create]
 
   def index
     @toys = Toy.all
@@ -17,22 +21,20 @@ le meilleur prix d'occasion en tenant compte du prix du neuf et des prix pratiqu
   def new
     @toy = Toy.new
     authorize @toy
-    @box = Box.find(params[:box_id])
-    @ruby_llm_chat = RubyLLM.chat(model: "gpt-4.1")
-    response = chat.ask("What is Ruby on Rails?")
-    question = @ruby_llm_chat.with_instructions(instructions)
-      @response = @ruby_llm_chat.ask(@message.content, with: with)
-    end
   end
 
   def create
-    @box = Box.find(params[:box_id])
     @toy = Toy.new(toy_params)
     authorize @toy
     authorize @box
     @toy.box = @box
 
     if @toy.save
+      @ruby_llm_chat = RubyLLM.chat(model: "gpt-4o")
+      @response = @ruby_llm_chat.ask(SYSTEM_PROMPT, with: { image: @toy.photo.url })
+      @aiprice = @response.content.to_i
+      @toy.update(price: @aiprice)
+
       Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à créé le jouet n#{@toy.id}")
       redirect_to toys_path, notice: "Jouet créé avec succès.", status: :see_other
     else
@@ -68,6 +70,10 @@ le meilleur prix d'occasion en tenant compte du prix du neuf et des prix pratiqu
   end
 
   private
+
+  def box_find
+    @box = Box.find(params[:box_id])
+  end
 
   def set_toy
     @toy = Toy.find(params[:id])
