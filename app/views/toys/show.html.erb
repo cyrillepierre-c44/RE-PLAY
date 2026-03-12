@@ -1,16 +1,21 @@
 <h1>Details, du jouet en valorisation</h1>
 <%= link_to "retour à la liste des jouets", toys_path, class: "btn btn-secondary mt-1" %>
 <br>
-<div class=container>
-  <h3>Jouet numéro <%= @toy.id %>,
-  catégorie : <%= @toy.category.name %>,
-  <% if @toy.barcode.present? %>
-  barcode : <%= @toy.barcode %>,
+<div class="container">
+  <h3>
+    <ul>
+      <li>Jouet numéro <%= @toy.id %>,</li>
+      <li>catégorie : <%= @toy.category.name %>,</li>
+       <% if @toy.barcode.present? %>,
+  barcode : <li><%= @toy.barcode %>,</li>
   <% end %>
-  créé le : <%= @toy.created_at.day %>/<%= @toy.created_at.month %>/<%= @toy.created_at.year %>,
-  </h3>
+  <li>créé le : <%= @toy.created_at.day %>/<%= @toy.created_at.month %>/<%= @toy.created_at.year %>,</li>
+  </ul></h3>
 </div>
-<%= link_to("Modifier", edit_toy_path(@toy), class: "btn btn-warning") if policy(@toy).edit? %>
+<div>
+<%= link_to("Modifier", edit_toy_path(@toy), class: "btn btn-warning m-1") if policy(@toy).edit? %>
 <br>
-<%= link_to("Supprimer", toy_path(@toy), class: "btn btn-danger", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(@toy).destroy? %>
+<%= link_to("Supprimer", toy_path(@toy), class: "btn btn-danger m-1", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(@toy).destroy? %>
+<br>
+<%= link_to("Controle qualité", verify_toy_path(@toy), class: "btn btn-info m-1") if policy(@toy).verify? %>
 </div>
