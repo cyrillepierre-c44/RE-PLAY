@@ -43,8 +43,9 @@
                   <i class="fa-solid fa-weight-hanging me-1"></i><%= box.weight %> kg
                 </span>
               <% end %>
+              <% toy_count = box.toys.where.not(status: "suppr").count %>
               <span class="badge badge-waiting">
-                <i class="fa-solid fa-puzzle-piece me-1"></i><%= box.toys.count %> jouet<%= 's' if box.toys.count > 1 %>
+                <i class="fa-solid fa-puzzle-piece me-1"></i><%= toy_count %> jouet<%= 's' if toy_count > 1 %>
               </span>
             </div>
             <div class="box-card-footer">

@@ -68,10 +68,14 @@
                 <i class="fa-solid fa-tag"></i><%= toy.category.name %>
               </div>
               <div class="toy-card-badges">
-                <% if toy.location == "En attente de validation" %>
+                <% if toy.pending? %>
                   <span class="badge badge-waiting"><i class="fa-solid fa-clock me-1"></i>En attente</span>
-                <% else %>
-                  <span class="badge badge-validated"><i class="fa-solid fa-check me-1"></i>Validé</span>
+                <% elsif toy.review? %>
+                  <span class="badge" style="background:rgba(155,93,229,0.15);color:#7B2FBE;font-weight:700;"><i class="fa-solid fa-magnifying-glass me-1"></i>En contrôle</span>
+                <% elsif toy.market? %>
+                  <span class="badge badge-validated"><i class="fa-solid fa-check me-1"></i>En vente</span>
+                <% elsif toy.suppr? %>
+                  <span class="badge" style="background:rgba(230,57,70,0.1);color:#E63946;font-weight:700;"><i class="fa-solid fa-trash me-1"></i>Supprimé</span>
                 <% end %>
                 <% if toy.clean? %>
                   <span class="condition-pill ok"><i class="fa-solid fa-soap"></i>Propre</span>

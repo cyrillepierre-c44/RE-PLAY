@@ -39,7 +39,7 @@
           <% end %>
           <div class="d-flex align-items-center gap-2">
             <span style="color: #9CA3AF; font-size: 0.8rem; width: 80px;">Jouets</span>
-            <strong><%= @box.toys.count %></strong>
+            <strong><%= @box.toys.where.not(status: "suppr").count %></strong>
           </div>
         </div>
 
@@ -65,13 +65,14 @@
     </div>
 
     <div class="col-md-7 col-lg-8">
+      <% active_toys = @box.toys.where.not(status: "suppr") %>
       <div class="d-flex align-items-center justify-content-between mb-3">
         <h2 style="font-size: 1.2rem; color: #1A2B4A; margin: 0;">
-          Jouets dans cette boîte (<%= @box.toys.count %>)
+          Jouets dans cette boîte (<%= active_toys.count %>)
         </h2>
       </div>
 
-      <% if @box.toys.empty? %>
+      <% if active_toys.empty? %>
         <div class="detail-card p-4 text-center" style="color: #9CA3AF;">
           <i class="fa-solid fa-puzzle-piece" style="font-size: 2.5rem; color: rgba(255,107,53,0.2); margin-bottom: 0.75rem; display:block;"></i>
           Aucun jouet dans cette boîte.
@@ -79,7 +80,7 @@
         </div>
       <% else %>
         <div class="row g-3">
-          <% @box.toys.each do |toy| %>
+          <% active_toys.each do |toy| %>
             <div class="col-sm-6 col-xl-4">
               <div class="toy-card">
                 <% if toy.photo.attached? %>
@@ -93,10 +94,14 @@
                     <i class="fa-solid fa-tag"></i><%= toy.category.name %>
                   </div>
                   <div class="toy-card-badges">
-                    <% if toy.location == "En attente de validation" %>
+                    <% if toy.pending? %>
                       <span class="badge badge-waiting">En attente</span>
-                    <% else %>
-                      <span class="badge badge-validated">Validé</span>
+                    <% elsif toy.review? %>
+                      <span class="badge" style="background:rgba(155,93,229,0.15);color:#7B2FBE;font-weight:700;">En contrôle</span>
+                    <% elsif toy.market? %>
+                      <span class="badge badge-validated">En vente</span>
+                    <% elsif toy.suppr? %>
+                      <span class="badge" style="background:rgba(230,57,70,0.1);color:#E63946;font-weight:700;">Supprimé</span>
                     <% end %>
                   </div>
                   <div class="toy-card-actions">
