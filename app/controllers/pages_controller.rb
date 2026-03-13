@@ -14,4 +14,13 @@ class PagesController < ApplicationController
 
   def enjoue
   end
+
+  def membre1
+  end
+
+  def membre2
+  end
+
+  def membre3
+  end
 end
