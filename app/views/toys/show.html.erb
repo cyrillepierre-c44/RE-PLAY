@@ -4,10 +4,10 @@
 <div class="container">
   <h3>
     <ul>
-      <li>Jouet numéro <%= @toy.id %>,</li>
-      <li>catégorie : <%= @toy.category.name %>,</li>
-       <% if @toy.barcode.present? %>,
-  barcode : <li><%= @toy.barcode %>,</li>
+      <li>Jouet numéro <%= @toy.id %></li>
+      <li>catégorie : <%= @toy.category.name %></li>
+       <% if @toy.barcode.present? %>
+  barcode : <li><%= @toy.barcode %></li>
   <% end %>
   <li>créé le : <%= @toy.created_at.day %>/<%= @toy.created_at.month %>/<%= @toy.created_at.year %>,</li>
   </ul></h3>
