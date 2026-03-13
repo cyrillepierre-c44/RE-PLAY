@@ -72,81 +72,63 @@
               label_html: { class: "form-label" } %>
           </div>
 
-          <%# Barcode %>
-          <div class="mb-3">
-            <%= f.input :barcode,
-              label: "Code-barres / Référence",
-              input_html: { class: "form-control" },
-              label_html: { class: "form-label" } %>
-          </div>
-
-          <%# État %>
-          <div class="mb-2">
-            <label class="form-label">État du jouet</label>
-          </div>
-          <div class="d-flex flex-column gap-2 mb-4">
-            <div class="form-check-custom">
-              <%= f.check_box :clean, class: "form-check-input", id: "toy_clean" %>
-              <%= f.label :clean, class: "form-check-label", for: "toy_clean" do %>
-                <i class="fa-solid fa-soap"></i> Propre
-              <% end %>
-            </div>
-            <div class="form-check-custom">
-              <%= f.check_box :complete, class: "form-check-input", id: "toy_complete" %>
-              <%= f.label :complete, class: "form-check-label", for: "toy_complete" do %>
-                <i class="fa-solid fa-puzzle-piece"></i> Complet
-              <% end %>
-            </div>
-            <div class="form-check-custom">
-              <%= f.check_box :playable, class: "form-check-input", id: "toy_playable" %>
-              <%= f.label :playable, class: "form-check-label", for: "toy_playable" do %>
-                <i class="fa-solid fa-gamepad"></i> Fonctionnel
-              <% end %>
-            </div>
-          </div>
-
-          <%# Prix %>
-          <div class="mb-3">
-            <%= f.input :price,
-              label: "Prix de vente (€)",
-              as: :numeric,
-              input_html: { class: "form-control", step: 0.01 },
-              label_html: { class: "form-label" } %>
-          </div>
-
-          <%# Emplacement %>
-          <div class="mb-4">
-            <%= f.input :location,
-              label: "Emplacement de rangement",
-              required: true,
-              input_html: {
-                class: "form-control",
-                placeholder: "Ex: Rack A, Étagère 2, Boîte 5",
-                value: @toy.location == "En attente de validation" ? "" : @toy.location
-              },
-              label_html: { class: "form-label" },
-              hint: "Indiquez où le jouet sera stocké après validation." %>
-          </div>
-
-          <div class="d-flex gap-2 flex-wrap">
-            <%= f.button :submit, "Valider & mettre en vente",
-                  name: "submit_action", value: "validate",
-                  class: "btn btn-primary flex-fill" %>
-            <%= f.button :submit, "Retour en valorisation",
-                  name: "submit_action", value: "rework",
-                  class: "btn btn-ghost flex-fill" %>
-            <% if policy(@toy).destroy? %>
-              <%= link_to toy_path(@toy),
-                    class: "btn flex-fill",
-                    style: "background:rgba(230,57,70,0.1);color:#E63946;font-weight:700;",
-                    data: { turbo_method: :delete, turbo_confirm: "Supprimer ce jouet ?" } do %>
-                <i class="fa-solid fa-trash me-1"></i>Supprimer
-              <% end %>
-            <% end %>
-          </div>
-
-        <% end %>
+      <div class="mb-3">
+        <%= f.association :category,
+          label: "Catégorie du jouet",
+          input_html: { class: "form-control", selected: @box.category.name } %>
       </div>
-    </div>
+
+      <div class="mb-3">
+        <%= f.input :barcode,
+          label: "Identification du jouet (facultatif)",
+          input_html: { class: "form-control" } %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <%= f.input :clean,
+          label: "Cocher si le jouet est propre",
+          input_html: { class: "form-check-input" },
+          wrapper_html: { class: "form-check" } %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <%= f.input :complete,
+          label: "Cocher si le jouet est complet",
+          input_html: { class: "form-check-input" },
+          wrapper_html: { class: "form-check" } %>
+      </div>
+
+      <div class="mb-3 form-check">
+        <%= f.input :playable,
+          label: "Cocher si le jouet est jouable",
+          input_html: { class: "form-check-input" },
+          wrapper_html: { class: "form-check" } %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.input :price,
+          label: "Prix (€)",
+          as: :numeric,
+          input_html: { class: "form-control", step: 0.01 } %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.input :location,
+          label: "Lieu où va etre rangé le jouet",
+          required: true,
+          placeholder: "Rack A, Etagère 0, Boîte 0",
+          input_html: {
+            class: "form-control",
+              value: @toy.location || "Rack A, Etagère 0, Boîte 0"
+          } %>
+      </div>
+
+
+      <div class="d-flex gap-2 justify-content-center">
+        <%= button_tag "Mise en vente", name:  :status, value: "market", class: "btn btn-success" %>
+        <%= button_tag "Retour en valorisation", name: :status, value: "review", class: "btn btn-warning" %>
+        <%= button_tag "Supprimer", name: :status, value: "suppr", class: "btn btn-danger" %>
+      </div>
+    <% end %>
   </div>
 </div>

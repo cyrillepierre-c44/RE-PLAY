@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_12_152216) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_13_134408) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+  enable_extension "vector"
 
   create_table "actions", force: :cascade do |t|
     t.bigint "actionable_id"
@@ -57,6 +58,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_152216) do
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.boolean "electronic"
+    t.string "status"
     t.datetime "updated_at", null: false
     t.decimal "weight"
     t.index ["category_id"], name: "index_boxes_on_category_id"
@@ -210,20 +212,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_152216) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
-  create_table "toys", force: :cascade do |t|
-    t.string "barcode"
-    t.bigint "box_id", null: false
-    t.bigint "category_id", null: false
-    t.boolean "clean"
-    t.boolean "complete"
-    t.datetime "created_at", null: false
-    t.string "location", default: "En attente de validation"
-    t.boolean "playable"
-    t.decimal "price"
-    t.datetime "updated_at", null: false
-    t.index ["box_id"], name: "index_toys_on_box_id"
-    t.index ["category_id"], name: "index_toys_on_category_id"
-  end
+# Could not dump table "toys" because of following StandardError
+#   Unknown type 'vector(1536)' for column 'embedding'
+
 
   create_table "users", force: :cascade do |t|
     t.boolean "admin", default: false, null: false

@@ -62,10 +62,10 @@ class ToysController < ApplicationController
 
   def destroy
     authorize @toy
-    if @toy.destroy
-      redirect_to toys_path, notice: "Jouet supprimée avec succès."
+    if @toy.update(status: :suppr)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} à supprimé le  jouet #{@toy.id}")
+      redirect_to toys_path, notice: "Jouet supprimée avec succès."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
@@ -78,10 +78,19 @@ class ToysController < ApplicationController
 
   def confirm_verify
     authorize @toy
-    if @toy.update(toy_params)
-      Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} a validé le contrôle du jouet n#{@toy.id}")
-      redirect_to toy_path(@toy), status: :see_other, notice: "contrôle validé !"
+    new_status = params[:status]
+
+    if @toy.update(toy_params.merge(status: new_status))
+      Action.create!(
+        user: current_user,
+        actionable: @toy,
+        content: "#{current_user.email} a passé le jouet n#{@toy.id} en statut: #{new_status}"
+      )
+      if new_status == "market"
+        redirect_to toys_path, notice: "Mis en vente de l'objet"
+      else
+        redirect_to toys_path, status: :see_other, notice: "Statut mis à jour : #{new_status}"
+      end
     else
       @box = @toy.box
       render :verify, status: :unprocessable_entity
@@ -121,6 +130,7 @@ class ToysController < ApplicationController
   end
 
   def toy_params
-    params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :price, :location)
+    params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :price, :location,
+                                :status)
   end
 end
