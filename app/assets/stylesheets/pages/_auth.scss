@@ -1,0 +1,8 @@
+// Auth pages decorative background dots
+.auth-page {
+  background-image:
+    radial-gradient(circle, rgba($coral, 0.06) 1px, transparent 1px),
+    radial-gradient(circle, rgba($yellow, 0.08) 1px, transparent 1px);
+  background-size: 32px 32px, 48px 48px;
+  background-position: 0 0, 16px 16px;
+}

@@ -1,125 +1,76 @@
-<div style="background-color: #1f2937; padding: 60px 20px; text-align: center; color: white;">
-  <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 20px;">
-    Onboarding
-  </h1>
+<% content_for :title, "Guide · RE-PLAY" %>
 
-  <div style="max-width: 800px; margin: 0 auto; font-size: 1.2rem; line-height: 1.8;">
-    <p>
-      Bienvenue dans l'Onboarding !<br>
-      Qui sommes-nous.
-    </p>
-  </div>
+<div style="background: linear-gradient(135deg, #FF6B35, #FF8C5A, #FFD166); padding: 3.5rem 1.5rem; text-align: center; color: white;">
+  <h1 style="font-size: 2.5rem; color: white; margin-bottom: 0.5rem;">Bienvenue sur RE-PLAY</h1>
+  <p style="color: rgba(255,255,255,0.88); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+    La plateforme de gestion du reconditionnement de jouets d'occasion Enjoué
+  </p>
 </div>
 
-<section style="margin: 60px auto; max-width: 900px; padding: 0 20px;">
-  <p style="font-size: 1.2rem; line-height: 1.8;">
+<div class="container py-5" style="max-width: 900px;">
 
-    ENJOUE donne une seconde vie aux jouets pour rendre le jeu plus responsable et accessible à tous.
-    En choisissant des jouets reconditionnés, particuliers, professionnels de l’enfance et entreprises
-    réduisent la surproduction, limitent la pollution et soutiennent l’emploi durable.
-
-    Les jouets proposés sont rigoureusement contrôlés pour répondre aux besoins des structures les plus exigeantes,
-    tandis que les entreprises peuvent renforcer leur démarche RSE grâce à des actions ludiques, fédératrices
-    et clés en main autour de la transition écologique.
-  </p>
-</section>
-
-<div style="text-align: center; margin-top: 30px;">
-    <a href="/enjoue" style="
-      display: inline-block;
-      background-color: #1f2937;
-      color: white;
-      padding: 12px 25px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: bold;
-    ">
-      Découvrir Enjoué
-    </a>
+  <div style="background: white; border-radius: 1.25rem; box-shadow: 0 4px 24px rgba(26,43,74,0.08); padding: 2rem; margin-bottom: 1.5rem;">
+    <p style="font-size: 1.05rem; line-height: 1.8; color: #1A2B4A; margin: 0;">
+      Enjoué donne une seconde vie aux jouets pour rendre le jeu plus responsable et accessible à tous.
+      En choisissant des jouets reconditionnés, particuliers, professionnels de l'enfance et entreprises
+      réduisent la surproduction, limitent la pollution et soutiennent l'emploi durable.
+    </p>
   </div>
 
-<div style="max-width: 900px; margin: 50px auto; padding: 0 20px;">
+  <%= link_to enjoue_path, class: "btn btn-primary mb-5" do %>
+    <i class="fa-solid fa-seedling me-2"></i>Découvrir Enjoué
+  <% end %>
 
-  <section style="margin-bottom: 60px;">
-    <h2 style="font-size: 2rem; margin-bottom: 20px;">Notre mission</h2>
-    <p style="font-size: 1.2rem; line-height: 1.7;">
-      Face à la traçabilité papier & double saisie Excel, aux stocks qui débordent et aux erreurs de saisie
-      au sein du process logistique d'ENJOUE, notre solution et de proposer un système gérant une DataBase avec scan des objets,
-      en utilisant l'IA pour la reconnaissance et la mise en en place de CL informatisées et dashboards.
+  <h2 style="font-size: 1.7rem; color: #1A2B4A; margin-bottom: 1.5rem;">Notre mission</h2>
+  <div style="background: white; border-radius: 1.25rem; box-shadow: 0 4px 24px rgba(26,43,74,0.08); padding: 2rem; margin-bottom: 2rem;">
+    <p style="font-size: 1rem; line-height: 1.8; color: #4B5563; margin: 0;">
+      Face à la traçabilité papier &amp; double saisie Excel, aux stocks qui débordent et aux erreurs de saisie
+      au sein du process logistique d'ENJOUE, notre solution est de proposer un système gérant une base de données
+      avec scan des objets, en utilisant l'IA pour la reconnaissance et la mise en place de checklists informatisées
+      et dashboards.
     </p>
-  </section>
-
-  <section style="margin-bottom: 60px;">
-    <h2 style="font-size: 2rem; margin-bottom: 20px;">Notre équipe</h2>
-    <p style="font-size: 1.2rem; line-height: 1.7;">
-      Derrière notre plateforme se trouve une équipe passionnée, composée de développeurs,
-      designers, créateurs de contenu et experts métier.
-    </p>
-  </section>
-
-  <section style="margin: 60px auto; max-width: 1000px; padding: 0 20px; text-align: center;">
-
-  <h2 style="font-size: 2rem; font-weight: bold; margin-bottom: 40px;">
-    Découvrez notre équipe
-  </h2>
-
-  <div style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
-
-    <!-- MEMBRE 1 -->
-    <div style="flex: 1; min-width: 250px; background: #f7f7f7; padding: 20px; border-radius: 10px;">
-      <img src="/images/membre1.jpg" alt="Membre 1" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
-      <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Nom du membre 1</h3>
-      <a href="/equipe/membre1" style="
-        display: inline-block;
-        background-color: #1f2937;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-      ">
-        Présentation
-      </a>
-    </div>
-
-    <!-- MEMBRE 2 -->
-    <div style="flex: 1; min-width: 250px; background: #f7f7f7; padding: 20px; border-radius: 10px;">
-      <img src="/images/membre2.jpg" alt="Membre 2" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
-      <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Nom du membre 2</h3>
-      <a href="/equipe/membre2" style="
-        display: inline-block;
-        background-color: #1f2937;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-      ">
-        Présentation
-      </a>
-    </div>
-
-    <!-- MEMBRE 3 -->
-    <div style="flex: 1; min-width: 250px; background: #f7f7f7; padding: 20px; border-radius: 10px;">
-      <img src="/images/membre3.jpg" alt="Membre 3" style="width: 100%; border-radius: 10px; margin-bottom: 15px;">
-      <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Nom du membre 3</h3>
-      <a href="/equipe/membre3" style="
-        display: inline-block;
-        background-color: #1f2937;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-      ">
-        Présentation
-      </a>
-    </div>
-
   </div>
 
-</section>
+  <h2 style="font-size: 1.7rem; color: #1A2B4A; margin-bottom: 1.5rem;">Comment ça marche ?</h2>
+  <div class="row g-3 mb-4">
+    <% [
+      { num: "1", icon: "fa-box-open", color: "#FF6B35", bg: "rgba(255,107,53,0.1)",
+        title: "Réception d'une boîte",
+        text: "Créez une nouvelle boîte, indiquez sa catégorie, son poids et si elle contient des jouets électroniques." },
+      { num: "2", icon: "fa-puzzle-piece", color: "#4CC9F0", bg: "rgba(76,201,240,0.1)",
+        title: "Saisie des jouets",
+        text: "Ajoutez chaque jouet avec sa photo. L'IA suggère automatiquement un prix de revente." },
+      { num: "3", icon: "fa-clipboard-check", color: "#9B5DE5", bg: "rgba(155,93,229,0.1)",
+        title: "Contrôle qualité",
+        text: "Un admin valide l'état du jouet, confirme le prix et définit son emplacement de stockage." },
+      { num: "4", icon: "fa-circle-check", color: "#0CC9A3", bg: "rgba(12,201,163,0.1)",
+        title: "Mise en vente",
+        text: "Le jouet est validé et prêt à rejoindre le catalogue de vente Enjoué." }
+    ].each do |step| %>
+      <div class="col-sm-6">
+        <div style="background: white; border-radius: 1rem; box-shadow: 0 4px 24px rgba(26,43,74,0.06); padding: 1.5rem; height: 100%;">
+          <div style="width: 44px; height: 44px; border-radius: 0.75rem; background: <%= step[:bg] %>; display: flex; align-items: center; justify-content: center; color: <%= step[:color] %>; font-size: 1.1rem; margin-bottom: 1rem;">
+            <i class="fa-solid <%= step[:icon] %>"></i>
+          </div>
+          <h3 style="font-size: 1rem; font-weight: 700; color: #1A2B4A; margin-bottom: 0.4rem;"><%= step[:title] %></h3>
+          <p style="font-size: 0.875rem; color: #6B7280; line-height: 1.6; margin: 0;"><%= step[:text] %></p>
+        </div>
+      </div>
+    <% end %>
+  </div>
 
+  <h2 style="font-size: 1.7rem; color: #1A2B4A; margin-bottom: 1.5rem;">Notre équipe</h2>
+  <div class="row g-3">
+    <% 3.times do |i| %>
+      <div class="col-sm-4">
+        <div style="background: white; border-radius: 1rem; box-shadow: 0 4px 24px rgba(26,43,74,0.06); padding: 1.5rem; text-align: center;">
+          <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #FF6B35, #FFD166); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <h3 style="font-size: 1rem; font-weight: 700; color: #1A2B4A; margin: 0;">Membre <%= i + 1 %></h3>
+        </div>
+      </div>
+    <% end %>
+  </div>
 
 </div>
