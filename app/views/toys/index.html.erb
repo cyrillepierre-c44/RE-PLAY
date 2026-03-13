@@ -3,9 +3,9 @@
 
 <div class="mb-4 d-flex gap-2">
   <% if params[:filter] == "validated" %>
-    <%= link_to "Voir les jouets à contrôler", toys_path(filter: "waiting"), class: "btn btn-outline-warning m-3" %>
+    <%= link_to "Voir les jouets à contrôler", toys_path(filter: "waiting"), class: "btn btn-secondary m-3" %>
   <% else %>
-    <%= link_to "Voir les jouets validés", toys_path(filter: "validated"), class: "btn btn-outline-success m-3" %>
+    <%= link_to "Voir les jouets validés", toys_path(filter: "validated"), class: "btn btn-secondary m-3" %>
   <% end %>
 </div>
 

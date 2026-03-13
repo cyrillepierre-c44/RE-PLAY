@@ -37,5 +37,6 @@ class BoxPolicy < ApplicationPolicy
 
   def destroy?
     record.actions.where(user: user).any?
+    user.admin? || record.actions.where(user: user).any?
   end
 end
