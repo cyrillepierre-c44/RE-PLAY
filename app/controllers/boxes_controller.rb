@@ -54,6 +54,6 @@ class BoxesController < ApplicationController
   end
 
   def box_params
-    params.require(:box).permit(:weight, :category_id, :electronic)
+    params.require(:box).permit(:weight, :category_id, :electronic, :status)
   end
 end

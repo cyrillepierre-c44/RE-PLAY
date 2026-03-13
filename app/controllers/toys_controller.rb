@@ -121,6 +121,7 @@ class ToysController < ApplicationController
   end
 
   def toy_params
-    params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :price, :location)
+    params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :price, :location,
+                                :status)
   end
 end
