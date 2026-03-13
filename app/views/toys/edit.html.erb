@@ -1,3 +1,21 @@
-<h1>Mise à jour du jouet</h1>
+<% content_for :title, "Modifier le jouet ##{@toy.id} · RE-PLAY" %>
 
-  <%= render "form" %>
+<div class="form-page">
+  <div class="container">
+    <%= link_to toy_path(@toy), class: "btn btn-ghost btn-sm mb-3" do %>
+      <i class="fa-solid fa-arrow-left me-1"></i>Retour au jouet #<%= @toy.id %>
+    <% end %>
+    <div class="form-card">
+      <div class="form-card-header">
+        <div class="form-card-icon">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </div>
+        <h1 class="form-card-title">Modifier le jouet #<%= @toy.id %></h1>
+        <p class="form-card-subtitle"><%= @toy.category.name %></p>
+      </div>
+      <div class="form-card-body">
+        <%= render "form" %>
+      </div>
+    </div>
+  </div>
+</div>

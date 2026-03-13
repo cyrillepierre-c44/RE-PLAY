@@ -1,12 +1,141 @@
-.navbar-lewagon {
-  justify-content: space-between;
-  background: white;
-}
+.navbar-replay {
+  background: $white;
+  box-shadow: 0 2px 12px rgba(26, 43, 74, 0.07);
+  padding: 0.6rem 0;
 
-.navbar-lewagon .navbar-collapse {
-  flex-grow: 0;
-}
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: $headers-font;
+    font-size: 1.5rem;
+    color: $coral;
+    text-decoration: none;
 
-.navbar-lewagon .navbar-brand img {
-  width: 40px;
+    img {
+      height: 44px;
+      width: auto;
+    }
+
+    .brand-text {
+      color: $coral;
+      font-size: 1.6rem;
+      letter-spacing: -0.5px;
+    }
+  }
+
+  .nav-link {
+    color: $navy;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: $border-radius-pill;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    i {
+      font-size: 0.9em;
+      color: $coral;
+    }
+
+    &:hover, &.active {
+      color: $coral;
+      background-color: rgba($coral, 0.08);
+    }
+  }
+
+  .navbar-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: $cream;
+    border: 1.5px solid #EEE8E0;
+    border-radius: $border-radius-pill;
+    padding: 0.35rem 0.75rem 0.35rem 0.4rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: $navy;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s;
+
+    &:hover {
+      border-color: $coral;
+      background-color: rgba($coral, 0.06);
+      color: $coral;
+    }
+
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, $coral, $yellow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+  }
+
+  .dropdown-menu {
+    border: none;
+    box-shadow: $box-shadow-lg;
+    border-radius: $border-radius-xl;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+
+    .dropdown-item {
+      border-radius: $border-radius;
+      padding: 0.5rem 0.75rem;
+      font-weight: 500;
+      color: $navy;
+      transition: all 0.15s;
+
+      i {
+        width: 18px;
+        color: $gray;
+      }
+
+      &:hover {
+        background-color: rgba($coral, 0.08);
+        color: $coral;
+
+        i { color: $coral; }
+      }
+
+      &.text-danger {
+        color: $danger-red !important;
+
+        i { color: $danger-red; }
+
+        &:hover {
+          background-color: rgba($danger-red, 0.08);
+        }
+      }
+    }
+
+    .dropdown-divider {
+      margin: 0.35rem 0.5rem;
+      border-color: #F0EBE3;
+    }
+  }
+
+  .navbar-toggler {
+    border: none;
+    padding: 0.4rem;
+    border-radius: $border-radius;
+
+    &:focus { box-shadow: none; }
+  }
 }

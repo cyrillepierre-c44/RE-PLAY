@@ -1,21 +1,111 @@
-<h1>Details, du jouet en valorisation</h1>
-<%= link_to "retour à la liste des jouets", toys_path, class: "btn btn-secondary mt-1" %>
-<br>
-<div class="container">
-  <h3>
-    <ul>
-      <li>Jouet numéro <%= @toy.id %>,</li>
-      <li>catégorie : <%= @toy.category.name %>,</li>
-       <% if @toy.barcode.present? %>,
-  barcode : <li><%= @toy.barcode %>,</li>
+<% content_for :title, "Jouet ##{@toy.id} · RE-PLAY" %>
+
+<div class="container py-4">
+  <%= link_to toys_path, class: "btn btn-ghost btn-sm mb-3" do %>
+    <i class="fa-solid fa-arrow-left me-1"></i>Retour aux jouets
   <% end %>
-  <li>créé le : <%= @toy.created_at.day %>/<%= @toy.created_at.month %>/<%= @toy.created_at.year %>,</li>
-  </ul></h3>
-</div>
-<div>
-<%= link_to("Modifier", edit_toy_path(@toy), class: "btn btn-warning m-1") if policy(@toy).edit? %>
-<br>
-<%= link_to("Supprimer", toy_path(@toy), class: "btn btn-danger m-1", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" }) if policy(@toy).destroy? %>
-<br>
-<%= link_to("Controle qualité", verify_toy_path(@toy), class: "btn btn-info m-1") if policy(@toy).verify? %>
+
+  <div class="row g-4">
+    <div class="col-md-5">
+      <% if @toy.photo.attached? %>
+        <%= image_tag @toy.photo, class: "detail-card-photo" %>
+      <% else %>
+        <div class="detail-card-no-photo"><i class="fa-solid fa-image"></i></div>
+      <% end %>
+    </div>
+
+    <div class="col-md-7">
+      <div class="detail-card p-4 h-100">
+        <div class="d-flex align-items-start justify-content-between mb-3">
+          <div>
+            <h1 style="font-size:2rem; color:#1A2B4A; margin-bottom:0.25rem;">Jouet #<%= @toy.id %></h1>
+            <p style="color:#6B7280; font-size:0.875rem; margin:0;">
+              Créé le <%= @toy.created_at.strftime('%d/%m/%Y') %>
+            </p>
+          </div>
+          <% if @toy.location == "En attente de validation" %>
+            <span class="badge badge-waiting" style="font-size:0.8rem; padding: 0.5em 0.9em;">
+              <i class="fa-solid fa-clock me-1"></i>En attente
+            </span>
+          <% else %>
+            <span class="badge badge-validated" style="font-size:0.8rem; padding: 0.5em 0.9em;">
+              <i class="fa-solid fa-check me-1"></i>Validé
+            </span>
+          <% end %>
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <div style="background:#FAFAF9; border:1px solid #F0EBE3; border-radius:0.75rem; padding:0.75rem;">
+              <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Catégorie</div>
+              <div style="font-weight:700; color:#1A2B4A;"><%= @toy.category.name %></div>
+            </div>
+          </div>
+          <% if @toy.barcode.present? %>
+            <div class="col-6">
+              <div style="background:#FAFAF9; border:1px solid #F0EBE3; border-radius:0.75rem; padding:0.75rem;">
+                <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Code-barres</div>
+                <div style="font-weight:700; color:#1A2B4A; font-family: monospace;"><%= @toy.barcode %></div>
+              </div>
+            </div>
+          <% end %>
+          <% if @toy.price.present? %>
+            <div class="col-6">
+              <div style="background: linear-gradient(135deg, #FFF4EC, #FFE8D6); border-radius:0.75rem; padding:0.75rem;">
+                <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Prix suggéré IA</div>
+                <div style="font-weight:700; color:#FF6B35; font-size:1.3rem; font-family: 'Fredoka One', sans-serif;"><%= @toy.price.to_i %> €</div>
+              </div>
+            </div>
+          <% end %>
+          <% if @toy.location != "En attente de validation" && @toy.location.present? %>
+            <div class="col-6">
+              <div style="background:#FAFAF9; border:1px solid #F0EBE3; border-radius:0.75rem; padding:0.75rem;">
+                <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Emplacement</div>
+                <div style="font-weight:700; color:#1A2B4A; font-size:0.875rem;"><%= @toy.location %></div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mb-4">
+          <% if @toy.clean? %>
+            <span class="condition-pill ok"><i class="fa-solid fa-soap"></i>Propre</span>
+          <% else %>
+            <span class="condition-pill ko"><i class="fa-solid fa-soap"></i>À nettoyer</span>
+          <% end %>
+          <% if @toy.complete? %>
+            <span class="condition-pill ok"><i class="fa-solid fa-puzzle-piece"></i>Complet</span>
+          <% else %>
+            <span class="condition-pill ko"><i class="fa-solid fa-puzzle-piece"></i>Incomplet</span>
+          <% end %>
+          <% if @toy.playable? %>
+            <span class="condition-pill ok"><i class="fa-solid fa-gamepad"></i>Fonctionnel</span>
+          <% else %>
+            <span class="condition-pill ko"><i class="fa-solid fa-gamepad"></i>Non fonctionnel</span>
+          <% end %>
+        </div>
+
+        <div class="action-strip">
+          <% if policy(@toy).verify? %>
+            <%= link_to verify_toy_path(@toy), class: "btn btn-primary" do %>
+              <i class="fa-solid fa-clipboard-check me-1"></i>Contrôle qualité
+            <% end %>
+          <% end %>
+          <% if policy(@toy).edit? %>
+            <%= link_to edit_toy_path(@toy), class: "btn btn-ghost btn-sm" do %>
+              <i class="fa-solid fa-pen me-1"></i>Modifier
+            <% end %>
+          <% end %>
+          <% if policy(@toy).destroy? %>
+            <%= link_to toy_path(@toy),
+                  class: "btn btn-sm",
+                  style: "background:rgba(230,57,70,0.1);color:#E63946;font-weight:700;",
+                  data: { turbo_method: :delete, turbo_confirm: "Supprimer ce jouet ?" } do %>
+              <i class="fa-solid fa-trash me-1"></i>Supprimer
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

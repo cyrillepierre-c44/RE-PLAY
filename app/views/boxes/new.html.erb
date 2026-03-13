@@ -1,3 +1,21 @@
-<h1>Créer une nouvelle boite</h1>
+<% content_for :title, "Nouvelle boîte · RE-PLAY" %>
 
-  <%= render "form" %>
+<div class="form-page">
+  <div class="container">
+    <%= link_to boxes_path, class: "btn btn-ghost btn-sm mb-3" do %>
+      <i class="fa-solid fa-arrow-left me-1"></i> Retour
+    <% end %>
+    <div class="form-card">
+      <div class="form-card-header">
+        <div class="form-card-icon">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+        <h1 class="form-card-title">Nouvelle boîte</h1>
+        <p class="form-card-subtitle">Enregistrez une nouvelle boîte de dons</p>
+      </div>
+      <div class="form-card-body">
+        <%= render "form" %>
+      </div>
+    </div>
+  </div>
+</div>
