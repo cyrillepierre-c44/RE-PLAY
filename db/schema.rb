@@ -217,7 +217,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_12_152216) do
     t.boolean "clean"
     t.boolean "complete"
     t.datetime "created_at", null: false
-    t.string "location"
+    t.string "location", default: "En attente de validation"
     t.boolean "playable"
     t.decimal "price"
     t.datetime "updated_at", null: false
