@@ -32,7 +32,11 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def update?
+<<<<<<< HEAD
     user.present? && user.admin?
+=======
+    record.actions.where(user: user).any?
+>>>>>>> master
     user.admin? || record.actions.where(user: user).any?
   end
 
