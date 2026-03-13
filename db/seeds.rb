@@ -4,7 +4,6 @@ Box.destroy_all
 Category.destroy_all
 Action.destroy_all
 Toy.destroy_all
-User.destroy_all
 puts "Creating seeds..."
 
 # Create categories from the list
