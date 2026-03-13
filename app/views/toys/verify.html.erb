@@ -101,12 +101,10 @@
 
 
       <div class="d-flex gap-2 justify-content-center">
-        <%= f.button :submit, "Mise en vente", class: "btn btn-primary btn-lg flex-fill" %>
-        <%= f.button :submit, "Retour en valorisation", class: "btn btn-warning btn-lg flex-fill" %>
-        <%= link_to "Supprimer", toy_path(@toy), class: "btn btn-danger btn-lg flex-fill", data: { turbo_method: :delete, turbo_confirm: "Êtes-vous sûr ?" } if policy(@toy).destroy? %>
+        <%= button_tag "Mise en vente", name:  :status, value: "market", class: "btn btn-success" %>
+        <%= button_tag "Retour en valorisation", name: :status, value: "review", class: "btn btn-warning" %>
+        <%= button_tag "Supprimer", name: :status, value: "suppr", class: "btn btn-danger" %>
       </div>
-
-
     <% end %>
   </div>
 </div>
