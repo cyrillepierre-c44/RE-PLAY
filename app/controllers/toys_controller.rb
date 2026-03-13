@@ -11,8 +11,12 @@ class ToysController < ApplicationController
   #   moyenne seulement. Par exemple : 10"
 
   def index
-    @toys = Toy.all
-    @toys = policy_scope(Toy)
+    base_scope = policy_scope(Toy)
+    if params[:filter] == "validated"
+      @toys = base_scope.validated
+    else
+      @toys = base_scope.waiting
+    end
   end
 
   def show

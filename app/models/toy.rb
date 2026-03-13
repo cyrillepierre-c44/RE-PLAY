@@ -6,7 +6,8 @@ class Toy < ApplicationRecord
   has_many :users, through: :actions
   has_one_attached :photo, dependent: :destroy
   validates :location, presence: true
-
+  scope :waiting, -> { where(location: "En attente de validation") }
+  scope :validated, -> { where.not(location: "En attente de validation").where.not(location: [nil, ""]) }
   private
 
   def set_default_location

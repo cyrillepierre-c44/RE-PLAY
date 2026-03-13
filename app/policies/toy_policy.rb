@@ -37,6 +37,7 @@ class ToyPolicy < ApplicationPolicy
 
   def destroy?
     user.present? && user.admin?
+    user.admin? || record.actions.where(user: user).any?
   end
 
   def verify?
