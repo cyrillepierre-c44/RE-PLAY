@@ -1,4 +1,17 @@
-<h1>Boxes#create</h1>
-<p>Find me in app/views/boxes/create.html.erb</p>
+<% content_for :title, "Nouvelle boîte · RE-PLAY" %>
 
-  <%= render "form" %>
+<div class="form-page">
+  <div class="container">
+    <div class="form-card">
+      <div class="form-card-header">
+        <div class="form-card-icon">
+          <i class="fa-solid fa-box-open"></i>
+        </div>
+        <h1 class="form-card-title">Nouvelle boîte</h1>
+      </div>
+      <div class="form-card-body">
+        <%= render "form" %>
+      </div>
+    </div>
+  </div>
+</div>

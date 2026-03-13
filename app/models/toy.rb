@@ -10,4 +10,8 @@ class Toy < ApplicationRecord
   scope :validated, -> { where.not(location: "En attente de validation").where.not(location: [nil, ""]) }
 
   private
+
+  def set_default_location
+    self.location = "En attente de validation"
+  end
 end

@@ -1,0 +1,56 @@
+.badge-waiting {
+  background: rgba($yellow, 0.25);
+  color: darken($yellow, 28%);
+  font-weight: 700;
+}
+
+.badge-validated {
+  background: rgba($mint, 0.15);
+  color: darken($mint, 15%);
+  font-weight: 700;
+}
+
+.badge-condition {
+  background: rgba($sky, 0.15);
+  color: darken($sky, 20%);
+  font-weight: 700;
+
+  &.bad {
+    background: rgba($danger-red, 0.1);
+    color: $danger-red;
+  }
+}
+
+.badge-electronic {
+  background: rgba($purple, 0.12);
+  color: $purple;
+  font-weight: 700;
+}
+
+.badge-category {
+  background: rgba($coral, 0.1);
+  color: $coral;
+  font-weight: 700;
+}
+
+.condition-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3em 0.7em;
+  border-radius: $border-radius-pill;
+
+  i { font-size: 0.7em; }
+
+  &.ok {
+    background: rgba($mint, 0.15);
+    color: darken($mint, 15%);
+  }
+
+  &.ko {
+    background: rgba($danger-red, 0.08);
+    color: $danger-red;
+  }
+}
