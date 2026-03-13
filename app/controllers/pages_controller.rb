@@ -15,12 +15,12 @@ class PagesController < ApplicationController
   def enjoue
   end
 
-  def membre1
+  def cyrille_pierre
   end
 
-  def membre2
+  def marc_thomas
   end
 
-  def membre3
+  def loic_laplagne
   end
 end

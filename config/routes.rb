@@ -16,8 +16,8 @@ Rails.application.routes.draw do
   get "about_us", to: "pages#about_us"
   get "onboarding", to: "pages#onboarding"
   get "enjoue", to: "pages#enjoue"
-  get "equipe/membre1", to: "pages#membre1"
-  get "equipe/membre2", to: "pages#membre2"
-  get "equipe/membre3", to: "pages#membre3"
+  get "equipe/cyrille-pierre", to: "pages#cyrille_pierre"
+  get "equipe/marc-thomas", to: "pages#marc_thomas"
+  get "equipe/loic-laplagne", to: "pages#loic_laplagne"
 
 end
