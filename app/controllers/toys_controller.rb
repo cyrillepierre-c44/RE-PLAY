@@ -21,6 +21,7 @@ class ToysController < ApplicationController
 
   def show
     authorize @toy
+    @timeline = Action.where(actionable: @toy).includes(:user).order(created_at: :asc)
   end
 
   def new

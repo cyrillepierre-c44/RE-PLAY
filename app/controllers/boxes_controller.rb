@@ -7,6 +7,11 @@ class BoxesController < ApplicationController
 
   def show
     authorize @box
+    toys = @box.toys
+    @timeline = Action.where(actionable: @box)
+                      .or(Action.where(actionable: toys))
+                      .includes(:user)
+                      .order(created_at: :asc)
   end
 
   def new
