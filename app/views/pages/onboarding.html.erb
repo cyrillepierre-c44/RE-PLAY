@@ -1,122 +1,119 @@
-<div style="background-color: #1f2937; padding: 60px 20px; text-align: center; color: white;">
-  <h1 style="font-size: 3rem; font-weight: bold; margin-bottom: 20px;">
-    Onboarding
-  </h1>
+<%# ── HERO ──────────────────────────────────────────────────────────── %>
+<div class="onboarding-hero">
+  <div class="container py-5 text-center text-white">
+    <span class="badge onboarding-badge mb-3 px-3 py-2 fs-6">RE-PLAY × ENJOUÉ</span>
+    <h1 class="display-4 fw-bold mb-3">Bienvenue sur RE-PLAY</h1>
+    <p class="lead mb-4 onboarding-hero-sub">
+      La plateforme de gestion des jouets reconditionnés par ENJOUÉ
+    </p>
+    <%= link_to "Découvrir Enjoué", enjoue_path, class: "btn onboarding-cta btn-lg fw-bold" %>
+  </div>
+</div>
 
-  <div style="max-width: 800px; margin: 0 auto; font-size: 1.2rem; line-height: 1.8;">
-    <p>
-      Bienvenue dans l'Onboarding !<br>
-      Qui sommes-nous.
+<%# ── INTRO ────────────────────────────────────────────────────────── %>
+<div class="container my-5">
+  <div class="card border-0 shadow-sm onboarding-intro-card p-4 p-md-5">
+    <p class="fs-5 lh-lg mb-0">
+      ENJOUÉ donne une seconde vie aux jouets pour rendre le jeu plus responsable et accessible à tous.
+      En choisissant des jouets reconditionnés, particuliers, professionnels de l'enfance et entreprises
+      réduisent la surproduction, limitent la pollution et soutiennent l'emploi durable.
+      Les jouets proposés sont rigoureusement contrôlés pour répondre aux besoins des structures les plus exigeantes.
     </p>
   </div>
 </div>
 
-<section style="margin: 60px auto; max-width: 900px; padding: 0 20px;">
-  <p style="font-size: 1.2rem; line-height: 1.8;">
+<%# ── NOTRE MISSION ────────────────────────────────────────────────── %>
+<section class="bg-white py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Notre mission</h2>
+    </div>
+    <div class="row g-4">
 
-    ENJOUE donne une seconde vie aux jouets pour rendre le jeu plus responsable et accessible à tous.
-    En choisissant des jouets reconditionnés, particuliers, professionnels de l’enfance et entreprises
-    réduisent la surproduction, limitent la pollution et soutiennent l’emploi durable.
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 onboarding-step-card p-4">
+          <div class="onboarding-step-number mb-3">1</div>
+          <h5 class="fw-bold mb-2">Traçabilité digitale</h5>
+          <p class="text-muted mb-0">
+            Fini les tableurs Excel et la saisie papier. RE-PLAY centralise les stocks et suit chaque jouet
+            par scan de code-barres.
+          </p>
+        </div>
+      </div>
 
-    Les jouets proposés sont rigoureusement contrôlés pour répondre aux besoins des structures les plus exigeantes,
-    tandis que les entreprises peuvent renforcer leur démarche RSE grâce à des actions ludiques, fédératrices
-    et clés en main autour de la transition écologique.
-  </p>
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 onboarding-step-card p-4">
+          <div class="onboarding-step-number mb-3">2</div>
+          <h5 class="fw-bold mb-2">Contrôle qualité</h5>
+          <p class="text-muted mb-0">
+            Chaque jouet est évalué selon son état (propreté, complétude, fonctionnalité) avant d'être
+            validé et remis en circulation.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 onboarding-step-card p-4">
+          <div class="onboarding-step-number mb-3">3</div>
+          <h5 class="fw-bold mb-2">Prix assisté par IA</h5>
+          <p class="text-muted mb-0">
+            L'intelligence artificielle analyse chaque jouet et propose automatiquement un prix de revente
+            cohérent avec le marché.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
 
-<div style="text-align: center; margin-top: 30px;">
-    <a href="/enjoue" style="
-      display: inline-block;
-      background-color: #1f2937;
-      color: white;
-      padding: 12px 25px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-size: 1.1rem;
-      font-weight: bold;
-    ">
-      Découvrir Enjoué
-    </a>
-  </div>
-
-<div style="max-width: 900px; margin: 50px auto; padding: 0 20px;">
-
-  <section style="margin-bottom: 60px;">
-    <h2 style="font-size: 2rem; margin-bottom: 20px;">Notre mission</h2>
-    <p style="font-size: 1.2rem; line-height: 1.7;">
-      Face à la traçabilité papier & double saisie Excel, aux stocks qui débordent et aux erreurs de saisie
-      au sein du process logistique d'ENJOUE, notre solution et de proposer un système gérant une DataBase avec scan des objets,
-      en utilisant l'IA pour la reconnaissance et la mise en en place de CL informatisées et dashboards.
+<%# ── NOTRE ÉQUIPE ─────────────────────────────────────────────────── %>
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Notre équipe</h2>
+    </div>
+    <p class="text-muted mb-4 fs-5">
+      Derrière RE-PLAY, une équipe passionnée de développeurs, designers et experts métier.
     </p>
-  </section>
 
-  <section style="margin-bottom: 60px;">
-    <h2 style="font-size: 2rem; margin-bottom: 20px;">Notre équipe</h2>
-    <p style="font-size: 1.2rem; line-height: 1.7;">
-      Derrière notre plateforme se trouve une équipe passionnée, composée de développeurs,
-      designers, créateurs de contenu et experts métier.
-    </p>
-  </section>
+    <div class="row g-4">
 
-<section style="margin: 60px auto; max-width: 1000px; padding: 0 20px; text-align: center;">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center onboarding-team-card p-4">
+          <%= image_tag "cyrille", alt: "Cyrille Pierre", class: "onboarding-avatar mb-3" %>
+          <h5 class="fw-bold mb-1">Cyrille Pierre</h5>
+          <span class="badge onboarding-role-badge mb-3">Développeur</span>
+          <div>
+            <%= link_to "Voir la présentation", cyrille_pierre_path, class: "btn onboarding-team-btn btn-sm fw-bold" %>
+          </div>
+        </div>
+      </div>
 
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center onboarding-team-card p-4">
+          <%= image_tag "marc", alt: "Marc Thomas", class: "onboarding-avatar mb-3" %>
+          <h5 class="fw-bold mb-1">Marc Thomas</h5>
+          <span class="badge onboarding-role-badge mb-3">Développeur</span>
+          <div>
+            <%= link_to "Voir la présentation", marc_thomas_path, class: "btn onboarding-team-btn btn-sm fw-bold" %>
+          </div>
+        </div>
+      </div>
 
-<!-- SECTION DES 3 MEMBRES -->
-<section style="margin: 60px auto; max-width: 1000px; padding: 0 20px; text-align: center;">
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center onboarding-team-card p-4">
+          <%= image_tag "loic", alt: "Loïc Laplagne", class: "onboarding-avatar mb-3" %>
+          <h5 class="fw-bold mb-1">Loïc Laplagne</h5>
+          <span class="badge onboarding-role-badge mb-3">Développeur</span>
+          <div>
+            <%= link_to "Voir la présentation", loic_laplagne_path, class: "btn onboarding-team-btn btn-sm fw-bold" %>
+          </div>
+        </div>
+      </div>
 
-  <div style="display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
-
-    <!-- CYRILLE PIERRE -->
-    <div style="flex: 1; min-width: 250px; background: #f7f7f7; padding: 20px; border-radius: 10px;">
-      <%= image_tag "cyrille", alt: "Cyrille Pierre", style: "width: 100px; border-radius: 10px; margin-bottom: 15px;" %>
-      <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Cyrille Pierre</h3>
-      <a href="/equipe/cyrille-pierre" style="
-        display: inline-block;
-        background-color: #1f2937;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-      ">
-        Présentation
-      </a>
     </div>
-
-    <!-- MARC THOMAS -->
-    <div style="flex: 1; min-width: 250px; background: #f7f7f7; padding: 20px; border-radius: 10px;">
-      <%= image_tag "marc", alt: "Marc Thomas", style: "width: 100px; border-radius: 10px; margin-bottom: 15px;" %>
-      <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Marc Thomas</h3>
-      <a href="/equipe/marc-thomas" style="
-        display: inline-block;
-        background-color: #1f2937;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-      ">
-        Présentation
-      </a>
-    </div>
-
-    <!-- LOÏC LAPLAGNE -->
-    <div style="flex: 1; min-width: 250px; background: #f7f7f7; padding: 20px; border-radius: 10px;">
-      <%= image_tag "loic", alt: "Loïc Laplagne", style: "width: 100px; border-radius: 10px; margin-bottom: 15px;" %>
-      <h3 style="font-size: 1.3rem; margin-bottom: 10px;">Loïc Laplagne</h3>
-      <a href="/equipe/loic-laplagne" style="
-        display: inline-block;
-        background-color: #1f2937;
-        color: white;
-        padding: 10px 20px;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: bold;
-      ">
-        Présentation
-      </a>
-    </div>
-
   </div>
-
 </section>

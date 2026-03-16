@@ -1,19 +1,166 @@
-<section style="margin: 60px auto; max-width: 800px; padding: 0 20px; text-align: center;">
+<%# ── HERO ─────────────────────────────────────────────────────────── %>
+<div class="onboarding-hero">
+  <div class="container py-5 text-center text-white">
+    <%= image_tag "cyrille", alt: "Cyrille Pierre", class: "onboarding-avatar mb-4", style: "width: 130px; height: 130px;" %>
+    <h1 class="display-5 fw-bold mb-1">Cyrille Pierre</h1>
+    <p class="lead onboarding-hero-sub mb-0">Direction opérationnelle &middot; LEAN Manufacturing &middot; Accompagnement du changement</p>
+  </div>
+</div>
 
-  <!-- PHOTO -->
-  <%= image_tag "cyrille.jpg", alt: "Cyrille Pierre", style:"width: 250px; height: 250px; object-fit: cover; border-radius: 50%; margin-bottom: 25px;" %>
-  <!-- NOM -->
-  <h1 style="font-size: 2rem; font-weight: bold; margin-bottom: 20px;">
-    Cyrille Pierre
-  </h1>
+<%# ── BIO ─────────────────────────────────────────────────────────── %>
+<div class="container my-5">
+  <div class="card border-0 shadow-sm onboarding-intro-card p-4 p-md-5">
+    <p class="fs-5 lh-lg mb-0">
+      Fondateur d'une entreprise spécialisée dans l'électrification de vélos classiques et le reconditionnement
+      de flottes de vélos électriques, je mets à profit mes 22 années d'expérience en gestion de projets,
+      pilotage d'unités de production et développement d'affaires. J'ai développé une expertise technique
+      approfondie, accompagnée de solides compétences en management opérationnel, conseil stratégique et
+      gestion financière. Mon approche repose sur la mise en place de relations commerciales durables,
+      la création de solutions innovantes et l'accompagnement des équipes vers le changement.
+    </p>
+  </div>
+</div>
 
-  <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 20px; color: #444;">
-    Parcours
-  </h2>
+<%# ── EXPÉRIENCE ──────────────────────────────────────────────────── %>
+<section class="bg-white py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Expérience</h2>
+    </div>
 
-  <!-- TEXTE -->
-  <p style="font-size: 1.2rem; line-height: 1.8; max-width: 700px; margin: 0 auto;">
-    Directeur des opérations.
-  </p>
+    <div class="d-flex flex-column gap-3">
 
+      <div class="card border-0 shadow-sm onboarding-step-card p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1">Fondateur</h5>
+            <p class="mb-1 text-muted">Centaur Bike &middot; Indépendant &middot; Lyon, Auvergne-Rhône-Alpes</p>
+            <p class="mb-0 small text-muted">
+              Création d'un atelier de transformation et reconditionnement de vélos électriques toutes marques,
+              en B2B et B2C. Management opérationnel et financier, relations grands comptes.
+            </p>
+          </div>
+          <span class="badge onboarding-role-badge align-self-start">janv. 2021 – aujourd'hui</span>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm onboarding-step-card p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1">Responsable de production &middot; membre du CODIR</h5>
+            <p class="mb-1 text-muted">General Mills – Yoplait &middot; CDI &middot; Vienne</p>
+            <p class="mb-0 small text-muted">
+              Management de 3 unités de production (200 personnes, 16 lignes). Réduction de 30% des aléas
+              de production, gain de 8% de TRS/OEE et 480 K€/an d'économies.
+            </p>
+          </div>
+          <span class="badge onboarding-role-badge align-self-start">oct. 2018 – déc. 2020</span>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm onboarding-step-card p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1">Responsable Fabrication Injectables Stérile et Aseptique</h5>
+            <p class="mb-1 text-muted">Cenexi &middot; CDI &middot; Fontenay-sous-Bois</p>
+            <p class="mb-0 small text-muted">
+              Management de 170 personnes, 6 équipements de remplissage classe A. Réduction de l'absentéisme,
+              productivité améliorée de 10%, économies durables de 450 K€/an.
+            </p>
+          </div>
+          <span class="badge onboarding-role-badge align-self-start">juin 2016 – juin 2018</span>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm onboarding-step-card p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1">Consultant senior</h5>
+            <p class="mb-1 text-muted">EFESO &middot; CDI &middot; France</p>
+            <p class="mb-0 small text-muted">
+              Conseil en stratégie opérationnelle auprès de Comités Exécutifs. Formation aux piliers du
+              World Class Manufacturing : VSM, 5S, KAIZEN, TPM.
+            </p>
+          </div>
+          <span class="badge onboarding-role-badge align-self-start">oct. 2014 – mai 2016</span>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm onboarding-step-card p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1">Responsable d'Unité de Production &middot; Responsable Travaux Neufs</h5>
+            <p class="mb-1 text-muted">Campbell Soup Company &middot; CDI &middot; Le Pontet</p>
+            <p class="mb-0 small text-muted">
+              Management de 100 personnes. Réduction de 40% des arrêts non planifiés, gain de 7% TRS/OEE
+              et 850 K€/an d'économies. Plan directeur à 3 ans, budget 3,5 M€/an.
+            </p>
+          </div>
+          <span class="badge onboarding-role-badge align-self-start">sept. 2010 – sept. 2014</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </section>
+
+<%# ── FORMATION ───────────────────────────────────────────────────── %>
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Formation</h2>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+
+      <div class="card border-0 shadow-sm onboarding-step-card p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1">Arts et Métiers ParisTech</h5>
+            <p class="mb-0 text-muted">Ingénieur généraliste &middot; Master's degree, Science and Industry</p>
+          </div>
+          <span class="badge onboarding-role-badge align-self-start">2000 – 2003</span>
+        </div>
+      </div>
+
+      <div class="card border-0 shadow-sm onboarding-step-card p-4">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+          <div>
+            <h5 class="fw-bold mb-1">IUT Nancy-Brabois</h5>
+            <p class="mb-0 text-muted">DUT Génie Mécanique et Productique &middot; mention Bien</p>
+          </div>
+          <span class="badge onboarding-role-badge align-self-start">1998 – 2000</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<%# ── COMPÉTENCES ─────────────────────────────────────────────────── %>
+<section class="bg-white py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Compétences</h2>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">LEAN Manufacturing</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Excellence opérationnelle</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Management opérationnel</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Amélioration continue</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Change Management</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Lean Six Sigma</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Gestion de projet</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Gestion budgétaire</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">BPF / FDA</span>
+    </div>
+  </div>
+</section>
+
+<%# ── RETOUR ───────────────────────────────────────────────────────── %>
+<div class="container py-4 text-center">
+  <%= link_to "← Retour à l'onboarding", onboarding_path, class: "btn onboarding-team-btn fw-bold" %>
+</div>
