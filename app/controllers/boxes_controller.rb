@@ -31,7 +31,7 @@ class BoxesController < ApplicationController
     authorize @box
     if @box.save!
       Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} à créé la boite n#{@box.id}")
-      redirect_to boxes_path
+      redirect_to box_path(@box)
     else
       render :new, status: :unprocessable_entity
     end
