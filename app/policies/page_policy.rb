@@ -20,4 +20,8 @@ class PagePolicy < ApplicationPolicy
   def onboarding?
     true
   end
+
+  def dashboard?
+    user.admin
+  end
 end

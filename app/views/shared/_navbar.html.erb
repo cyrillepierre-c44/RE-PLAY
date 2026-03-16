@@ -29,6 +29,13 @@
               <i class="fa-solid fa-circle-info"></i> Guide
             <% end %>
           </li>
+          <% if current_user.admin %>
+            <li class="nav-item">
+              <%= link_to dashboard_path, class: "nav-link #{'active' if action_name == 'dashboard'}" do %>
+                <i class="fa-solid fa-chart-bar"></i> Dashboard
+              <% end %>
+            </li>
+          <% end %>
         </ul>
 
         <div class="navbar-nav-right">
