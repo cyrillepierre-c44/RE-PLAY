@@ -1,31 +1,34 @@
 .home-hero {
-  background: linear-gradient(135deg, $coral 0%, #FF8C5A 50%, $yellow 100%);
-  border-radius: 0 0 $border-radius-xxl $border-radius-xxl;
+  background: $coral;
+  border-bottom: 2.5px solid $navy;
   padding: 3rem 1.5rem 4.5rem;
   color: $white;
   text-align: center;
   position: relative;
   overflow: hidden;
 
+  // Geometric Neo Memphis decorations
   &::before {
     content: '';
     position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 280px;
-    height: 280px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
+    top: 18px;
+    right: 40px;
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(255, 255, 255, 0.35);
+    border-radius: $border-radius-sm;
+    transform: rotate(18deg);
   }
 
   &::after {
     content: '';
     position: absolute;
-    bottom: -80px;
-    left: -40px;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.06);
+    bottom: 24px;
+    left: 32px;
+    width: 44px;
+    height: 44px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 3px solid rgba(255, 255, 255, 0.35);
     border-radius: 50%;
   }
 
@@ -38,7 +41,7 @@
   }
 
   .hero-subtitle {
-    color: rgba(255, 255, 255, 0.88);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 1.05rem;
     margin-bottom: 0;
     position: relative;
@@ -55,6 +58,7 @@
 
 .quick-action-card {
   background: $white;
+  border: 2.5px solid $navy;
   border-radius: $border-radius-xl;
   box-shadow: $card-box-shadow;
   padding: 1.5rem;
@@ -65,33 +69,32 @@
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  transition: all 0.22s ease;
-  border: 1.5px solid transparent;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: $box-shadow-lg;
-    color: $coral;
-    border-color: rgba($coral, 0.2);
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 $navy;
+    color: $navy;
   }
 
   .quick-action-icon {
     width: 60px;
     height: 60px;
-    border-radius: $border-radius-lg;
+    border-radius: $border-radius;
+    border: 2px solid $navy;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
 
-    &.icon-boxes  { background: linear-gradient(135deg, #FFF4EC, #FFD6B8); color: $coral; }
-    &.icon-toys   { background: linear-gradient(135deg, #E8FBFF, #B8EEFF); color: darken($sky, 10%); }
-    &.icon-new    { background: linear-gradient(135deg, #EDFCF6, #B8F5E0); color: darken($mint, 10%); }
-    &.icon-verify { background: linear-gradient(135deg, #FDF0FF, #E8C4FF); color: $purple; }
+    &.icon-boxes  { background: rgba($coral, 0.12); color: $coral; }
+    &.icon-toys   { background: rgba($sky, 0.15);   color: darken($sky, 15%); }
+    &.icon-new    { background: rgba($mint, 0.15);  color: darken($mint, 10%); }
+    &.icon-verify { background: rgba($purple, 0.12); color: $purple; }
   }
 
   .quick-action-label {
-    font-weight: 700;
+    font-weight: 800;
     font-size: 0.9rem;
   }
 }

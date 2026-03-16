@@ -1,28 +1,31 @@
 // ── Toy Cards ──────────────────────────────────────────────
 .toy-card {
   background: $white;
+  border: 2.5px solid $navy;
   border-radius: $border-radius-xl;
   box-shadow: $card-box-shadow;
   overflow: hidden;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
 
   &:hover {
-    transform: translateY(-5px);
-    box-shadow: $box-shadow-lg;
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 $navy;
   }
 
   .toy-card-img {
     width: 100%;
     height: 200px;
     object-fit: cover;
+    border-bottom: 2px solid $navy;
   }
 
   .toy-card-no-img {
     height: 200px;
-    background: linear-gradient(135deg, #FFF4EC, #FFE8D6);
+    background: $cream;
+    border-bottom: 2px solid $navy;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -86,10 +89,11 @@
 // ── Box Cards ──────────────────────────────────────────────
 .box-card {
   background: $white;
+  border: 2.5px solid $navy;
   border-radius: $border-radius-xl;
   box-shadow: $card-box-shadow;
   padding: 1.25rem;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -98,8 +102,8 @@
   color: inherit;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: $box-shadow-lg;
+    transform: translate(-3px, -3px);
+    box-shadow: 7px 7px 0 $navy;
     color: inherit;
   }
 
@@ -120,7 +124,8 @@
     width: 44px;
     height: 44px;
     border-radius: $border-radius-lg;
-    background: linear-gradient(135deg, #FFF4EC, #FFE0C8);
+    border: 2px solid $navy;
+    background: rgba($coral, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -143,7 +148,7 @@
   .box-card-footer {
     margin-top: auto;
     padding-top: 0.75rem;
-    border-top: 1px solid #F0EBE3;
+    border-top: 2px solid $navy;
     display: flex;
     gap: 0.4rem;
     flex-wrap: wrap;
@@ -153,7 +158,8 @@
 // ── Detail Card ──────────────────────────────────────────────
 .detail-card {
   background: $white;
-  border-radius: $border-radius-xxl;
+  border: 2.5px solid $navy;
+  border-radius: $border-radius-xl;
   box-shadow: $card-box-shadow;
   overflow: hidden;
 }
@@ -163,14 +169,16 @@
   max-height: 420px;
   object-fit: cover;
   border-radius: $border-radius-xl;
+  border: 2.5px solid $navy;
   box-shadow: $box-shadow;
 }
 
 .detail-card-no-photo {
   width: 100%;
   height: 320px;
-  background: linear-gradient(135deg, #FFF4EC, #FFE8D6);
+  background: $cream;
   border-radius: $border-radius-xl;
+  border: 2.5px solid $navy;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,6 +189,7 @@
 // ── Stat Card ──────────────────────────────────────────────
 .stat-card {
   background: $white;
+  border: 2.5px solid $navy;
   border-radius: $border-radius-xl;
   box-shadow: $card-box-shadow;
   padding: 1.25rem 1.5rem;
@@ -192,16 +201,17 @@
     width: 52px;
     height: 52px;
     border-radius: $border-radius-lg;
+    border: 2px solid $navy;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.3rem;
     flex-shrink: 0;
 
-    &.stat-icon-coral { background: rgba($coral, 0.12); color: $coral; }
-    &.stat-icon-mint  { background: rgba($mint, 0.12);  color: $mint;  }
-    &.stat-icon-sky   { background: rgba($sky, 0.12);   color: $sky;   }
-    &.stat-icon-yellow{ background: rgba($yellow, 0.18); color: darken($yellow, 20%); }
+    &.stat-icon-coral { background: rgba($coral, 0.15); color: $coral; }
+    &.stat-icon-mint  { background: rgba($mint, 0.15);  color: darken($mint, 10%); }
+    &.stat-icon-sky   { background: rgba($sky, 0.15);   color: darken($sky, 15%); }
+    &.stat-icon-yellow{ background: rgba($yellow, 0.3); color: darken($yellow, 25%); }
   }
 
   .stat-value {

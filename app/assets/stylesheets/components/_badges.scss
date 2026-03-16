@@ -2,22 +2,26 @@
   background: rgba($yellow, 0.25);
   color: darken($yellow, 28%);
   font-weight: 700;
+  border: 1.5px solid darken($yellow, 15%);
 }
 
 .badge-validated {
   background: rgba($mint, 0.15);
   color: darken($mint, 15%);
   font-weight: 700;
+  border: 1.5px solid darken($mint, 5%);
 }
 
 .badge-condition {
   background: rgba($sky, 0.15);
   color: darken($sky, 20%);
   font-weight: 700;
+  border: 1.5px solid darken($sky, 10%);
 
   &.bad {
     background: rgba($danger-red, 0.1);
     color: $danger-red;
+    border-color: $danger-red;
   }
 }
 
@@ -25,12 +29,14 @@
   background: rgba($purple, 0.12);
   color: $purple;
   font-weight: 700;
+  border: 1.5px solid $purple;
 }
 
 .badge-category {
   background: rgba($coral, 0.1);
   color: $coral;
   font-weight: 700;
+  border: 1.5px solid $coral;
 }
 
 .condition-pill {
@@ -47,10 +53,12 @@
   &.ok {
     background: rgba($mint, 0.15);
     color: darken($mint, 15%);
+    border: 1.5px solid darken($mint, 5%);
   }
 
   &.ko {
     background: rgba($danger-red, 0.08);
     color: $danger-red;
+    border: 1.5px solid $danger-red;
   }
 }

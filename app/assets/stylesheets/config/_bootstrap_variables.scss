@@ -14,55 +14,58 @@ $danger:     $danger-red;
 $light:      $cream;
 $dark:       $navy;
 
-// Border radius — arrondi généreux pour un style jouet
-$border-radius-sm:  0.375rem;
-$border-radius:     0.75rem;
-$border-radius-lg:  1rem;
-$border-radius-xl:  1.25rem;
-$border-radius-xxl: 1.75rem;
+// Border radius — Neo Memphis : plus angulaire
+$border-radius-sm:   0.25rem;
+$border-radius:      0.5rem;
+$border-radius-lg:   0.625rem;
+$border-radius-xl:   0.75rem;
+$border-radius-xxl:  1rem;
 $border-radius-pill: 50rem;
 
-// Card
-$card-border-width:  0;
+// Card — bordure épaisse + offset shadow solide
+$card-border-width:  2.5px;
+$card-border-color:  $navy;
 $card-border-radius: $border-radius-xl;
-$card-box-shadow:    0 4px 24px rgba(26, 43, 74, 0.08);
+$card-box-shadow:    4px 4px 0 $navy;
 
-// Buttons
+// Buttons — bold + offset shadow
 $btn-border-radius:    $border-radius-pill;
 $btn-border-radius-sm: $border-radius-pill;
 $btn-border-radius-lg: $border-radius-pill;
-$btn-font-weight:      600;
+$btn-font-weight:      800;
+$btn-border-width:     2px;
 $btn-padding-x:        1.25rem;
 $btn-padding-y:        0.55rem;
 
 // Inputs
-$input-border-radius:    $border-radius-lg;
-$input-border-radius-sm: $border-radius;
-$input-border-radius-lg: $border-radius-xl;
-$input-border-color:     #E2E8F0;
+$input-border-radius:      $border-radius-lg;
+$input-border-radius-sm:   $border-radius;
+$input-border-radius-lg:   $border-radius-xl;
+$input-border-color:       $navy;
+$input-border-width:       2px;
 $input-focus-border-color: $coral;
-$input-focus-box-shadow: 0 0 0 0.2rem rgba($coral, 0.2);
-$input-padding-y: 0.65rem;
-$input-padding-x: 1rem;
+$input-focus-box-shadow:   3px 3px 0 $coral;
+$input-padding-y:          0.65rem;
+$input-padding-x:          1rem;
 
 // Navbar
-$navbar-padding-y: 0.75rem;
-$navbar-light-color: $navy;
-$navbar-light-active-color: $coral;
-$navbar-light-hover-color: $coral;
+$navbar-padding-y:           0.75rem;
+$navbar-light-color:         $navy;
+$navbar-light-active-color:  $coral;
+$navbar-light-hover-color:   $coral;
 
 // Badge
-$badge-border-radius: $border-radius-pill;
-$badge-font-size: 0.75em;
-$badge-font-weight: 700;
-$badge-padding-x: 0.75em;
-$badge-padding-y: 0.4em;
+$badge-border-radius: $border-radius;
+$badge-font-size:     0.75em;
+$badge-font-weight:   800;
+$badge-padding-x:     0.65em;
+$badge-padding-y:     0.35em;
 
 // Headings
-$headings-font-weight: 400;
-$headings-color: $navy;
+$headings-font-weight: 700;
+$headings-color:       $navy;
 
-// Box shadow
-$box-shadow-sm: 0 2px 8px rgba(26, 43, 74, 0.06);
-$box-shadow:    0 4px 24px rgba(26, 43, 74, 0.08);
-$box-shadow-lg: 0 8px 40px rgba(26, 43, 74, 0.12);
+// Box shadow — offset solide Neo Memphis
+$box-shadow-sm: 2px 2px 0 $navy;
+$box-shadow:    4px 4px 0 $navy;
+$box-shadow-lg: 6px 6px 0 $navy;
