@@ -115,6 +115,7 @@
 </div>
 
 <!-- ci-dessous la partie du code pour le  tracage des boites -->
+
   <% if @timeline.any? %>
     <div class="row mt-4">
       <div class="col-12">
@@ -122,7 +123,7 @@
         <ul>
           <% @timeline.each do |action| %>
             <li>
-              <%= action.created_at.strftime('%d/%m/%Y à %H:%M') %> —
+              <%= action.created_at.in_time_zone('Europe/Paris').strftime('%d/%m/%Y à %H:%M') %> —
               <%= action.content %>
             </li>
           <% end %>

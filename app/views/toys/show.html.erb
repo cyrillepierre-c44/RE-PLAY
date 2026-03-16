@@ -116,7 +116,7 @@
         <ul>
           <% @timeline.each do |action| %>
             <li>
-              <%= action.created_at.strftime('%d/%m/%Y à %H:%M') %> —
+              <%= action.created_at.in_time_zone('Europe/Paris').strftime('%d/%m/%Y à %H:%M') %> —
               <%= action.content %>
             </li>
           <% end %>
