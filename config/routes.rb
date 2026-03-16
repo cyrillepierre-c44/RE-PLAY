@@ -19,4 +19,5 @@ Rails.application.routes.draw do
   get "about_us", to: "pages#about_us"
   get "onboarding", to: "pages#onboarding"
   get "enjoue", to: "pages#enjoue"
+  get "dashboard", to: "pages#dashboard"
 end

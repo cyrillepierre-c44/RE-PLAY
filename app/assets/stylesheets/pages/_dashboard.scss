@@ -1,0 +1,473 @@
+// ── Dashboard ──────────────────────────────────────────────────────
+
+.dashboard-hero {
+  background: linear-gradient(135deg, $navy 0%, darken($navy, 8%) 100%);
+  padding: 2.5rem 1.5rem 3.5rem;
+  color: $white;
+
+  .dashboard-title {
+    font-size: 2rem;
+    color: $white;
+    margin-bottom: 0.35rem;
+  }
+
+  .dashboard-subtitle {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+  }
+}
+
+.dashboard-container {
+  margin-top: -1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+// ── Filtres ────────────────────────────────────────────────────────
+
+.dashboard-filters {
+  border: none;
+  box-shadow: $card-box-shadow;
+  border-radius: $border-radius-xl;
+
+  .filter-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: $gray;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.4rem;
+  }
+
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    min-width: 140px;
+  }
+
+  .filter-select {
+    border-radius: $border-radius-lg;
+    border-color: #E5E7EB;
+    font-size: 0.88rem;
+  }
+
+  .filter-actions {
+    flex-direction: row;
+    gap: 0.5rem;
+    min-width: auto;
+  }
+}
+
+.period-btns {
+  .btn-period {
+    background: $light-gray;
+    border: 1.5px solid #E5E7EB;
+    color: $gray;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.35rem 0.9rem;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: rgba($coral, 0.08);
+      border-color: $coral;
+      color: $coral;
+    }
+
+    &.active {
+      background: $coral;
+      border-color: $coral;
+      color: $white;
+    }
+  }
+}
+
+.custom-date-panel {
+  background: rgba($coral, 0.04);
+  border: 1.5px solid rgba($coral, 0.2);
+  border-radius: $border-radius-lg;
+  padding: 1rem 1.25rem;
+  animation: fadeSlideIn 0.2s ease;
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+.date-input {
+  border-radius: $border-radius-lg;
+  border-color: rgba($coral, 0.3);
+  min-width: 150px;
+
+  &:focus {
+    border-color: $coral;
+    box-shadow: 0 0 0 3px rgba($coral, 0.15);
+  }
+}
+
+// ── KPI Cards ──────────────────────────────────────────────────────
+
+.kpi-card {
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $card-box-shadow;
+  padding: 1.5rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  border-left: 4px solid transparent;
+  transition: transform 0.18s ease;
+
+  &:hover { transform: translateY(-3px); }
+
+  .kpi-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .kpi-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .kpi-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: $gray;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  &.kpi-total   { border-color: $sky;    .kpi-icon, .kpi-value { color: $sky; } }
+  &.kpi-admin   { border-color: $purple; .kpi-icon, .kpi-value { color: $purple; } }
+  &.kpi-user    { border-color: $mint;   .kpi-icon, .kpi-value { color: $mint; } }
+  &.kpi-rework  { border-color: $coral;  .kpi-icon, .kpi-value { color: $coral; } }
+}
+
+// ── Dashboard card generic ─────────────────────────────────────────
+
+.dashboard-card {
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $card-box-shadow;
+  padding: 1.5rem;
+
+  .dashboard-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $navy;
+    margin-bottom: 1.25rem;
+
+    .text-sky    { color: $sky; }
+    .text-coral  { color: $coral; }
+    .text-purple { color: $purple; }
+    .text-mint   { color: $mint; }
+    .text-yellow { color: darken($yellow, 15%); }
+    .text-navy   { color: $navy; }
+  }
+}
+
+// ── Split stats ───────────────────────────────────────────────────
+
+.split-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+
+  .split-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 1;
+
+    .split-value {
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .split-label {
+      font-size: 0.8rem;
+      color: $gray;
+      font-weight: 600;
+    }
+  }
+
+  .split-divider {
+    width: 1px;
+    height: 48px;
+    background: #E5E7EB;
+  }
+}
+
+.text-sky    { color: $sky !important; }
+.text-coral  { color: $coral !important; }
+.text-purple { color: $purple !important; }
+.text-mint   { color: $mint !important; }
+
+.progress-legend {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: $gray;
+}
+
+.bg-sky    { background-color: $sky !important; }
+.bg-coral  { background-color: $coral !important; }
+.bg-purple { background-color: $purple !important; }
+.bg-mint   { background-color: $mint !important; }
+
+// ── Action types grid ──────────────────────────────────────────────
+
+.action-types-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+
+  @media (max-width: 575px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .action-type-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1.25rem 0.75rem;
+    border-radius: $border-radius-lg;
+    text-align: center;
+
+    i { font-size: 1.6rem; }
+
+    .action-type-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .action-type-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    &.action-type-create {
+      background: linear-gradient(135deg, #EDFCF6, #B8F5E0);
+      i, .action-type-value { color: darken($mint, 10%); }
+      .action-type-label { color: darken($mint, 20%); }
+    }
+
+    &.action-type-rework {
+      background: linear-gradient(135deg, #FFF4EC, #FFD6B8);
+      i, .action-type-value { color: $coral; }
+      .action-type-label { color: darken($coral, 10%); }
+    }
+
+    &.action-type-verify {
+      background: linear-gradient(135deg, #FDF0FF, #E8C4FF);
+      i, .action-type-value { color: $purple; }
+      .action-type-label { color: darken($purple, 10%); }
+    }
+
+    &.action-type-delete {
+      background: linear-gradient(135deg, #FFF0F0, #FFD0D0);
+      i, .action-type-value { color: $danger-red; }
+      .action-type-label { color: darken($danger-red, 10%); }
+    }
+  }
+}
+
+// ── Rework analysis ───────────────────────────────────────────────
+
+.rework-grid {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+
+  @media (max-width: 575px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .rework-total {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 90px;
+
+    .rework-number {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: $coral;
+      line-height: 1;
+    }
+
+    .rework-desc {
+      font-size: 0.75rem;
+      color: $gray;
+      text-align: center;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      max-width: 80px;
+    }
+  }
+
+  .rework-breakdown {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .rework-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .rework-role {
+    font-size: 0.82rem;
+    font-weight: 700;
+    min-width: 90px;
+    text-align: right;
+
+    &.role-admin { color: $purple; }
+    &.role-user  { color: $mint; }
+  }
+
+  .rework-bar-wrap {
+    flex: 1;
+    height: 14px;
+    background: $light-gray;
+    border-radius: 7px;
+    overflow: hidden;
+  }
+
+  .rework-bar {
+    height: 100%;
+    background: linear-gradient(90deg, $coral, lighten($coral, 15%));
+    border-radius: 7px;
+    transition: width 0.4s ease;
+
+    &.rework-bar-user {
+      background: linear-gradient(90deg, $mint, lighten($mint, 15%));
+    }
+  }
+
+  .rework-count {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: $navy;
+    min-width: 28px;
+    text-align: right;
+  }
+}
+
+// ── Table des actions ─────────────────────────────────────────────
+
+.table-actions {
+  font-size: 0.88rem;
+
+  thead th {
+    background: $light-gray;
+    color: $gray;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: none;
+    padding: 0.6rem 0.75rem;
+
+    &:first-child { border-radius: $border-radius-lg 0 0 $border-radius-lg; }
+    &:last-child  { border-radius: 0 $border-radius-lg $border-radius-lg 0; }
+  }
+
+  tbody td {
+    vertical-align: middle;
+    padding: 0.6rem 0.75rem;
+    border-color: #F3F4F6;
+  }
+
+  tbody tr:hover td {
+    background: rgba($cream, 0.6);
+  }
+}
+
+.user-badge {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: $navy;
+}
+
+.role-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &.role-pill-admin { background: rgba($purple, 0.12); color: darken($purple, 5%); }
+  &.role-pill-user  { background: rgba($mint, 0.12);   color: darken($mint, 20%); }
+}
+
+.type-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  &.type-pill-toy { background: rgba($sky, 0.12);   color: darken($sky, 25%); }
+  &.type-pill-box { background: rgba($coral, 0.12); color: darken($coral, 5%); }
+}
+
+.action-badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  &.action-badge-create  { background: rgba($mint, 0.12);        color: darken($mint, 20%); }
+  &.action-badge-update  { background: rgba($coral, 0.12);       color: darken($coral, 5%); }
+  &.action-badge-verify  { background: rgba($purple, 0.12);      color: darken($purple, 5%); }
+  &.action-badge-delete  { background: rgba($danger-red, 0.1);   color: $danger-red; }
+  &.action-badge-other   { background: $light-gray;              color: $gray; }
+}
+
+// ── Empty state ───────────────────────────────────────────────────
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: $gray;
+
+  i {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    opacity: 0.4;
+    display: block;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0;
+  }
+}
