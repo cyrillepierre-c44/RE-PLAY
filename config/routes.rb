@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   root to: "pages#home"
   resources :boxes, only: [:index, :show, :new, :create, :edit, :update] do
     resources :toys, only: [:new, :create]
+    member do
+      patch :toggle_empty
+    end
   end
 
   resources :boxes, only: [:destroy]
@@ -16,8 +19,12 @@ Rails.application.routes.draw do
   get "about_us", to: "pages#about_us"
   get "onboarding", to: "pages#onboarding"
   get "enjoue", to: "pages#enjoue"
+<<<<<<< HEAD
   get "equipe/cyrille-pierre", to: "pages#cyrille_pierre", as: :cyrille_pierre
   get "equipe/marc-thomas", to: "pages#marc_thomas", as: :marc_thomas
   get "equipe/loic-laplagne", to: "pages#loic_laplagne", as: :loic_laplagne
 
+=======
+  get "dashboard", to: "pages#dashboard"
+>>>>>>> 55f3750e962e82541cf5c00af4cf831fccbea384
 end

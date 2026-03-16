@@ -1,25 +1,49 @@
-<h2>Sign up</h2>
+<% content_for :title, "Créer un compte · RE-PLAY" %>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card-header">
+      <div class="auth-logo">RE-PLAY</div>
+      <p class="auth-subtitle">Rejoignez l'équipe Enjoué</p>
+    </div>
+    <div class="auth-card-body">
+      <h2 style="font-size:1.3rem; color:#1A2B4A; margin-bottom:1.25rem;">Créer un compte</h2>
 
-  <div class="form-inputs">
-    <%= f.input :email,
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" }%>
-    <%= f.input :password,
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+        <%= f.error_notification message: f.object.errors.full_messages.to_sentence,
+              wrapper_html: { class: "alert", style: "background:rgba(230,57,70,0.08);color:#E63946;border-radius:0.75rem;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.875rem;font-weight:600;" } %>
+
+        <div class="mb-3">
+          <%= f.input :email,
+            label: "Adresse e-mail",
+            required: true,
+            autofocus: true,
+            input_html: { autocomplete: "email", class: "form-control", placeholder: "votre@email.com" },
+            label_html: { class: "form-label" } %>
+        </div>
+        <div class="mb-3">
+          <%= f.input :password,
+            label: "Mot de passe",
+            required: true,
+            hint: ("#{@minimum_password_length} caractères minimum" if @minimum_password_length),
+            input_html: { autocomplete: "new-password", class: "form-control", placeholder: "••••••••" },
+            label_html: { class: "form-label" } %>
+        </div>
+        <div class="mb-4">
+          <%= f.input :password_confirmation,
+            label: "Confirmer le mot de passe",
+            required: true,
+            input_html: { autocomplete: "new-password", class: "form-control", placeholder: "••••••••" },
+            label_html: { class: "form-label" } %>
+        </div>
+        <div class="d-grid">
+          <%= f.button :submit, "Créer mon compte", class: "btn btn-primary btn-lg" %>
+        </div>
+      <% end %>
+
+      <div class="auth-links">
+        Déjà un compte ? <%= link_to "Se connecter", new_session_path(resource_name) %>
+      </div>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>

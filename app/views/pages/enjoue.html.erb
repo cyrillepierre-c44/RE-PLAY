@@ -1,47 +1,54 @@
-<section style="margin: 60px auto; max-width: 1000px; padding: 0 20px; text-align: center;">
+<% content_for :title, "Enjoué · RE-PLAY" %>
 
-  <!-- TITRE -->
-  <h2 style="font-size: 2.2rem; font-weight: bold; margin-bottom: 10px;">
-    ENJOUÉ : Le jouet bon pour la planète et bon pour l'emploi.
+<div style="background: linear-gradient(135deg, #1A2B4A, #2D4373); padding: 4rem 1.5rem; text-align: center; color: white;">
+  <h1 style="font-size: 2.5rem; color: white; margin-bottom: 0.5rem;">
+    ENJOUÉ
+  </h1>
+  <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 0;">
+    Le jouet bon pour la planète et bon pour l'emploi.
+  </p>
+</div>
+
+<div class="container py-5" style="max-width: 1000px;">
+
+  <h2 style="text-align:center; font-size:1.5rem; color:#6B7280; font-family: inherit; font-weight:600; margin-bottom: 2rem;">
+    Les jeux adaptés à chacun
   </h2>
 
-  <!-- SOUS-TITRE -->
-  <h3 style="font-size: 1.5rem; font-weight: 500; margin-bottom: 40px; color: #555;">
-    Les jeux adaptés à chacun
-  </h3>
-
-  <!-- 3 COLONNES -->
-  <div style="display: flex; justify-content: space-between; gap: 20px; margin-bottom: 40px;">
-
-    <div style="flex: 1; background: #f7f7f7; padding: 20px; border-radius: 8px;">
-      <h4 style="font-size: 1.3rem; margin-bottom: 10px;">👶 Particuliers</h4>
-      <p style="font-size: 1rem; line-height: 1.6;">
-        Jouer n’a jamais été aussi responsable grâce à nos jouets de seconde main, écologiques et solidaires !
-      </p>
-    </div>
-
-    <div style="flex: 1; background: #f7f7f7; padding: 20px; border-radius: 8px;">
-      <h4 style="font-size: 1.3rem; margin-bottom: 10px;">🧸 Professionnels de l’enfance</h4>
-      <p style="font-size: 1rem; line-height: 1.6;">
-        Équipez votre structure avec des jouets rigoureusement contrôlés et sélectionnés pour répondre à vos besoins.
-      </p>
-    </div>
-
-    <div style="flex: 1; background: #f7f7f7; padding: 20px; border-radius: 8px;">
-      <h4 style="font-size: 1.3rem; margin-bottom: 10px;">💼 Entreprises</h4>
-      <p style="font-size: 1rem; line-height: 1.6;">
-        Faites vivre votre RSE grâce à nos actions à impact, ludiques et fédératrices !
-      </p>
-    </div>
-
+  <div class="row g-3 mb-5">
+    <% [
+      { icon: "👶", title: "Particuliers", color: "#FF6B35", bg: "#FFF4EC",
+        text: "Jouer n'a jamais été aussi responsable grâce à nos jouets de seconde main, écologiques et solidaires !" },
+      { icon: "🧸", title: "Professionnels de l'enfance", color: "#4CC9F0", bg: "#EBF9FF",
+        text: "Équipez votre structure avec des jouets rigoureusement contrôlés et sélectionnés pour répondre à vos besoins." },
+      { icon: "💼", title: "Entreprises", color: "#9B5DE5", bg: "#F5EEFF",
+        text: "Faites vivre votre RSE grâce à nos actions à impact, ludiques et fédératrices !" }
+    ].each do |card| %>
+      <div class="col-md-4">
+        <div style="background: white; border-radius: 1.25rem; box-shadow: 0 4px 24px rgba(26,43,74,0.08);
+                    padding: 2rem; text-align: center; height: 100%;
+                    border-top: 4px solid <%= card[:color] %>;">
+          <div style="font-size: 2.5rem; margin-bottom: 0.75rem;"><%= card[:icon] %></div>
+          <h3 style="font-size: 1.1rem; font-weight: 700; color: #1A2B4A; margin-bottom: 0.75rem;"><%= card[:title] %></h3>
+          <p style="font-size: 0.95rem; line-height: 1.7; color: #4B5563; margin: 0;"><%= card[:text] %></p>
+        </div>
+      </div>
+    <% end %>
   </div>
 
-  <!-- TEXTE GLOBAL -->
-  <p style="font-size: 1.2rem; line-height: 1.8; max-width: 900px; margin: 0 auto;">
-    Avec un jouet de seconde main, vous limitez la surproduction de nouveaux jouets et la pollution qu’elle génère.
-    Vous permettez aussi l’emploi en CDI de chômeurs de longue durée ! Enjoué a mis au point des actions clés en main
-    pour les entreprises qui souhaitent accompagner leurs collaborateurs dans la transition écologique et renforcer
-    la cohésion de leurs équipes.
-  </p>
+  <div style="background: linear-gradient(135deg, #FFF4EC, #FFFBF4); border-radius: 1.5rem;
+              padding: 2.5rem; text-align: center; border: 1px solid rgba(255,107,53,0.15);">
+    <p style="font-size: 1.05rem; line-height: 1.9; color: #1A2B4A; max-width: 800px; margin: 0 auto;">
+      Avec un jouet de seconde main, vous limitez la surproduction de nouveaux jouets et la pollution qu'elle génère.
+      Vous permettez aussi l'emploi en CDI de chômeurs de longue durée ! Enjoué a mis au point des actions clés en main
+      pour les entreprises qui souhaitent accompagner leurs collaborateurs dans la transition écologique et renforcer
+      la cohésion de leurs équipes.
+    </p>
+    <div class="mt-4">
+      <%= link_to onboarding_path, class: "btn btn-primary" do %>
+        <i class="fa-solid fa-arrow-left me-2"></i>Retour au guide
+      <% end %>
+    </div>
+  </div>
 
-</section>
+</div>

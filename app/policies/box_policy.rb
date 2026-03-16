@@ -33,9 +33,15 @@ class BoxPolicy < ApplicationPolicy
 
   def update?
     record.actions.where(user: user).any?
+    user.admin? || record.actions.where(user: user).any?
   end
 
   def destroy?
     record.actions.where(user: user).any?
+    user.admin? || record.actions.where(user: user).any?
+  end
+
+  def toggle_empty?
+    true
   end
 end

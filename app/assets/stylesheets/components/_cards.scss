@@ -1,0 +1,220 @@
+// ── Toy Cards ──────────────────────────────────────────────
+.toy-card {
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $card-box-shadow;
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: $box-shadow-lg;
+  }
+
+  .toy-card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .toy-card-no-img {
+    height: 200px;
+    background: linear-gradient(135deg, #FFF4EC, #FFE8D6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba($coral, 0.4);
+    font-size: 3rem;
+  }
+
+  .toy-card-body {
+    padding: 1rem 1.1rem 1.1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .toy-card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $navy;
+    margin-bottom: 0.35rem;
+  }
+
+  .toy-card-meta {
+    font-size: 0.8rem;
+    color: $gray;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    i { color: $coral; }
+  }
+
+  .toy-card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .toy-card-price {
+    font-family: $headers-font;
+    font-size: 1.4rem;
+    color: $coral;
+    margin-bottom: 0.85rem;
+
+    span {
+      font-size: 0.9rem;
+      color: $gray;
+      font-family: $body-font;
+    }
+  }
+
+  .toy-card-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: auto;
+  }
+}
+
+// ── Box Cards ──────────────────────────────────────────────
+.box-card {
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $card-box-shadow;
+  padding: 1.25rem;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $box-shadow-lg;
+    color: inherit;
+  }
+
+  .box-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .box-card-id {
+    font-family: $headers-font;
+    font-size: 1.5rem;
+    color: $navy;
+    line-height: 1;
+  }
+
+  .box-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: $border-radius-lg;
+    background: linear-gradient(135deg, #FFF4EC, #FFE0C8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $coral;
+    font-size: 1.15rem;
+  }
+
+  .box-card-category {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $navy;
+  }
+
+  .box-card-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .box-card-footer {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid #F0EBE3;
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+}
+
+// ── Detail Card ──────────────────────────────────────────────
+.detail-card {
+  background: $white;
+  border-radius: $border-radius-xxl;
+  box-shadow: $card-box-shadow;
+  overflow: hidden;
+}
+
+.detail-card-photo {
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+  border-radius: $border-radius-xl;
+  box-shadow: $box-shadow;
+}
+
+.detail-card-no-photo {
+  width: 100%;
+  height: 320px;
+  background: linear-gradient(135deg, #FFF4EC, #FFE8D6);
+  border-radius: $border-radius-xl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba($coral, 0.35);
+  font-size: 5rem;
+}
+
+// ── Stat Card ──────────────────────────────────────────────
+.stat-card {
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $card-box-shadow;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: $border-radius-lg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+
+    &.stat-icon-coral { background: rgba($coral, 0.12); color: $coral; }
+    &.stat-icon-mint  { background: rgba($mint, 0.12);  color: $mint;  }
+    &.stat-icon-sky   { background: rgba($sky, 0.12);   color: $sky;   }
+    &.stat-icon-yellow{ background: rgba($yellow, 0.18); color: darken($yellow, 20%); }
+  }
+
+  .stat-value {
+    font-family: $headers-font;
+    font-size: 2rem;
+    color: $navy;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: $gray;
+    font-weight: 500;
+    margin-top: 0.1rem;
+  }
+}

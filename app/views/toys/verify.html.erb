@@ -1,57 +1,81 @@
-<h1>formulaire de validation du jouet</h1>
+<% content_for :title, "Contrôle qualité · Jouet ##{@toy.id} · RE-PLAY" %>
 
-<div class="container" >
-  <div class="request-form">
-<%= simple_form_for(@toy, url: confirm_verify_toy_path(@toy), method: :patch) do |f| %>
+<div class="form-page">
+  <div class="container">
+    <%= link_to toy_path(@toy), class: "btn btn-ghost btn-sm mb-3" do %>
+      <i class="fa-solid fa-arrow-left me-1"></i>Retour au jouet #<%= @toy.id %>
+    <% end %>
 
-      <div class="mb-3">
-        <%= f.input :photo,
-          as: :file,
-          label: "Photo de l'objet",
-          input_html: { class: "form-control", id: "toy-photo-input", accept: "image/*" },
-          label_html: { class: "form-label" } %>
-        <div id="photo-preview" class="mt-2 text-center"></div>
+    <div class="form-card" style="max-width: 620px;">
+      <div class="form-card-header" style="background: linear-gradient(135deg, rgba(155,93,229,0.08), rgba(76,201,240,0.08));">
+        <div class="form-card-icon" style="background: linear-gradient(135deg, rgba(155,93,229,0.15), rgba(76,201,240,0.2)); color: #9B5DE5;">
+          <i class="fa-solid fa-clipboard-check"></i>
+        </div>
+        <h1 class="form-card-title">Contrôle qualité</h1>
+        <p class="form-card-subtitle">
+          Jouet #<%= @toy.id %> · <%= @toy.category.name %>
+        </p>
       </div>
 
-      <script>
-        document.addEventListener('DOMContentLoaded', function() {
-          const photoInput = document.getElementById('toy-photo-input');
-          const previewContainer = document.getElementById('photo-preview');
+      <div class="form-card-body">
+        <% if @toy.photo.attached? %>
+          <div class="text-center mb-4">
+            <%= image_tag @toy.photo, class: "current-photo", style: "max-width: 240px; display: block; margin: 0 auto;" %>
+          </div>
+        <% end %>
 
-          if (photoInput) {
-            photoInput.addEventListener('change', function(event) {
-              previewContainer.innerHTML = '';
+        <%= simple_form_for(@toy, url: confirm_verify_toy_path(@toy), method: :patch) do |f| %>
 
-              if (event.target.files && event.target.files[0]) {
-                const reader = new FileReader();
+          <%# Photo update %>
+          <div class="mb-3">
+            <label class="form-label">Mettre à jour la photo</label>
+            <div class="photo-upload-zone">
+              <div class="upload-icon"><i class="fa-solid fa-camera"></i></div>
+              <%= f.input :photo,
+                as: :file,
+                label: false,
+                input_html: { class: "form-control", id: "toy-photo-input", accept: "image/*",
+                              style: "background:transparent; border:none; padding:0; font-size:0.85rem;" } %>
+              <div id="photo-preview" class="mt-2 text-center"></div>
+            </div>
+          </div>
 
-                reader.onload = function(e) {
-                  const img = document.createElement('img');
-                  img.src = e.target.result;
-                  img.className = 'img-thumbnail';
-                  img.style.maxWidth = '200px';
-                  img.alt = 'Aperçu de la photo';
-                  previewContainer.appendChild(img);
-                };
-
-                reader.readAsDataURL(event.target.files[0]);
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const photoInput = document.getElementById('toy-photo-input');
+              const previewContainer = document.getElementById('photo-preview');
+              if (photoInput) {
+                photoInput.addEventListener('change', function(event) {
+                  previewContainer.innerHTML = '';
+                  if (event.target.files && event.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                      const img = document.createElement('img');
+                      img.src = e.target.result;
+                      img.style.maxWidth = '200px';
+                      img.style.borderRadius = '0.75rem';
+                      img.alt = 'Aperçu';
+                      previewContainer.appendChild(img);
+                    };
+                    reader.readAsDataURL(event.target.files[0]);
+                  }
+                });
               }
             });
-          }
-        });
-      </script>
+          </script>
 
-      <% if @toy.photo.attached? %>
-        <div class="mb-3 text-center">
-          <%= image_tag @toy.photo, class: "img-thumbnail", style: "max-width: 200px;", alt: "Photo actuelle du jouet" %>
-          <p class="text-muted small">Photo actuelle</p>
-        </div>
-      <% end %>
+          <%# Catégorie %>
+          <div class="mb-3">
+            <%= f.association :category,
+              label: "Catégorie",
+              input_html: { class: "form-select" },
+              label_html: { class: "form-label" } %>
+          </div>
 
       <div class="mb-3">
         <%= f.association :category,
           label: "Catégorie du jouet",
-          input_html: { class: "form-control", value: @box.category.name } %>
+          input_html: { class: "form-control", selected: @box.category.name } %>
       </div>
 
       <div class="mb-3">
@@ -90,19 +114,21 @@
 
       <div class="mb-3">
         <%= f.input :location,
-          label: "Lieu où va etre rangé l'objet",
+          label: "Lieu où va etre rangé le jouet",
           required: true,
-          placeholder: "Saisissez le futur emplacement de l'objet",
+          placeholder: "Rack A, Etagère 0, Boîte 0",
           input_html: {
             class: "form-control",
-            value: (f.object.location == "En attente de placement" ? "" : f.object.location)
+              value: @toy.location || "Rack A, Etagère 0, Boîte 0"
           } %>
       </div>
 
-      <div class="d-grid gap-2">
-        <%= f.button :submit, "Finaliser le contrôle qualité", class: "btn btn-primary btn-lg" %>
-      </div>
 
+      <div class="d-flex gap-2 justify-content-center">
+        <%= button_tag "Mise en vente", name:  :status, value: "market", class: "btn btn-success" %>
+        <%= button_tag "Retour en valorisation", name: :status, value: "review", class: "btn btn-warning" %>
+        <%= button_tag "Supprimer", name: :status, value: "suppr", class: "btn btn-danger" %>
+      </div>
     <% end %>
   </div>
 </div>
