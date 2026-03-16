@@ -7,8 +7,8 @@ class Box < ApplicationRecord
   after_initialize :set_default_status, if: :new_record?
 
   validates :status, presence: true
-  scope :active,   -> { where.not(status: :suppr) }
-  scope :deleted,  -> { where(status: :suppr) }
+  scope :active, -> { where(status: :pending) }
+  scope :deleted, -> { where(status: :suppr) }
 
   private
 

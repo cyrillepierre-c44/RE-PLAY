@@ -16,10 +16,16 @@
 <div class="mb-4">
   <div class="filter-tabs">
     <%= link_to boxes_path,
-          class: "filter-tab #{'active' unless params[:filter] == 'suppr'}" do %>
+          class: "filter-tab #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
       <i class="fa-solid fa-box-open"></i>
       En cours
       <span><%= Box.active.count %></span>
+    <% end %>
+    <%= link_to boxes_path(filter: "empty"),
+          class: "filter-tab #{'active' if params[:filter] == 'empty'}" do %>
+      <i class="fa-solid fa-box-open"></i>
+      Vides
+      <span><%= Box.empty.count %></span>
     <% end %>
     <%= link_to boxes_path(filter: "suppr"),
           class: "filter-tab #{'active' if params[:filter] == 'suppr'}" do %>

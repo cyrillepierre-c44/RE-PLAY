@@ -60,6 +60,13 @@
               <i class="fa-solid fa-trash me-1"></i>Supprimer
             <% end %>
           <% end %>
+          <%= button_to toggle_empty_box_path(@box), method: :patch, class: "btn btn-sm" do %>
+            <% if @box.empty? %>
+              <i class="fa-solid fa-box me-1"></i>Marquer non vide
+            <% else %>
+              <i class="fa-solid fa-box-open me-1"></i>Marquer vide
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>
