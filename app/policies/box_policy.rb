@@ -40,6 +40,6 @@ class BoxPolicy < ApplicationPolicy
   end
 
   def toggle_empty?
-    user.admin? || record.actions.where(user: user).any?
+    true
   end
 end
