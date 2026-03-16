@@ -14,6 +14,8 @@ class ToysController < ApplicationController
     base_scope = policy_scope(Toy)
     if params[:filter] == "validated"
       @toys = base_scope.validated
+    elsif params[:filter] == "deleted"
+      @toys = base_scope.deleted
     else
       @toys = base_scope.waiting
     end
