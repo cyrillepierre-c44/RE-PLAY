@@ -1,4 +1,6 @@
 class PagesController < ApplicationController
+  include DashboardPareto
+
   skip_before_action :authenticate_user!, only: [:home]
 
   def home
@@ -17,7 +19,7 @@ class PagesController < ApplicationController
 
   def dashboard
     authorize :page, :dashboard?
-    @period      = params[:period].presence || "month"
+    @period      = params[:period].presence || "prev_day"
     @type_filter = params[:type].presence
     @category_id = params[:category_id].presence
     @user_id     = params[:user_id].presence
@@ -39,15 +41,23 @@ class PagesController < ApplicationController
   end
 
   def period_range
-    return parse_custom_range if @period == "custom"
-    return last_week_range    if @period == "last_week"
+    return parse_custom_range               if @period == "custom"
+    return last_week_range                  if @period == "last_week"
+    return Time.current.beginning_of_day..Time.current.end_of_day if @period == "today"
 
-    Date.yesterday.beginning_of_day..Date.yesterday.end_of_day
+    prev = previous_working_day
+    prev.beginning_of_day..prev.end_of_day
   end
 
   def last_week_range
     last_monday = Date.current.beginning_of_week(:monday) - 7.days
     last_monday.beginning_of_day..last_monday.next_day(6).end_of_day
+  end
+
+  def previous_working_day
+    day = Date.current - 1.day
+    day -= 1.day while day.saturday? || day.sunday?
+    day
   end
 
   def parse_custom_range
@@ -81,6 +91,7 @@ class PagesController < ApplicationController
     build_count_stats
     build_rework_stats
     build_type_stats
+    build_pareto_stats
   end
 
   def build_count_stats
@@ -89,6 +100,10 @@ class PagesController < ApplicationController
     @actions_by_user   = @actions.joins(:user).where(users: { admin: false }).count
     @toy_actions_count = @actions.where(actionable_type: "Toy").count
     @box_actions_count = @actions.where(actionable_type: "Box").count
+    @box_ids           = @actions.where(actionable_type: "Box").pluck(:actionable_id).uniq
+    @toy_ids           = @actions.where(actionable_type: "Toy").pluck(:actionable_id).uniq
+    @boxes_weight      = Box.where(id: @box_ids).sum(:weight)
+    @toys_price_total  = Toy.where(id: @toy_ids).sum(:price)
   end
 
   def build_rework_stats

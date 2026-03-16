@@ -154,6 +154,14 @@
   &.kpi-admin   { border-color: $purple; .kpi-icon, .kpi-value { color: $purple; } }
   &.kpi-user    { border-color: $mint;   .kpi-icon, .kpi-value { color: $mint; } }
   &.kpi-rework  { border-color: $coral;  .kpi-icon, .kpi-value { color: $coral; } }
+  &.kpi-weight  { border-color: $yellow; .kpi-icon, .kpi-value { color: darken($yellow, 20%); } }
+  &.kpi-price   { border-color: $mint;   .kpi-icon, .kpi-value { color: darken($mint, 15%); } }
+
+  .kpi-unit {
+    font-size: 1rem;
+    font-weight: 600;
+    opacity: 0.7;
+  }
 }
 
 // ── Dashboard card generic ─────────────────────────────────────────
@@ -450,6 +458,169 @@
   &.action-badge-verify  { background: rgba($purple, 0.12);      color: darken($purple, 5%); }
   &.action-badge-delete  { background: rgba($danger-red, 0.1);   color: $danger-red; }
   &.action-badge-other   { background: $light-gray;              color: $gray; }
+}
+
+// ── Pareto ────────────────────────────────────────────────────────
+
+.pareto-subtitle {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: $gray;
+  margin-left: 0.5rem;
+}
+
+.pareto-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pareto-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: $border-radius-lg;
+  transition: background 0.15s ease;
+
+  &.pareto-vital   { background: rgba($coral, 0.05); border-left: 3px solid $coral; }
+  &.pareto-trivial { background: $light-gray;        border-left: 3px solid #E5E7EB; }
+}
+
+.pareto-rank {
+  flex-shrink: 0;
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 0.78rem;
+    font-weight: 800;
+
+    &.rank-vital   { background: $coral;  color: $white; }
+    &.rank-trivial { background: #E5E7EB; color: $gray; }
+  }
+}
+
+.pareto-category {
+  flex: 1;
+  min-width: 0;
+
+  .pareto-cat-name {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: $navy;
+    margin-bottom: 0.4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.pareto-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mini-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  .mini-bar-label {
+    font-size: 0.7rem;
+    color: $gray;
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .mini-bar-wrap {
+    flex: 1;
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 4px;
+    overflow: hidden;
+    max-width: 200px;
+  }
+
+  .mini-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+
+    &.mini-bar-weight { background: linear-gradient(90deg, darken($yellow, 15%), $yellow); }
+    &.mini-bar-price  { background: linear-gradient(90deg, darken($mint, 10%), $mint); }
+  }
+
+  .mini-bar-value {
+    font-size: 0.75rem;
+    color: $gray;
+    white-space: nowrap;
+  }
+}
+
+.pareto-cumul {
+  flex-shrink: 0;
+  text-align: center;
+  min-width: 52px;
+
+  .cumul-badge {
+    font-size: 0.88rem;
+    font-weight: 800;
+    line-height: 1;
+
+    &.cumul-vital   { color: $coral; }
+    &.cumul-trivial { color: $gray; }
+  }
+
+  .cumul-label {
+    display: block;
+    font-size: 0.68rem;
+    color: #9CA3AF;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 0.15rem;
+  }
+}
+
+.pareto-threshold-line {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0.5rem 0;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    height: 1.5px;
+    background: repeating-linear-gradient(90deg, $coral 0, $coral 6px, transparent 6px, transparent 12px);
+  }
+
+  span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $coral;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+}
+
+.pareto-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  font-weight: 600;
+
+  .legend-vital   { color: $coral; }
+  .legend-trivial { color: $gray; }
 }
 
 // ── Empty state ───────────────────────────────────────────────────

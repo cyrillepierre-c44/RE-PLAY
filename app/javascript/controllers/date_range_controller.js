@@ -4,6 +4,7 @@ export default class extends Controller {
   static targets = ["customPanel", "periodBtn"]
 
   connect() {
+    this.anchor = "resultats"
     this.updateVisibility()
   }
 
@@ -13,6 +14,16 @@ export default class extends Controller {
     this.periodBtnTargets.forEach(btn => btn.classList.remove("active"))
     event.currentTarget.classList.add("active")
     this.updateVisibility()
+  }
+
+  setAnchor(event) {
+    this.anchor = event.currentTarget.dataset.anchor || "resultats"
+  }
+
+  submit(event) {
+    event.preventDefault()
+    const params = new URLSearchParams(new FormData(this.element))
+    window.location.href = `${window.location.pathname}?${params}#${this.anchor}`
   }
 
   updateVisibility() {
