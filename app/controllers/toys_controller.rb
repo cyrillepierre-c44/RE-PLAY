@@ -14,6 +14,8 @@ class ToysController < ApplicationController
     base_scope = policy_scope(Toy)
     if params[:filter] == "validated"
       @toys = base_scope.validated
+    elsif params[:filter] == "deleted"
+      @toys = base_scope.deleted
     else
       @toys = base_scope.waiting
     end
@@ -38,7 +40,7 @@ class ToysController < ApplicationController
     if @toy.save
       chat_response
       Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à créé le jouet #{@toy.id}")
-      redirect_to toys_path, notice: "Jouet créé avec succès.", status: :see_other
+      redirect_to box_path(@box), notice: "Jouet créé avec succès.", status: :see_other
     else
       render :new, status: :unprocessable_entity
     end
