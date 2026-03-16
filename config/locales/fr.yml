@@ -1,0 +1,19 @@
+fr:
+  helpers:
+    submit:
+      create: "Créer %{model}"
+      update: "Modifier %{model}"
+      box:
+        create: "Créer la boîte"
+        update: "Modifier la boîte"
+      toy:
+        create: "Ajouter le jouet"
+        update: "Modifier le jouet"
+
+  activerecord:
+    models:
+      box: "Boîte"
+      toy: "Jouet"
+      category: "Catégorie"
+      user: "Utilisateur"
+      action: "Action"

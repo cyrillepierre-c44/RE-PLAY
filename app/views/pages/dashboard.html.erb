@@ -14,7 +14,7 @@
   <%# ── Filtres ─────────────────────────────────────────────── %>
   <%= form_with url: dashboard_path, method: :get, local: true,
         class: "dashboard-filters card mb-4",
-        data: { controller: "date-range" } do |f| %>
+        data: { controller: "date-range", action: "submit->date-range#submit" } do |f| %>
     <div class="card-body">
 
       <%# Période %>
@@ -22,7 +22,7 @@
         <label class="filter-label"><i class="fa-regular fa-calendar me-1"></i>Période</label>
         <%= f.hidden_field :period, value: @period %>
         <div class="btn-group period-btns" role="group">
-          <% [["yesterday", "Hier"], ["last_week", "Semaine dernière"], ["custom", "Sélection libre"]].each do |val, label| %>
+          <% [["today", "Aujourd'hui"], ["prev_day", "Jour précédent"], ["last_week", "Semaine dernière"], ["custom", "Sélection libre"]].each do |val, label| %>
             <button type="button"
                     class="btn btn-period <%= 'active' if @period == val %>"
                     data-period="<%= val %>"
@@ -52,12 +52,13 @@
                   placeholder: "jj/mm/aaaa" %>
           </div>
           <div class="filter-group" style="flex-direction: row; gap: 0.5rem;">
-            <%= f.submit "Appliquer", class: "btn btn-primary btn-sm" %>
+            <%= f.submit "Appliquer", class: "btn btn-primary btn-sm",
+                  data: { action: "click->date-range#setAnchor", anchor: "filtres-secondaires" } %>
           </div>
         </div>
       </div>
 
-      <div class="filter-row mt-3">
+      <div id="filtres-secondaires" class="filter-row mt-3">
         <%# Type %>
         <div class="filter-group">
           <label class="filter-label"><i class="fa-solid fa-filter me-1"></i>Type</label>
@@ -86,7 +87,8 @@
         </div>
 
         <div class="filter-group filter-actions">
-          <%= f.submit "Appliquer", class: "btn btn-primary btn-sm" %>
+          <%= f.submit "Appliquer", class: "btn btn-primary btn-sm",
+                data: { action: "click->date-range#setAnchor", anchor: "resultats" } %>
           <%= link_to "Réinitialiser", dashboard_path, class: "btn btn-ghost btn-sm" %>
         </div>
       </div>
@@ -94,7 +96,7 @@
   <% end %>
 
   <%# ── KPIs principaux ─────────────────────────────────────── %>
-  <div class="row g-3 mb-4">
+  <div id="resultats" class="row g-3 mb-4">
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-total">
         <div class="kpi-icon"><i class="fa-solid fa-bolt"></i></div>
@@ -120,7 +122,27 @@
       <div class="kpi-card kpi-rework">
         <div class="kpi-icon"><i class="fa-solid fa-rotate"></i></div>
         <div class="kpi-value"><%= @rework_total %></div>
-        <div class="kpi-label">Mises à jour (rework)</div>
+        <div class="kpi-label">Retouches / mises à jour</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="kpi-card kpi-weight">
+        <div class="kpi-icon"><i class="fa-solid fa-weight-hanging"></i></div>
+        <div class="kpi-value">
+          <%= number_with_precision(@boxes_weight, precision: 1, delimiter: " ") %>
+          <span class="kpi-unit">kg</span>
+        </div>
+        <div class="kpi-label">Poids cumulé des boîtes</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="kpi-card kpi-price">
+        <div class="kpi-icon"><i class="fa-solid fa-robot"></i></div>
+        <div class="kpi-value">
+          <%= number_with_precision(@toys_price_total, precision: 0, delimiter: " ") %>
+          <span class="kpi-unit">€</span>
+        </div>
+        <div class="kpi-label">Valorisation IA des jouets</div>
       </div>
     </div>
   </div>
@@ -218,12 +240,12 @@
   <%# ── Analyse rework détaillée ───────────────────────────── %>
   <div class="dashboard-card mb-4">
     <h2 class="dashboard-card-title">
-      <i class="fa-solid fa-rotate me-2 text-coral"></i>Analyse des reworks (mises à jour)
+      <i class="fa-solid fa-rotate me-2 text-coral"></i>Analyse des retouches
     </h2>
     <div class="rework-grid">
       <div class="rework-total">
         <span class="rework-number"><%= @rework_total %></span>
-        <span class="rework-desc">Total reworks sur la période</span>
+        <span class="rework-desc">Total retouches sur la période</span>
       </div>
       <div class="rework-breakdown">
         <div class="rework-row">
@@ -248,6 +270,65 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <%# ── Pareto des catégories ──────────────────────────────────────── %>
+  <div class="dashboard-card mb-4">
+    <h2 class="dashboard-card-title">
+      <i class="fa-solid fa-ranking-star me-2 text-coral"></i>Pareto des catégories
+      <span class="pareto-subtitle">Classées par valorisation IA · poids affiché en contexte</span>
+    </h2>
+
+    <% if @pareto_data.empty? %>
+      <div class="empty-state">
+        <i class="fa-solid fa-inbox"></i>
+        <p>Aucune donnée catégorie sur cette période.</p>
+      </div>
+    <% else %>
+      <div class="pareto-chart">
+        <% @pareto_data.each_with_index do |row, index| %>
+          <% vital     = row[:cumulative] <= 80 %>
+          <% threshold = index > 0 && @pareto_data[index - 1][:cumulative] <= 80 && !vital %>
+          <% if threshold %>
+            <div class="pareto-threshold-line"><span>seuil 80 %</span></div>
+          <% end %>
+          <div class="pareto-row <%= vital ? 'pareto-vital' : 'pareto-trivial' %>">
+            <div class="pareto-rank">
+              <span class="rank-badge <%= vital ? 'rank-vital' : 'rank-trivial' %>"><%= index + 1 %></span>
+            </div>
+            <div class="pareto-category">
+              <span class="pareto-cat-name"><%= row[:category]&.name || "Catégorie ##{row[:category]&.id}" %></span>
+              <div class="pareto-bars">
+                <% w_pct = @pareto_total_weight.positive? ? (row[:weight] / @pareto_total_weight * 100).round : 0 %>
+                <% p_pct = @pareto_total_price.positive?  ? (row[:price]  / @pareto_total_price  * 100).round : 0 %>
+                <div class="mini-bar-row">
+                  <span class="mini-bar-label"><i class="fa-solid fa-weight-hanging"></i></span>
+                  <div class="mini-bar-wrap">
+                    <div class="mini-bar mini-bar-weight" style="width: <%= w_pct %>%"></div>
+                  </div>
+                  <span class="mini-bar-value"><%= number_with_precision(row[:weight], precision: 1) %> kg · <%= w_pct %>%</span>
+                </div>
+                <div class="mini-bar-row">
+                  <span class="mini-bar-label"><i class="fa-solid fa-robot"></i></span>
+                  <div class="mini-bar-wrap">
+                    <div class="mini-bar mini-bar-price" style="width: <%= p_pct %>%"></div>
+                  </div>
+                  <span class="mini-bar-value"><%= number_with_precision(row[:price], precision: 0) %> € · <%= p_pct %>%</span>
+                </div>
+              </div>
+            </div>
+            <div class="pareto-cumul">
+              <div class="cumul-badge <%= vital ? 'cumul-vital' : 'cumul-trivial' %>"><%= row[:cumulative] %>%</div>
+              <span class="cumul-label">cumulé</span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <div class="pareto-legend mt-3">
+        <span class="legend-vital"><i class="fa-solid fa-circle-dot me-1"></i>Essentiels — représentent 80% de la valeur</span>
+        <span class="legend-trivial"><i class="fa-regular fa-circle me-1"></i>Secondaires — représentent 20% restants</span>
+      </div>
+    <% end %>
   </div>
 
   <%# ── Journal des actions ─────────────────────────────────── %>
@@ -297,7 +378,7 @@
                   <% if action.user&.admin %>
                     <span class="role-pill role-pill-admin">Admin</span>
                   <% else %>
-                    <span class="role-pill role-pill-user">User</span>
+                    <span class="role-pill role-pill-user">Utilisateur</span>
                   <% end %>
                 </td>
                 <td>
