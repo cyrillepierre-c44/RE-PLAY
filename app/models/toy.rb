@@ -9,7 +9,8 @@ class Toy < ApplicationRecord
 
   validates :status, presence: true
   scope :waiting, -> { where(status: %i[pending review]) }
-  scope :validated, -> { where(status: %i[market suppr]) }
+  scope :validated, -> { where(status: :market) }
+  scope :deleted, -> { where(status: :suppr) }
   private
 
   def set_default_status

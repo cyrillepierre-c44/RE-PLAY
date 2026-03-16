@@ -35,6 +35,14 @@
           <%= Toy.validated.count %>
         </span>
       <% end %>
+      <%= link_to toys_path(filter: "deleted"),
+            class: "filter-tab #{'active' if params[:filter] == 'deleted'}" do %>
+        <i class="fa-solid fa-trash"></i>
+        Supprimés
+        <span>
+          <%= Toy.deleted.count %>
+        </span>
+      <% end %>
     </div>
   </div>
 

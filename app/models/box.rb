@@ -3,10 +3,12 @@ class Box < ApplicationRecord
   has_many :actions, as: :actionable
   has_many :toys, dependent: :destroy
 
-  enum :status, { pending: "pending", empty: "empty" }
+  enum :status, { pending: "pending", empty: "empty", suppr: "suppr" }
   after_initialize :set_default_status, if: :new_record?
 
   validates :status, presence: true
+  scope :active, -> { where(status: :pending) }
+  scope :deleted, -> { where(status: :suppr) }
 
   private
 
