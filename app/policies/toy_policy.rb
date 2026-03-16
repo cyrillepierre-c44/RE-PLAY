@@ -32,12 +32,14 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def update?
-    user.present? && user.admin?
     user.admin? || record.actions.where(user: user).any?
   end
 
   def destroy?
-    user.present? && user.admin?
+    user.admin? || record.actions.where(user: user).any?
+  end
+
+  def restore?
     user.admin? || record.actions.where(user: user).any?
   end
 

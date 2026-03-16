@@ -44,15 +44,17 @@
         </div>
 
         <div class="action-strip">
-          <%= link_to new_box_toy_path(@box), class: "btn btn-primary btn-sm" do %>
-            <i class="fa-solid fa-plus me-1"></i>Ajouter un jouet
+          <% if @box.pending? %>
+            <%= link_to new_box_toy_path(@box), class: "btn btn-primary btn-sm" do %>
+              <i class="fa-solid fa-plus me-1"></i>Ajouter un jouet
+            <% end %>
           <% end %>
           <% if policy(@box).edit? %>
             <%= link_to edit_box_path(@box), class: "btn btn-ghost btn-sm" do %>
               <i class="fa-solid fa-pen me-1"></i>Modifier
             <% end %>
           <% end %>
-          <% if policy(@box).destroy? %>
+          <% if policy(@box).destroy? && !@box.suppr? %>
             <%= link_to box_path(@box),
                   class: "btn btn-sm",
                   style: "background: rgba(230,57,70,0.1); color: #E63946; font-weight:700;",
@@ -60,12 +62,14 @@
               <i class="fa-solid fa-trash me-1"></i>Supprimer
             <% end %>
           <% end %>
+          <% if policy(@box).toggle_empty? %>
           <%= button_to toggle_empty_box_path(@box), method: :patch, class: "btn btn-sm" do %>
             <% if @box.empty? %>
               <i class="fa-solid fa-box me-1"></i>Marquer non vide
             <% else %>
               <i class="fa-solid fa-box-open me-1"></i>Marquer vide
             <% end %>
+          <% end %>
           <% end %>
         </div>
       </div>
@@ -82,7 +86,9 @@
         <div class="detail-card p-4 text-center" style="color: #9CA3AF;">
           <i class="fa-solid fa-puzzle-piece" style="font-size: 2.5rem; color: rgba(255,107,53,0.2); margin-bottom: 0.75rem; display:block;"></i>
           Aucun jouet dans cette boîte.
-          <%= link_to "Ajouter le premier jouet", new_box_toy_path(@box), class: "btn btn-primary btn-sm d-block mt-3 mx-auto" , style:"width:fit-content;" %>
+          <% if @box.pending? %>
+            <%= link_to "Ajouter le premier jouet", new_box_toy_path(@box), class: "btn btn-primary btn-sm d-block mt-3 mx-auto" , style:"width:fit-content;" %>
+          <% end %>
         </div>
       <% else %>
         <div class="row g-3">

@@ -22,6 +22,6 @@ class PagePolicy < ApplicationPolicy
   end
 
   def dashboard?
-    user.admin
+    user.admin?
   end
 end

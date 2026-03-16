@@ -1,5 +1,5 @@
 class ToysController < ApplicationController
-  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify]
+  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore]
   before_action :box_find, only: %i[new create]
 
   # SYSTEM_PROMPT = "Tu es un expert en vente de jouet d'occasion reconditionnés issus de dons.
@@ -69,6 +69,17 @@ class ToysController < ApplicationController
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} à supprimé le  jouet #{@toy.id}")
       redirect_to toys_path, notice: "Jouet supprimée avec succès."
+    else
+      redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
+    end
+  end
+
+  def restore
+    authorize @toy
+    if @toy.update(status: :pending)
+      Action.create!(user: current_user, actionable: @toy,
+                     content: "#{current_user.email} a réintégré le jouet n°#{@toy.id} en attente")
+      redirect_to toy_path(@toy), notice: "Jouet réintégré en attente."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
