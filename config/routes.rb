@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     member do
       get :verify
       patch :confirm_verify
+      patch :restore
     end
   end
 

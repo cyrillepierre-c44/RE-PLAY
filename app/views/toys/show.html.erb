@@ -86,7 +86,12 @@
         </div>
 
         <div class="action-strip">
-          <% if policy(@toy).verify? %>
+          <% if policy(@toy).restore? && @toy.suppr? %>
+            <%= button_to restore_toy_path(@toy), method: :patch, class: "btn btn-sm", style: "background:rgba(12,201,163,0.12);color:#0CC9A3;font-weight:700;" do %>
+              <i class="fa-solid fa-rotate-left me-1"></i>Réintégrer en attente
+            <% end %>
+          <% end %>
+          <% if policy(@toy).verify? && !@toy.suppr? %>
             <%= link_to verify_toy_path(@toy), class: "btn btn-primary" do %>
               <i class="fa-solid fa-clipboard-check me-1"></i>Contrôle qualité
             <% end %>
@@ -96,7 +101,7 @@
               <i class="fa-solid fa-pen me-1"></i>Modifier
             <% end %>
           <% end %>
-          <% if policy(@toy).destroy? %>
+          <% if policy(@toy).destroy? && !@toy.suppr? %>
             <%= link_to toy_path(@toy),
                   class: "btn btn-sm",
                   style: "background:rgba(230,57,70,0.1);color:#E63946;font-weight:700;",

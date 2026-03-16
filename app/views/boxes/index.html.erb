@@ -6,8 +6,10 @@
       <h1 class="page-title"><i class="fa-solid fa-box-open me-2" style="color: #FF6B35;"></i>Boîtes de dons</h1>
       <p class="page-subtitle">Gérez les boîtes de jouets à reconditionner</p>
     </div>
-    <%= link_to new_box_path, class: "btn btn-primary" do %>
-      <i class="fa-solid fa-plus me-1"></i> Nouvelle boîte
+    <% unless params[:filter] == 'suppr' %>
+      <%= link_to new_box_path, class: "btn btn-primary" do %>
+        <i class="fa-solid fa-plus me-1"></i> Nouvelle boîte
+      <% end %>
     <% end %>
   </div>
 
@@ -43,7 +45,9 @@
       </div>
       <h3 style="color: #6B7280;">Aucune boîte pour le moment</h3>
       <p style="color: #9CA3AF;">Créez votre première boîte pour commencer.</p>
-      <%= link_to "Créer une boîte", new_box_path, class: "btn btn-primary mt-2" %>
+      <% unless params[:filter] == 'suppr' %>
+        <%= link_to "Créer une boîte", new_box_path, class: "btn btn-primary mt-2" %>
+      <% end %>
     </div>
   <% else %>
     <div class="row g-3">
