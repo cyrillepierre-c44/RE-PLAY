@@ -17,6 +17,15 @@ class PagesController < ApplicationController
   def enjoue
   end
 
+  def cyrille_pierre
+  end
+
+  def marc_thomas
+  end
+
+  def loic_laplagne
+  end
+  
   def dashboard
     authorize :page, :dashboard?
     @period      = params[:period].presence || "prev_day"

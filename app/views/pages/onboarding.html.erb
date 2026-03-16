@@ -1,76 +1,119 @@
-<% content_for :title, "Guide · RE-PLAY" %>
-
-<div style="background: linear-gradient(135deg, #FF6B35, #FF8C5A, #FFD166); padding: 3.5rem 1.5rem; text-align: center; color: white;">
-  <h1 style="font-size: 2.5rem; color: white; margin-bottom: 0.5rem;">Bienvenue sur RE-PLAY</h1>
-  <p style="color: rgba(255,255,255,0.88); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
-    La plateforme de gestion du reconditionnement de jouets d'occasion Enjoué
-  </p>
+<%# ── HERO ──────────────────────────────────────────────────────────── %>
+<div class="onboarding-hero">
+  <div class="container py-5 text-center text-white">
+    <span class="badge onboarding-badge mb-3 px-3 py-2 fs-6">RE-PLAY × ENJOUÉ</span>
+    <h1 class="display-4 fw-bold mb-3">Bienvenue sur RE-PLAY</h1>
+    <p class="lead mb-4 onboarding-hero-sub">
+      La plateforme de gestion des jouets reconditionnés par ENJOUÉ
+    </p>
+    <%= link_to "Découvrir Enjoué", enjoue_path, class: "btn onboarding-cta btn-lg fw-bold" %>
+  </div>
 </div>
 
-<div class="container py-5" style="max-width: 900px;">
-
-  <div style="background: white; border-radius: 1.25rem; box-shadow: 0 4px 24px rgba(26,43,74,0.08); padding: 2rem; margin-bottom: 1.5rem;">
-    <p style="font-size: 1.05rem; line-height: 1.8; color: #1A2B4A; margin: 0;">
-      Enjoué donne une seconde vie aux jouets pour rendre le jeu plus responsable et accessible à tous.
+<%# ── INTRO ────────────────────────────────────────────────────────── %>
+<div class="container my-5">
+  <div class="card border-0 shadow-sm onboarding-intro-card p-4 p-md-5">
+    <p class="fs-5 lh-lg mb-0">
+      ENJOUÉ donne une seconde vie aux jouets pour rendre le jeu plus responsable et accessible à tous.
       En choisissant des jouets reconditionnés, particuliers, professionnels de l'enfance et entreprises
       réduisent la surproduction, limitent la pollution et soutiennent l'emploi durable.
+      Les jouets proposés sont rigoureusement contrôlés pour répondre aux besoins des structures les plus exigeantes.
     </p>
   </div>
-
-  <%= link_to enjoue_path, class: "btn btn-primary mb-5" do %>
-    <i class="fa-solid fa-seedling me-2"></i>Découvrir Enjoué
-  <% end %>
-
-  <h2 style="font-size: 1.7rem; color: #1A2B4A; margin-bottom: 1.5rem;">Notre mission</h2>
-  <div style="background: white; border-radius: 1.25rem; box-shadow: 0 4px 24px rgba(26,43,74,0.08); padding: 2rem; margin-bottom: 2rem;">
-    <p style="font-size: 1rem; line-height: 1.8; color: #4B5563; margin: 0;">
-      Face à la traçabilité papier &amp; double saisie Excel, aux stocks qui débordent et aux erreurs de saisie
-      au sein du process logistique d'ENJOUE, notre solution est de proposer un système gérant une base de données
-      avec scan des objets, en utilisant l'IA pour la reconnaissance et la mise en place de checklists informatisées
-      et dashboards.
-    </p>
-  </div>
-
-  <h2 style="font-size: 1.7rem; color: #1A2B4A; margin-bottom: 1.5rem;">Comment ça marche ?</h2>
-  <div class="row g-3 mb-4">
-    <% [
-      { num: "1", icon: "fa-box-open", color: "#FF6B35", bg: "rgba(255,107,53,0.1)",
-        title: "Réception d'une boîte",
-        text: "Créez une nouvelle boîte, indiquez sa catégorie, son poids et si elle contient des jouets électroniques." },
-      { num: "2", icon: "fa-puzzle-piece", color: "#4CC9F0", bg: "rgba(76,201,240,0.1)",
-        title: "Saisie des jouets",
-        text: "Ajoutez chaque jouet avec sa photo. L'IA suggère automatiquement un prix de revente." },
-      { num: "3", icon: "fa-clipboard-check", color: "#9B5DE5", bg: "rgba(155,93,229,0.1)",
-        title: "Contrôle qualité",
-        text: "Un admin valide l'état du jouet, confirme le prix et définit son emplacement de stockage." },
-      { num: "4", icon: "fa-circle-check", color: "#0CC9A3", bg: "rgba(12,201,163,0.1)",
-        title: "Mise en vente",
-        text: "Le jouet est validé et prêt à rejoindre le catalogue de vente Enjoué." }
-    ].each do |step| %>
-      <div class="col-sm-6">
-        <div style="background: white; border-radius: 1rem; box-shadow: 0 4px 24px rgba(26,43,74,0.06); padding: 1.5rem; height: 100%;">
-          <div style="width: 44px; height: 44px; border-radius: 0.75rem; background: <%= step[:bg] %>; display: flex; align-items: center; justify-content: center; color: <%= step[:color] %>; font-size: 1.1rem; margin-bottom: 1rem;">
-            <i class="fa-solid <%= step[:icon] %>"></i>
-          </div>
-          <h3 style="font-size: 1rem; font-weight: 700; color: #1A2B4A; margin-bottom: 0.4rem;"><%= step[:title] %></h3>
-          <p style="font-size: 0.875rem; color: #6B7280; line-height: 1.6; margin: 0;"><%= step[:text] %></p>
-        </div>
-      </div>
-    <% end %>
-  </div>
-
-  <h2 style="font-size: 1.7rem; color: #1A2B4A; margin-bottom: 1.5rem;">Notre équipe</h2>
-  <div class="row g-3">
-    <% 3.times do |i| %>
-      <div class="col-sm-4">
-        <div style="background: white; border-radius: 1rem; box-shadow: 0 4px 24px rgba(26,43,74,0.06); padding: 1.5rem; text-align: center;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #FF6B35, #FFD166); margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
-            <i class="fa-solid fa-user"></i>
-          </div>
-          <h3 style="font-size: 1rem; font-weight: 700; color: #1A2B4A; margin: 0;">Membre <%= i + 1 %></h3>
-        </div>
-      </div>
-    <% end %>
-  </div>
-
 </div>
+
+<%# ── NOTRE MISSION ────────────────────────────────────────────────── %>
+<section class="bg-white py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Notre mission</h2>
+    </div>
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 onboarding-step-card p-4">
+          <div class="onboarding-step-number mb-3">1</div>
+          <h5 class="fw-bold mb-2">Traçabilité digitale</h5>
+          <p class="text-muted mb-0">
+            Fini les tableurs Excel et la saisie papier. RE-PLAY centralise les stocks et suit chaque jouet
+            par scan de code-barres.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 onboarding-step-card p-4">
+          <div class="onboarding-step-number mb-3">2</div>
+          <h5 class="fw-bold mb-2">Contrôle qualité</h5>
+          <p class="text-muted mb-0">
+            Chaque jouet est évalué selon son état (propreté, complétude, fonctionnalité) avant d'être
+            validé et remis en circulation.
+          </p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm h-100 onboarding-step-card p-4">
+          <div class="onboarding-step-number mb-3">3</div>
+          <h5 class="fw-bold mb-2">Prix assisté par IA</h5>
+          <p class="text-muted mb-0">
+            L'intelligence artificielle analyse chaque jouet et propose automatiquement un prix de revente
+            cohérent avec le marché.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<%# ── NOTRE ÉQUIPE ─────────────────────────────────────────────────── %>
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Notre équipe</h2>
+    </div>
+    <p class="text-muted mb-4 fs-5">
+      Derrière RE-PLAY, une équipe passionnée de développeurs, designers et experts métier.
+    </p>
+
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center onboarding-team-card p-4">
+          <%= image_tag "cyrille", alt: "Cyrille Pierre", class: "onboarding-avatar mb-3" %>
+          <h5 class="fw-bold mb-1">Cyrille Pierre</h5>
+          <span class="badge onboarding-role-badge mb-3">Développeur</span>
+          <div>
+            <%= link_to "Voir la présentation", cyrille_pierre_path, class: "btn onboarding-team-btn btn-sm fw-bold" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center onboarding-team-card p-4">
+          <%= image_tag "marc", alt: "Marc Thomas", class: "onboarding-avatar mb-3" %>
+          <h5 class="fw-bold mb-1">Marc Thomas</h5>
+          <span class="badge onboarding-role-badge mb-3">Développeur</span>
+          <div>
+            <%= link_to "Voir la présentation", marc_thomas_path, class: "btn onboarding-team-btn btn-sm fw-bold" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm text-center onboarding-team-card p-4">
+          <%= image_tag "loic", alt: "Loïc Laplagne", class: "onboarding-avatar mb-3" %>
+          <h5 class="fw-bold mb-1">Loïc Laplagne</h5>
+          <span class="badge onboarding-role-badge mb-3">Développeur</span>
+          <div>
+            <%= link_to "Voir la présentation", loic_laplagne_path, class: "btn onboarding-team-btn btn-sm fw-bold" %>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
