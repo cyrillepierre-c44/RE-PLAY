@@ -108,4 +108,20 @@
       </div>
     </div>
   </div>
+<!-- ci-dessous le code pour la timeline -->
+  <% if @timeline.any? %>
+    <div class="row mt-4">
+      <div class="col-12">
+        <h3>Historique</h3>
+        <ul>
+          <% @timeline.each do |action| %>
+            <li>
+              <%= action.created_at.strftime('%d/%m/%Y à %H:%M') %> —
+              <%= action.content %>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
 </div>
