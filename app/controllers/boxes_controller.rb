@@ -2,7 +2,12 @@ class BoxesController < ApplicationController
   before_action :set_box, only: %i[show edit update destroy]
 
   def index
-    @boxes = policy_scope(Box)
+    base_scope = policy_scope(Box)
+    if params[:filter] == "suppr"
+      @boxes = base_scope.suppr
+    else
+      @boxes = base_scope.active
+    end
   end
 
   def show
@@ -43,10 +48,13 @@ class BoxesController < ApplicationController
 
   def destroy
     authorize @box
-    if @box.destroy
-      redirect_to boxes_path, notice: "Demande supprimée avec succès."
-      Action.create!(user: current_user, actionable: @box,
-                     content: "#{current_user.email} à supprimé la boite n#{@box.id}")
+    if @box.update(status: :suppr)
+      Action.create!(
+        user: current_user,
+        actionable: @box,
+        content: "#{current_user.email} a supprimé la boite n°#{@box.id}"
+      )
+      redirect_to boxes_path, notice: "Boîte supprimée."
     else
       redirect_to box_path(@box), alert: @box.errors.full_messages.to_sentence
     end

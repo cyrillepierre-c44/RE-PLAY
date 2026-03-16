@@ -11,6 +11,25 @@
     <% end %>
   </div>
 
+<!-- ci-dessous le code pour générer la nouvelle view filtré des boites soft suppr -->
+
+<div class="mb-4">
+  <div class="filter-tabs">
+    <%= link_to boxes_path,
+          class: "filter-tab #{'active' unless params[:filter] == 'suppr'}" do %>
+      <i class="fa-solid fa-box-open"></i>
+      En cours
+      <span><%= Box.active.count %></span>
+    <% end %>
+    <%= link_to boxes_path(filter: "suppr"),
+          class: "filter-tab #{'active' if params[:filter] == 'suppr'}" do %>
+      <i class="fa-solid fa-trash"></i>
+      Supprimées
+      <span><%= Box.suppr.count %></span>
+    <% end %>
+  </div>
+</div>
+
   <% if @boxes.empty? %>
     <div class="text-center py-5">
       <div style="font-size: 4rem; color: rgba(255,107,53,0.2); margin-bottom: 1rem;">
