@@ -15,7 +15,6 @@ class PagesController < ApplicationController
   def enjoue
   end
 
-<<<<<<< HEAD
   def cyrille_pierre
   end
 
@@ -23,7 +22,8 @@ class PagesController < ApplicationController
   end
 
   def loic_laplagne
-=======
+  end
+  
   def dashboard
     authorize :page, :dashboard?
     @period      = params[:period].presence || "month"
@@ -111,6 +111,5 @@ class PagesController < ApplicationController
     @create_total = @actions.where("content LIKE ?", "%créé%").count
     @verify_total = @actions.where("content LIKE ?", "%passé%").count
     @delete_total = @actions.where("content LIKE ?", "%supprimé%").count
->>>>>>> 55f3750e962e82541cf5c00af4cf831fccbea384
   end
 end
