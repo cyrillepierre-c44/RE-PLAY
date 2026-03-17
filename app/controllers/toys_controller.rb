@@ -60,7 +60,11 @@ class ToysController < ApplicationController
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} à updaté le jouet n#{@toy.id}")
-      redirect_to toy_path(@toy), status: :see_other, notice: "modifié avec succès"
+      if params[:from_new] == "1"
+        redirect_to box_path(@toy.box), notice: "Jouet créé avec succès.", status: :see_other
+      else
+        redirect_to toy_path(@toy), status: :see_other, notice: "modifié avec succès"
+      end
     else
       render :edit, status: :unprocessable_entity
     end

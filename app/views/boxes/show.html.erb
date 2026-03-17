@@ -160,6 +160,13 @@
     </div>
   </div>
 
+  <%# ── Polling prix IA ── %>
+  <% if @box.toys.any? { |t| t.photo.attached? && t.price.nil? } %>
+    <script>
+      setTimeout(function() { location.reload(); }, 2000);
+    </script>
+  <% end %>
+
   <%# ── Timeline ── %>
   <% if @timeline.any? %>
     <div class="row mt-4">
