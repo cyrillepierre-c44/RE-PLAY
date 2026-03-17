@@ -78,14 +78,16 @@
         </div>
 
         <%# Barcode + Prix côte à côte %>
-        <div class="row g-2 mb-2">
+        <div class="row g-2 mb-1">
           <div class="col-6">
+            <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Facultatif</div>
             <%= f.input :barcode,
                 label: false,
                 placeholder: "Code-barres",
                 input_html: { class: "form-control verify-input" } %>
           </div>
           <div class="col-6">
+            <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;"><i class="fa-solid fa-robot" style="font-size:0.7rem;"></i> Suggéré par IA</div>
             <%= f.input :price,
                 label: false,
                 as: :numeric,
@@ -95,12 +97,13 @@
         </div>
 
         <%# Emplacement %>
-        <div class="mb-3">
+        <div class="mb-3" style="margin-top:-0.5rem;">
+          <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Obligatoire</div>
           <%= f.input :location,
               label: false,
               required: true,
-              placeholder: "Emplacement : Rack A, Étagère 0…",
-              input_html: { class: "form-control verify-input", value: @toy.location.presence || "Rack A, Étagère 0, Boîte 0" } %>
+              placeholder: "Lieu de stockage : Rack A, Étagère 0…",
+              input_html: { class: "form-control verify-input", value: (@toy.location unless @toy.location == "En attente de validation") } %>
         </div>
 
         <%# Boutons décision %>
