@@ -1,0 +1,40 @@
+<% content_for :title, "Comptes · RE-PLAY" %>
+
+<div class="container py-4">
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="toy-show-title"><i class="fa-solid fa-users me-2"></i>Comptes</h1>
+    <%= link_to new_user_registration_path, class: "toy-show-btn toy-show-btn-verify" do %>
+      <i class="fa-solid fa-plus"></i>
+    <% end %>
+  </div>
+
+  <div class="detail-card p-0">
+    <% @users.each_with_index do |u, i| %>
+      <div class="d-flex align-items-center gap-3 p-3 <%= 'border-top' if i > 0 %>">
+        <div class="user-avatar" style="flex-shrink:0;"><%= u.email[0].upcase %></div>
+        <div class="flex-grow-1 overflow-hidden">
+          <div style="font-weight:700; color:#1A2B4A; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><%= u.email %></div>
+          <div style="font-size:0.75rem; color:#9CA3AF;">
+            Créé le <%= u.created_at.in_time_zone('Europe/Paris').strftime('%d/%m/%Y') %>
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-shrink-0">
+          <% if u.admin? %>
+            <span style="font-size:0.7rem; font-weight:700; background:rgba(255,107,53,0.12); color:#FF6B35; padding:0.15em 0.6em; border-radius:50rem;">Admin</span>
+          <% end %>
+          <% if policy(u).destroy? %>
+            <%= link_to user_path(u),
+                  class: "toy-show-btn toy-show-btn-delete",
+                  style: "height:36px; min-width:36px; padding:0 0.6rem; font-size:0.85rem;",
+                  title: "Supprimer",
+                  data: { turbo_method: :delete, turbo_confirm: "Supprimer le compte #{u.email} ?" } do %>
+              <i class="fa-solid fa-trash"></i>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+</div>

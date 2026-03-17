@@ -54,6 +54,14 @@
                   <i class="fa-regular fa-user me-2"></i>Mon profil
                 <% end %>
               </li>
+              <% if current_user.admin? %>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                  <%= link_to users_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-users me-2"></i>Gérer les comptes
+                  <% end %>
+                </li>
+              <% end %>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <%= link_to destroy_user_session_path,
