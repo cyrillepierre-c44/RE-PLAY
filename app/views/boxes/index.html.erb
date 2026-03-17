@@ -19,7 +19,7 @@
   <div class="filter-tabs">
     <%= link_to boxes_path,
           class: "filter-tab #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
-      <i class="fa-solid fa-box-open"></i>
+      <i class="fa-solid fa-box"></i>
       En cours
       <span><%= Box.active.count %></span>
     <% end %>
@@ -57,7 +57,7 @@
             <div class="box-card-header">
               <span class="box-card-id">#<%= box.id %></span>
               <div class="box-card-icon">
-                <i class="fa-solid fa-<%= box.electronic? ? 'bolt' : 'box' %>"></i>
+                <i class="fa-solid fa-<%= box.electronic? ? 'bolt' : (box.empty? ? 'box-open' : 'box') %>"></i>
               </div>
             </div>
             <div class="box-card-category"><%= box.category.name %></div>
