@@ -1,4 +1,7 @@
 <%= simple_form_for @toy.persisted? ? @toy : [@box, @toy] do |f| %>
+  <% if params[:new] %>
+    <%= hidden_field_tag :from_new, "1" %>
+  <% end %>
 
   <%# Zone photo %>
   <%= f.input :photo, as: :file, label: false,
