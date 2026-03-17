@@ -83,6 +83,11 @@
       <% else %>
         <%= link_to "Se connecter", new_user_session_path, class: "btn btn-primary btn-sm" %>
       <% end %>
+      <% if user_signed_in? && current_user.admin? %>
+        <%= link_to users_path, class: "user-chip ms-1", title: "Gérer les comptes" do %>
+          <i class="fa-solid fa-users" style="font-size:0.9rem;"></i>
+        <% end %>
+      <% end %>
     </div>
 
   </div>
