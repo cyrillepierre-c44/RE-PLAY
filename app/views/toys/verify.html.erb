@@ -29,16 +29,6 @@
               <i class="fa-solid fa-image"></i>
             </div>
           <% end %>
-          <label class="verify-photo-overlay" for="toy-photo-input" title="Changer la photo">
-            <i class="fa-solid fa-camera"></i>
-          </label>
-          <%= f.input :photo,
-              as: :file,
-              label: false,
-              input_html: { id: "toy-photo-input", accept: "image/*", style: "display:none;" } %>
-          <div id="photo-new-preview" class="mt-2 text-center" style="display:none;">
-            <img id="photo-preview-new" src="" style="max-width:100%; border-radius:0.75rem;" alt="Aperçu">
-          </div>
         </div>
       </div>
 
@@ -129,16 +119,3 @@
   <% end %>
 </div>
 
-<script>
-  document.getElementById('toy-photo-input').addEventListener('change', function(e) {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const preview = document.getElementById('photo-preview-new');
-        preview.src = ev.target.result;
-        document.getElementById('photo-new-preview').style.display = 'block';
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  });
-</script>

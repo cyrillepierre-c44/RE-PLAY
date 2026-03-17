@@ -70,7 +70,16 @@
                 <% else %>
                   <span class="status-dot status-dot-box-active"></span>
                 <% end %>
-                <span class="box-card-id"><i class="fa-solid fa-boxes-stacked me-1" style="color:#FF6B35; font-size:0.9em;"></i>N°&nbsp;<%= box.id %></span>
+                <span class="box-card-id">
+                  <% if box.suppr? %>
+                    <i class="fa-solid fa-dumpster me-1" style="color:#FF6B35; font-size:0.9em;"></i>
+                  <% elsif box.empty? %>
+                    <i class="fa-solid fa-box-open me-1" style="color:#FF6B35; font-size:0.9em;"></i>
+                  <% else %>
+                    <i class="fa-solid fa-box me-1" style="color:#FF6B35; font-size:0.9em;"></i>
+                  <% end %>
+                  N°&nbsp;<%= box.id %>
+                </span>
               </div>
               <div class="box-card-icon">
                 <% if box.suppr? %>

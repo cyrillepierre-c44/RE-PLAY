@@ -3,7 +3,7 @@
 <div class="container py-4">
   <div class="page-header">
     <div>
-      <h1 class="page-title"><i class="fa-solid fa-puzzle-piece me-2" style="color:#FF6B35;"></i>Jouets</h1>
+      <h1 class="page-title"><span style="display:inline-block; position:relative; width:1.4em; height:1em; vertical-align:middle;" class="me-2"><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; top:0; left:0; color:#FF6B35;"></i><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; bottom:0; right:0; transform:rotate(90deg); color:#FF6B35;"></i></span>Jouets</h1>
       <p class="page-subtitle">
         <% if params[:filter] == "validated" %>
           Jouets reconditionnés et validés
@@ -107,9 +107,18 @@
               </div>
             </div>
             <div class="toy-card-body">
-              <div class="toy-card-title"><i class="fa-solid fa-puzzle-piece me-1"></i>N°&nbsp;<%= toy.id %></div>
+              <div class="toy-card-title">
+                <% if toy.suppr? %>
+                  <i class="fa-solid fa-trash-can me-1"></i>
+                <% elsif toy.market? %>
+                  <i class="fa-solid fa-tag me-1"></i>
+                <% else %>
+                  <i class="fa-solid fa-hourglass-half me-1"></i>
+                <% end %>
+                N°&nbsp;<%= toy.id %>
+              </div>
               <div class="toy-card-meta">
-                <span class="toy-card-category"><i class="fa-solid fa-tag me-1"></i><%= toy.category.name %></span>
+                <span class="toy-card-category"><i class="fa-solid fa-layer-group me-1"></i><%= toy.category.name %></span>
                 <div class="toy-card-conditions">
                   <span class="condition-icon <%= toy.clean? ? 'ok' : 'ko' %>" title="<%= toy.clean? ? 'Propre' : 'Pas propre' %>">
                     <i class="fa-solid fa-soap"></i>
