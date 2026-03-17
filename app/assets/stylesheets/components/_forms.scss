@@ -244,6 +244,14 @@
   }
 }
 
+.filter-count {
+  padding: 0.1em 0.5em;
+  border-radius: 50rem;
+  font-size: 0.8em;
+  font-weight: 700;
+  transition: background 0.2s, color 0.2s;
+}
+
 // Filter tabs
 .filter-tabs {
   display: flex;
@@ -252,12 +260,14 @@
   padding: 0.25rem;
   box-shadow: $box-shadow-sm;
   border: 1px solid #F0EBE3;
-  width: fit-content;
+  width: 100%;
 
   .filter-tab {
-    padding: 0.45rem 1.1rem;
+    flex: 1;
+    justify-content: center;
+    padding: 0.6rem 0.5rem;
     border-radius: $border-radius-pill;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 700;
     color: $gray;
     text-decoration: none;
@@ -271,10 +281,35 @@
       color: $coral;
     }
 
-    &.active {
-      background: $coral;
-      color: $white;
-      box-shadow: 0 2px 8px rgba($coral, 0.35);
+    // Pastilles inactives — couleur du point correspondant
+    &.filter-tab-waiting   .filter-count { background: rgba($yellow, 0.30);      color: darken($yellow, 35%); }
+    &.filter-tab-validated .filter-count { background: rgba($mint, 0.20);         color: darken($mint, 20%); }
+    &.filter-tab-deleted   .filter-count { background: rgba($danger-red, 0.12);   color: $danger-red; }
+
+    // Pastilles actives — chiffre en noir avec cercle noir
+    &.active .filter-count {
+      background: transparent;
+      color: #000;
+      font-weight: 700;
+      border: 2px solid #000;
+    }
+
+    &.filter-tab-waiting.active {
+      background: $yellow;
+      color: #000;
+      box-shadow: 0 2px 8px rgba($yellow, 0.45);
+    }
+
+    &.filter-tab-validated.active {
+      background: $mint;
+      color: #000;
+      box-shadow: 0 2px 8px rgba($mint, 0.35);
+    }
+
+    &.filter-tab-deleted.active {
+      background: $danger-red;
+      color: #000;
+      box-shadow: 0 2px 8px rgba($danger-red, 0.35);
     }
   }
 }
