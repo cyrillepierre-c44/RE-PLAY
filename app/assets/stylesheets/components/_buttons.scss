@@ -138,27 +138,31 @@
 
 // ── Action buttons overlaid on toy card photo ───────────────
 .toy-action-btn {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 0.6rem;
+  border-radius: $border-radius-lg;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  backdrop-filter: blur(6px);
-  border: none;
+  font-size: 0.95rem;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.6);
   cursor: pointer;
   text-decoration: none;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 
-  &:hover { transform: scale(1.1); }
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  }
 
-  &.toy-action-primary  { background: $coral;                      color: $white; }
-  &.toy-action-verify   { background: rgba(#9B5DE5, 0.9);          color: $white; }
-  &.toy-action-edit     { background: rgba(255,255,255,0.88);       color: $navy; }
-  &.toy-action-restore  { background: rgba(#0CC9A3, 0.9);          color: $white; }
-  &.toy-action-delete   { background: rgba(#E63946, 0.88);         color: $white; }
+  &.toy-action-primary  { background: rgba($coral, 0.88);          color: $white; }
+  &.toy-action-verify   { background: rgba($navy, 0.85);           color: $white; }
+  &.toy-action-edit     { background: rgba(255,255,255,0.88);      color: $navy; }
+  &.toy-action-restore  { background: rgba($mint, 0.88);           color: darken($mint, 20%); }
+  &.toy-action-delete   { background: rgba($danger-red, 0.85);     color: $white; }
 
   // button_to wraps in a form — flatten it
   form { margin: 0; }
