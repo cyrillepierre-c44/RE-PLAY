@@ -110,7 +110,7 @@
         </div>
       <% else %>
         <div class="row g-3">
-          <% @box.toys.each do |toy| %>
+          <% @box.toys.order(created_at: :desc).each do |toy| %>
             <div class="col-12 col-sm-6 col-xl-4">
               <div class="toy-card">
                 <div class="toy-card-photo-wrap">
