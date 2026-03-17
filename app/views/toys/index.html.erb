@@ -3,45 +3,41 @@
 <div class="container py-4">
   <div class="page-header">
     <div>
-      <h1 class="page-title"><i class="fa-solid fa-puzzle-piece me-2" style="color:#FF6B35;"></i>Jouets</h1>
+      <h1 class="page-title"><span style="display:inline-block; position:relative; width:1.4em; height:1em; vertical-align:middle;" class="me-2"><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; top:0; left:0; color:#FF6B35;"></i><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; bottom:0; right:0; transform:rotate(90deg); color:#FF6B35;"></i></span>Jouets</h1>
       <p class="page-subtitle">
         <% if params[:filter] == "validated" %>
           Jouets reconditionnés et validés
+        <% elsif params[:filter] == "deleted" %>
+          Jouets jetés
         <% else %>
           Jouets en attente de contrôle qualité
         <% end %>
       </p>
     </div>
-    <%= link_to boxes_path, class: "btn btn-ghost btn-sm" do %>
-      <i class="fa-solid fa-box me-1"></i>Boîtes
+    <%= link_to boxes_path, class: "btn-back-boxes", title: "Retour aux boîtes" do %>
+      <span style="color:#000;">←</span> <i class="fa-solid fa-boxes-stacked"></i>
     <% end %>
   </div>
 
   <div class="mb-4">
     <div class="filter-tabs">
       <%= link_to toys_path,
-            class: "filter-tab #{'active' unless params[:filter] == 'validated'}" do %>
-        <i class="fa-solid fa-clock"></i>
-        En attente
-        <span style="background: rgba(255,107,53,0.15); color: #FF6B35; padding: 0.1em 0.5em; border-radius: 50rem; font-size: 0.75em;">
-          <%= Toy.waiting.count %>
-        </span>
+            class: "filter-tab filter-tab-waiting #{'active' if params[:filter].blank?}" do %>
+        <i class="fa-solid fa-hourglass-half"></i>
+        Attente
+        <span class="filter-count"><%= Toy.waiting.count %></span>
       <% end %>
       <%= link_to toys_path(filter: "validated"),
-            class: "filter-tab #{'active' if params[:filter] == 'validated'}" do %>
-        <i class="fa-solid fa-circle-check"></i>
-        Validés
-        <span style="background: rgba(12,201,163,0.15); color: #0CC9A3; padding: 0.1em 0.5em; border-radius: 50rem; font-size: 0.75em;">
-          <%= Toy.validated.count %>
-        </span>
+            class: "filter-tab filter-tab-validated #{'active' if params[:filter] == 'validated'}" do %>
+        <i class="fa-solid fa-store"></i>
+        Prêts
+        <span class="filter-count"><%= Toy.validated.count %></span>
       <% end %>
       <%= link_to toys_path(filter: "deleted"),
-            class: "filter-tab #{'active' if params[:filter] == 'deleted'}" do %>
-        <i class="fa-solid fa-trash"></i>
-        Supprimés
-        <span>
-          <%= Toy.deleted.count %>
-        </span>
+            class: "filter-tab filter-tab-deleted #{'active' if params[:filter] == 'deleted'}" do %>
+        <i class="fa-solid fa-trash-can"></i>
+        Jetés
+        <span class="filter-count"><%= Toy.deleted.count %></span>
       <% end %>
     </div>
   </div>
@@ -63,60 +59,77 @@
   <% else %>
     <div class="row g-3">
       <% @toys.each do |toy| %>
-        <div class="col-sm-6 col-md-4 col-xl-3">
+        <div class="col-12 col-sm-6 col-md-4 col-xl-3">
           <div class="toy-card">
-            <% if toy.photo.attached? %>
-              <%= image_tag toy.photo, class: "toy-card-img" %>
-            <% else %>
-              <div class="toy-card-no-img"><i class="fa-solid fa-image"></i></div>
-            <% end %>
-            <div class="toy-card-body">
-              <div class="toy-card-title">Jouet #<%= toy.id %></div>
-              <div class="toy-card-meta">
-                <i class="fa-solid fa-tag"></i><%= toy.category.name %>
-              </div>
-              <div class="toy-card-badges">
-                <% if toy.location == "En attente de validation" %>
-                  <span class="badge badge-waiting"><i class="fa-solid fa-clock me-1"></i>En attente</span>
-                <% else %>
-                  <span class="badge badge-validated"><i class="fa-solid fa-check me-1"></i>Validé</span>
-                <% end %>
-                <% if toy.clean? %>
-                  <span class="condition-pill ok"><i class="fa-solid fa-soap"></i>Propre</span>
-                <% end %>
-              </div>
+            <div class="toy-card-photo-wrap">
+              <% if toy.photo.attached? %>
+                <%= image_tag toy.photo, class: "toy-card-img" %>
+              <% else %>
+                <div class="toy-card-no-img"><i class="fa-solid fa-image"></i></div>
+              <% end %>
               <% if toy.price.present? %>
-                <div class="toy-card-price">
-                  <%= toy.price.to_i %> €<span> suggéré par IA</span>
-                </div>
+                <div class="toy-card-price-badge"><%= toy.price.to_i %> €</div>
+              <% end %>
+              <% if toy.suppr? %>
+                <span class="status-dot status-dot-deleted toy-card-status-dot" title="Jeté"></span>
+              <% elsif toy.market? %>
+                <span class="status-dot status-dot-validated toy-card-status-dot" title="Validé"></span>
+              <% else %>
+                <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente de validation"></span>
               <% end %>
               <div class="toy-card-actions">
-                <%= link_to toy_path(toy), class: "btn btn-primary btn-sm" do %>
-                  Voir
+                <%= link_to toy_path(toy), class: "toy-action-btn toy-action-primary", title: "Voir" do %>
+                  <i class="fa-solid fa-eye"></i>
                 <% end %>
                 <% if policy(toy).verify? %>
-                  <%= link_to verify_toy_path(toy), class: "btn btn-sm", style: "background:rgba(155,93,229,0.12);color:#9B5DE5;font-weight:700;" do %>
+                  <%= link_to verify_toy_path(toy), class: "toy-action-btn toy-action-verify", title: "Contrôle qualité" do %>
                     <i class="fa-solid fa-magnifying-glass"></i>
                   <% end %>
                 <% end %>
                 <% if policy(toy).edit? %>
-                  <%= link_to edit_toy_path(toy), class: "btn btn-ghost btn-sm btn-icon" do %>
+                  <%= link_to edit_toy_path(toy), class: "toy-action-btn toy-action-edit", title: "Modifier" do %>
                     <i class="fa-solid fa-pen"></i>
                   <% end %>
                 <% end %>
                 <% if policy(toy).restore? && toy.suppr? %>
-                  <%= button_to restore_toy_path(toy), method: :patch, class: "btn btn-sm btn-icon", style: "background:rgba(12,201,163,0.12);color:#0CC9A3;", title: "Réintégrer en attente" do %>
+                  <%= button_to restore_toy_path(toy), method: :patch, class: "toy-action-btn toy-action-restore", title: "Réintégrer" do %>
                     <i class="fa-solid fa-rotate-left"></i>
                   <% end %>
                 <% end %>
                 <% if policy(toy).destroy? && !toy.suppr? %>
                   <%= link_to toy_path(toy),
-                        class: "btn btn-sm btn-icon",
-                        style: "background:rgba(230,57,70,0.1);color:#E63946;",
+                        class: "toy-action-btn toy-action-delete",
+                        title: "Supprimer",
                         data: { turbo_method: :delete, turbo_confirm: "Supprimer ce jouet ?" } do %>
                     <i class="fa-solid fa-trash"></i>
                   <% end %>
                 <% end %>
+              </div>
+            </div>
+            <div class="toy-card-body">
+              <div class="toy-card-title">
+                <% if toy.suppr? %>
+                  <i class="fa-solid fa-trash-can me-1"></i>
+                <% elsif toy.market? %>
+                  <i class="fa-solid fa-store me-1"></i>
+                <% else %>
+                  <i class="fa-solid fa-hourglass-half me-1"></i>
+                <% end %>
+                N°&nbsp;<%= toy.id %>
+              </div>
+              <div class="toy-card-meta">
+                <span class="toy-card-category"><i class="fa-solid fa-layer-group me-1"></i><%= truncate(toy.category.name, length: 20) %></span>
+                <div class="toy-card-conditions">
+                  <span class="condition-icon <%= toy.clean? ? 'ok' : 'ko' %>" title="<%= toy.clean? ? 'Propre' : 'Pas propre' %>">
+                    <i class="fa-solid fa-soap"></i>
+                  </span>
+                  <span class="condition-icon <%= toy.complete? ? 'ok' : 'ko' %>" title="<%= toy.complete? ? 'Complet' : 'Incomplet' %>">
+                    <i class="fa-solid fa-list-check"></i>
+                  </span>
+                  <span class="condition-icon <%= toy.playable? ? 'ok' : 'ko' %>" title="<%= toy.playable? ? 'Jouable' : 'Non jouable' %>">
+                    <i class="fa-solid fa-gamepad"></i>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
