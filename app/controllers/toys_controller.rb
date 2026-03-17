@@ -23,12 +23,15 @@ class ToysController < ApplicationController
 
   def show
     authorize @toy
-    @timeline = Action.where(actionable: @toy).includes(:user).order(created_at: :asc)
+    @timeline = Action.where(actionable: @toy).includes(:user).order(created_at: :desc)
   end
 
   def new
-    @toy = Toy.new
+    @toy = Toy.new(box: @box, category: @box.category)
     authorize @toy
+    @toy.save(validate: false)
+    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a débuté la création du jouet #{@toy.id}")
+    redirect_to edit_toy_path(@toy, new: true), status: :see_other
   end
 
   def create
