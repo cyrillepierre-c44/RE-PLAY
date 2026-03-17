@@ -153,8 +153,10 @@ class PagesController < ApplicationController
     @box_actions_count = @actions.where(actionable_type: "Box").count
     @box_ids           = @actions.where(actionable_type: "Box").pluck(:actionable_id).uniq
     @toy_ids           = @actions.where(actionable_type: "Toy").pluck(:actionable_id).uniq
-    @boxes_weight      = Box.where(id: @box_ids).sum(:weight)
-    @toys_price_total  = Toy.where(id: @toy_ids).sum(:price)
+    @boxes_weight              = Box.where(id: @box_ids).sum(:weight)
+    @boxes_weight_electronic   = Box.where(id: @box_ids, electronic: true).sum(:weight)
+    @boxes_weight_non_electronic = Box.where(id: @box_ids, electronic: false).sum(:weight)
+    @toys_price_total  = Toy.validated.where(id: @toy_ids).sum(:price)
   end
 
   def build_rework_stats
