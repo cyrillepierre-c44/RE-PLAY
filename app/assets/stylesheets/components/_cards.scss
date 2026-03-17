@@ -34,20 +34,6 @@
     font-size: 3rem;
   }
 
-  .toy-card-price-badge {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: rgba(255,255,255,0.88);
-    backdrop-filter: blur(6px);
-    color: $coral;
-    font-family: $headers-font;
-    font-size: 1.15rem;
-    font-weight: 700;
-    padding: 0.25em 0.7em;
-    border-radius: $border-radius-pill;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
-  }
 
   .toy-card-actions {
     position: absolute;
@@ -210,6 +196,211 @@
   }
 }
 
+// ── Prix badge (overlay photo) ───────────────────────────────
+.toy-card-price-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(6px);
+  color: $coral;
+  font-family: $headers-font;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 0.25em 0.7em;
+  border-radius: $border-radius-pill;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+// ── Toy Show ─────────────────────────────────────────────────
+.toy-show-photo-wrap {
+  position: relative;
+
+  .toy-card-price-badge { font-size: 1.25rem; top: 1rem; right: 1rem; }
+  .toy-card-status-dot  { width: 16px; height: 16px; }
+}
+
+.toy-show-title {
+  font-size: 2rem;
+  color: $navy;
+  margin: 0;
+  flex-shrink: 0;
+
+  i { color: $coral; }
+}
+
+.toy-show-category-badge {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $navy;
+  display: inline-flex;
+  align-items: center;
+  max-width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+
+  i { color: $coral; flex-shrink: 0; }
+}
+
+.toy-show-info-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.toy-show-info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $navy;
+
+  i { color: $coral; width: 1.2em; text-align: center; }
+}
+
+.toy-show-conditions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.toy-show-condition-item {
+  flex: 1;
+  min-width: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: $border-radius-xl;
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  i { font-size: 1.5rem; }
+
+  &.ok {
+    background: rgba($mint, 0.15);
+    color: darken($mint, 15%);
+  }
+  &.ko {
+    background: rgba($danger-red, 0.08);
+    color: $danger-red;
+  }
+}
+
+.toy-show-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.toy-show-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+
+  &:hover { transform: scale(1.08); }
+
+  form { margin: 0; }
+
+  &.toy-show-btn-verify  { background: rgba(#9B5DE5, 0.9);  color: $white; }
+  &.toy-show-btn-edit    { background: rgba($navy, 0.08);    color: $navy; }
+  &.toy-show-btn-restore { background: rgba($mint, 0.9);     color: $white; }
+  &.toy-show-btn-delete  { background: rgba(#E63946, 0.88);  color: $white; }
+}
+
+.toy-show-timeline-wrap {
+  background: $white;
+  border-radius: $border-radius-xl;
+  box-shadow: $card-box-shadow;
+  overflow: hidden;
+}
+
+.toy-show-timeline-header {
+  padding: 0.75rem 1.25rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: $navy;
+  border-bottom: 1px solid #F0EBE3;
+
+  i { color: $coral; }
+}
+
+.toy-show-timeline-scroll {
+  max-height: 140px;
+  overflow-y: auto;
+  padding: 0.75rem 1.25rem;
+
+  // Scrollbar discrète
+  &::-webkit-scrollbar       { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: rgba($coral, 0.3); border-radius: 2px; }
+}
+
+.toy-show-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.toy-show-timeline-item {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+  padding-bottom: 1.25rem;
+
+  &:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 16px;
+    bottom: 0;
+    width: 2px;
+    background: #F0EBE3;
+  }
+}
+
+.toy-show-timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: $coral;
+  flex-shrink: 0;
+  margin-top: 2px;
+  box-shadow: 0 0 0 3px rgba($coral, 0.2);
+}
+
+.toy-show-timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.toy-show-timeline-date {
+  font-size: 0.8rem;
+  color: $gray;
+}
+
+.toy-show-timeline-text {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $navy;
+}
+
 // ── Detail Card ──────────────────────────────────────────────
 .detail-card {
   background: $white;
@@ -220,15 +411,15 @@
 
 .detail-card-photo {
   width: 100%;
-  max-height: 420px;
-  object-fit: cover;
+  max-height: 260px;
+  object-fit: contain;
   border-radius: $border-radius-xl;
   box-shadow: $box-shadow;
 }
 
 .detail-card-no-photo {
   width: 100%;
-  height: 320px;
+  height: 200px;
   background: linear-gradient(135deg, #FFF4EC, #FFE8D6);
   border-radius: $border-radius-xl;
   display: flex;
