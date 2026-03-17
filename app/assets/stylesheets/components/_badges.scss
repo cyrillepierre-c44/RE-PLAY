@@ -41,9 +41,11 @@
   display: inline-block;
   flex-shrink: 0;
 
-  &.status-dot-waiting   { background: $yellow;      box-shadow: 0 0 0 3px rgba($yellow, 0.25); }
-  &.status-dot-validated { background: $mint;        box-shadow: 0 0 0 3px rgba($mint, 0.25); }
-  &.status-dot-deleted   { background: $danger-red;  box-shadow: 0 0 0 3px rgba($danger-red, 0.25); }
+  &.status-dot-waiting    { background: $yellow;      box-shadow: 0 0 0 3px rgba($yellow, 0.25); }
+  &.status-dot-validated  { background: $mint;        box-shadow: 0 0 0 3px rgba($mint, 0.25); }
+  &.status-dot-deleted    { background: $danger-red;  box-shadow: 0 0 0 3px rgba($danger-red, 0.25); }
+  &.status-dot-box-active { background: $yellow;      box-shadow: 0 0 0 3px rgba($yellow, 0.25); }
+  &.status-dot-empty      { background: $sky;         box-shadow: 0 0 0 3px rgba($sky, 0.25); }
 }
 
 .toy-card-status-dot {

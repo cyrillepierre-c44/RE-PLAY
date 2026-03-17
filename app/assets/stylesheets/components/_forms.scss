@@ -282,9 +282,12 @@
     }
 
     // Pastilles inactives — couleur du point correspondant
-    &.filter-tab-waiting   .filter-count { background: rgba($yellow, 0.30);      color: darken($yellow, 35%); }
-    &.filter-tab-validated .filter-count { background: rgba($mint, 0.20);         color: darken($mint, 20%); }
-    &.filter-tab-deleted   .filter-count { background: rgba($danger-red, 0.12);   color: $danger-red; }
+    &.filter-tab-waiting    .filter-count { background: rgba($yellow, 0.30);      color: darken($yellow, 35%); }
+    &.filter-tab-validated  .filter-count { background: rgba($mint, 0.20);        color: darken($mint, 20%); }
+    &.filter-tab-deleted    .filter-count { background: rgba($danger-red, 0.12);  color: $danger-red; }
+    &.filter-tab-box-active .filter-count { background: rgba($yellow, 0.30);      color: darken($yellow, 35%); }
+    &.filter-tab-box-empty  .filter-count { background: rgba($sky, 0.20);         color: darken($sky, 20%); }
+    &.filter-tab-box-suppr  .filter-count { background: rgba($danger-red, 0.12);  color: $danger-red; }
 
     // Pastilles actives — chiffre en noir avec cercle noir
     &.active .filter-count {
@@ -294,22 +297,11 @@
       border: 2px solid #000;
     }
 
-    &.filter-tab-waiting.active {
-      background: $yellow;
-      color: #000;
-      box-shadow: 0 2px 8px rgba($yellow, 0.45);
-    }
-
-    &.filter-tab-validated.active {
-      background: $mint;
-      color: #000;
-      box-shadow: 0 2px 8px rgba($mint, 0.35);
-    }
-
-    &.filter-tab-deleted.active {
-      background: $danger-red;
-      color: #000;
-      box-shadow: 0 2px 8px rgba($danger-red, 0.35);
-    }
+    &.filter-tab-waiting.active    { background: $yellow;      color: #000; box-shadow: 0 2px 8px rgba($yellow, 0.45); }
+    &.filter-tab-validated.active  { background: $mint;        color: #000; box-shadow: 0 2px 8px rgba($mint, 0.35); }
+    &.filter-tab-deleted.active    { background: $danger-red;  color: #000; box-shadow: 0 2px 8px rgba($danger-red, 0.35); }
+    &.filter-tab-box-active.active { background: $yellow;      color: #000; box-shadow: 0 2px 8px rgba($yellow, 0.45); }
+    &.filter-tab-box-empty.active  { background: $sky;         color: #000; box-shadow: 0 2px 8px rgba($sky, 0.35); }
+    &.filter-tab-box-suppr.active  { background: $danger-red;  color: #000; box-shadow: 0 2px 8px rgba($danger-red, 0.35); }
   }
 }

@@ -53,6 +53,28 @@
   font-weight: 700;
 }
 
+.btn-new-box {
+  width: 48px;
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: $coral;
+  color: $white;
+  font-size: 1.4rem;
+  border: none;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba($coral, 0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    color: $white;
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba($coral, 0.5);
+  }
+}
+
 // ── Action buttons overlaid on toy card photo ───────────────
 .toy-action-btn {
   width: 44px;

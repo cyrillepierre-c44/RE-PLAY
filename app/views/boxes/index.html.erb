@@ -3,81 +3,101 @@
 <div class="container py-4">
   <div class="page-header">
     <div>
-      <h1 class="page-title"><i class="fa-solid fa-box-open me-2" style="color: #FF6B35;"></i>Boîtes de dons</h1>
-      <p class="page-subtitle">Gérez les boîtes de jouets à reconditionner</p>
+      <h1 class="page-title"><i class="fa-solid fa-boxes-stacked me-2" style="color:#FF6B35;"></i>Boîtes</h1>
+      <p class="page-subtitle">
+        <% if params[:filter] == 'empty' %>
+          Boîtes vidées
+        <% elsif params[:filter] == 'suppr' %>
+          Boîtes jetées
+        <% else %>
+          Boîtes en cours de traitement
+        <% end %>
+      </p>
     </div>
     <% unless params[:filter] == 'suppr' %>
-      <%= link_to new_box_path, class: "btn btn-primary" do %>
-        <i class="fa-solid fa-plus me-1"></i> Nouvelle boîte
+      <%= link_to new_box_path, class: "btn-new-box", title: "Nouvelle boîte" do %>
+        <i class="fa-solid fa-plus"></i>
       <% end %>
     <% end %>
   </div>
 
-<!-- ci-dessous le code pour générer la nouvelle view filtré des boites soft suppr -->
-
-<div class="mb-4">
-  <div class="filter-tabs">
-    <%= link_to boxes_path,
-          class: "filter-tab #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
-      <i class="fa-solid fa-box-open"></i>
-      En cours
-      <span><%= Box.active.count %></span>
-    <% end %>
-    <%= link_to boxes_path(filter: "empty"),
-          class: "filter-tab #{'active' if params[:filter] == 'empty'}" do %>
-      <i class="fa-solid fa-box-open"></i>
-      Vides
-      <span><%= Box.empty.count %></span>
-    <% end %>
-    <%= link_to boxes_path(filter: "suppr"),
-          class: "filter-tab #{'active' if params[:filter] == 'suppr'}" do %>
-      <i class="fa-solid fa-trash"></i>
-      Supprimées
-      <span><%= Box.suppr.count %></span>
-    <% end %>
+  <div class="mb-4">
+    <div class="filter-tabs">
+      <%= link_to boxes_path,
+            class: "filter-tab filter-tab-box-active #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
+        <i class="fa-solid fa-box"></i>
+        En cours
+        <span class="filter-count"><%= Box.active.count %></span>
+      <% end %>
+      <%= link_to boxes_path(filter: "empty"),
+            class: "filter-tab filter-tab-box-empty #{'active' if params[:filter] == 'empty'}" do %>
+        <i class="fa-solid fa-box-open"></i>
+        Vides
+        <span class="filter-count"><%= Box.empty.count %></span>
+      <% end %>
+      <%= link_to boxes_path(filter: "suppr"),
+            class: "filter-tab filter-tab-box-suppr #{'active' if params[:filter] == 'suppr'}" do %>
+        <i class="fa-solid fa-dumpster"></i>
+        Jetées
+        <span class="filter-count"><%= Box.suppr.count %></span>
+      <% end %>
+    </div>
   </div>
-</div>
 
   <% if @boxes.empty? %>
     <div class="text-center py-5">
       <div style="font-size: 4rem; color: rgba(255,107,53,0.2); margin-bottom: 1rem;">
-        <i class="fa-solid fa-box-open"></i>
+        <i class="fa-solid fa-boxes-stacked"></i>
       </div>
-      <h3 style="color: #6B7280;">Aucune boîte pour le moment</h3>
-      <p style="color: #9CA3AF;">Créez votre première boîte pour commencer.</p>
+      <h3 style="color: #6B7280;">Aucune boîte ici</h3>
       <% unless params[:filter] == 'suppr' %>
-        <%= link_to "Créer une boîte", new_box_path, class: "btn btn-primary mt-2" %>
+        <%= link_to new_box_path, class: "btn btn-primary mt-2" do %>
+          <i class="fa-solid fa-plus me-1"></i>Nouvelle boîte
+        <% end %>
       <% end %>
     </div>
   <% else %>
     <div class="row g-3">
       <% @boxes.each do |box| %>
-        <div class="col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4">
           <%= link_to box_path(box), class: "box-card d-block text-decoration-none" do %>
             <div class="box-card-header">
-              <span class="box-card-id">#<%= box.id %></span>
+              <div class="d-flex align-items-center gap-2">
+                <% if box.suppr? %>
+                  <span class="status-dot status-dot-deleted"></span>
+                <% elsif box.empty? %>
+                  <span class="status-dot status-dot-empty"></span>
+                <% else %>
+                  <span class="status-dot status-dot-box-active"></span>
+                <% end %>
+                <span class="box-card-id"><i class="fa-solid fa-boxes-stacked me-1" style="color:#FF6B35; font-size:0.9em;"></i>N°&nbsp;<%= box.id %></span>
+              </div>
               <div class="box-card-icon">
-                <i class="fa-solid fa-<%= box.electronic? ? 'bolt' : 'box' %>"></i>
+                <% if box.suppr? %>
+                  <i class="fa-solid fa-dumpster"></i>
+                <% elsif box.empty? %>
+                  <i class="fa-solid fa-box-open"></i>
+                <% else %>
+                  <i class="fa-solid fa-box"></i>
+                <% end %>
               </div>
             </div>
             <div class="box-card-category"><%= box.category.name %></div>
             <div class="box-card-details">
-              <% if box.electronic? %>
-                <span class="badge badge-electronic">
-                  <i class="fa-solid fa-bolt me-1"></i>Électronique
+              <div class="box-card-details-left">
+                <% if box.weight.present? %>
+                  <span class="box-detail-item">
+                    <i class="fa-solid fa-weight-hanging"></i><%= box.weight %> kg
+                  </span>
+                <% end %>
+                <span class="condition-icon <%= box.electronic? ? 'ok' : 'ko' %>" title="<%= box.electronic? ? 'Électronique' : 'Non électronique' %>">
+                  <i class="fa-solid fa-bolt"></i>
                 </span>
-              <% end %>
-              <% if box.weight.present? %>
-                <span class="badge badge-condition">
-                  <i class="fa-solid fa-weight-hanging me-1"></i><%= box.weight %> kg
-                </span>
-              <% end %>
-              <span class="badge badge-waiting">
-                <i class="fa-solid fa-puzzle-piece me-1"></i><%= box.toys.count %> jouet<%= 's' if box.toys.count > 1 %>
+              </div>
+              <span class="box-toy-count" title="<%= box.toys.count %> jouet<%= 's' if box.toys.count > 1 %>">
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <%= box.toys.count %>
               </span>
-            </div>
-            <div class="box-card-footer">
-              <span class="btn btn-ghost btn-sm" style="pointer-events:none;">Voir la boîte</span>
             </div>
           <% end %>
         </div>
