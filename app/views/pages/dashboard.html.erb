@@ -146,6 +146,16 @@
       </div>
     </div>
     <div class="col-6 col-md-3">
+      <div class="kpi-card kpi-rework">
+        <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="kpi-value">
+          <%= number_with_precision(@toys_price_pending, precision: 0, delimiter: " ") %>
+          <span class="kpi-unit">€</span>
+        </div>
+        <div class="kpi-label">Valorisation jouets en attente</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
       <div class="kpi-card kpi-price">
         <div class="kpi-icon"><i class="fa-solid fa-robot"></i></div>
         <div class="kpi-value">

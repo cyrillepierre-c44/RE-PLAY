@@ -156,7 +156,8 @@ class PagesController < ApplicationController
     @boxes_weight              = Box.where(id: @box_ids).sum(:weight)
     @boxes_weight_electronic   = Box.where(id: @box_ids, electronic: true).sum(:weight)
     @boxes_weight_non_electronic = Box.where(id: @box_ids, electronic: false).sum(:weight)
-    @toys_price_total  = Toy.validated.where(id: @toy_ids).sum(:price)
+    @toys_price_total   = Toy.validated.where(id: @toy_ids).sum(:price)
+    @toys_price_pending = Toy.waiting.where(id: @toy_ids).sum(:price)
   end
 
   def build_rework_stats
