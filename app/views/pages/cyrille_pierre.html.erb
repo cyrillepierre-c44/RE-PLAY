@@ -1,127 +1,105 @@
-<%# ── HERO ─────────────────────────────────────────────────────────── %>
-<div class="onboarding-hero">
-  <div class="container py-5 text-center text-white">
-    <%= image_tag "cyrille", alt: "Cyrille Pierre", class: "onboarding-avatar mb-4", style: "width: 130px; height: 130px;" %>
-    <h1 class="display-5 fw-bold mb-1">Cyrille Pierre</h1>
-    <p class="lead onboarding-hero-sub mb-0">
-      Direction opérationnelle &middot; LEAN Manufacturing &middot; Accompagnement du changement
-    </p>
-  </div>
-</div>
+<% content_for :title, "Cyrille Pierre · RE-PLAY" %>
 
-<%# ── BIO ─────────────────────────────────────────────────────────── %>
-<div class="container my-5">
-  <div class="card border-0 shadow-sm onboarding-intro-card p-4 p-md-5">
-    <p class="fs-5 lh-lg mb-0">
+<div class="container py-4">
+
+  <%= link_to onboarding_path, class: "btn-back-boxes mb-3 d-inline-block" do %>
+    <span style="color:#000;">←</span> Guide
+  <% end %>
+
+  <%# ── En-tête profil ── %>
+  <div class="detail-card p-4 text-center mb-4">
+    <%= image_tag "cyrille", alt: "Cyrille Pierre", class: "onb-avatar onb-avatar-lg mb-3" %>
+    <h1 class="toy-show-title mb-1">Cyrille Pierre</h1>
+    <div class="onb-team-role mb-2">Développeur</div>
+    <p class="onb-tagline">Direction opérationnelle · LEAN Manufacturing · Accompagnement du changement</p>
+  </div>
+
+  <%# ── Bio ── %>
+  <div class="detail-card p-4 mb-4 onb-bio-card">
+    <p class="onb-bio-text mb-0">
       Ingénieur Arts et Métiers spécialisé en direction opérationnelle et LEAN Manufacturing, Cyrille a passé
-      plus de 20 ans à piloter des unités de production industrielles et à créer des solutions concrètes,
-      jusqu'à fonder Centaur Bike, son atelier de reconditionnement de vélos électriques.
-      En suivant la formation full-stack développeur web &amp; IA du Wagon, il a transposé cette rigueur d'ingénieur
-      dans le code : Ruby on Rails, bases de données, APIs et intégration d'intelligence artificielle.
-      C'est cette combinaison unique entre expertise terrain et compétences numériques qui lui a permis de
-      concevoir RE-Play, en structurant notamment la logique de traçabilité et de contrôle qualité des jouets.
+      plus de 20 ans à piloter des unités de production industrielles, jusqu'à fonder Centaur Bike, son atelier
+      de reconditionnement de vélos électriques. La formation full-stack du Wagon lui a permis de transposer
+      cette rigueur d'ingénieur dans le code : Ruby on Rails, bases de données, APIs et IA.
     </p>
   </div>
-</div>
 
-<%# ── BLOC 1 : 2 dernières expériences ───────────────────────────── %>
-<section class="bg-white py-5">
-  <div class="container">
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <span class="onboarding-section-bar"></span>
-      <h2 class="mb-0 fw-bold">Expériences récentes</h2>
+  <%# ── Expériences ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2><i class="fa-solid fa-briefcase me-2" style="color:$coral; font-size:1rem;"></i>Expériences récentes</h2>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-exp-icon onb-icon-coral mb-2"><i class="fa-solid fa-bicycle"></i></div>
+        <div class="onb-exp-date">janv. 2021 – aujourd'hui</div>
+        <h5 class="onb-card-title">Fondateur</h5>
+        <p class="onb-exp-company">Centaur Bike · Lyon</p>
+        <p class="onb-card-text mb-0">Création d'un atelier d'électrification et de reconditionnement de vélos électriques toutes marques, en B2B &amp; B2C.</p>
+      </div>
     </div>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-            <h5 class="fw-bold mb-0">Fondateur</h5>
-            <span class="badge onboarding-role-badge">janv. 2021 – aujourd'hui</span>
-          </div>
-          <p class="text-muted mb-2">Centaur Bike &middot; Lyon</p>
-          <p class="mb-0 small">
-            Création d'un atelier d'électrification et de reconditionnement de vélos électriques toutes marques, en B2B &amp; B2C.
-          </p>
-        </div>
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-exp-icon onb-icon-sky mb-2"><i class="fa-solid fa-industry"></i></div>
+        <div class="onb-exp-date">oct. 2018 – déc. 2020</div>
+        <h5 class="onb-card-title">Responsable production · CODIR</h5>
+        <p class="onb-exp-company">General Mills – Yoplait · Vienne</p>
+        <p class="onb-card-text mb-0">Pilotage de plusieurs unités de production, management d'équipes pluridisciplinaires et amélioration continue.</p>
       </div>
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-            <h5 class="fw-bold mb-0">Responsable production &middot; CODIR</h5>
-            <span class="badge onboarding-role-badge">oct. 2018 – déc. 2020</span>
-          </div>
-          <p class="text-muted mb-2">General Mills – Yoplait &middot; Vienne</p>
-          <p class="mb-0 small">
-            Pilotage de plusieurs unités de production dans l'agroalimentaire, management d'équipes pluridisciplinaires et amélioration continue des performances.
-          </p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-            <h5 class="fw-bold mb-0">Concepteur &amp; Développeur web &amp; IA</h5>
-            <span class="badge onboarding-role-badge">janv. – mars 2026</span>
-          </div>
-          <p class="text-muted mb-2">Le Wagon &middot; Bootcamp full-stack &middot; RNCP niveau 6</p>
-          <p class="mb-0 small">
-            Formation intensive : Ruby on Rails, JavaScript, PostgreSQL, Git et intégration d'IA.
-            Projet final : conception de l'application RE-Play pour ENJOUÉ.
-          </p>
-        </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-exp-icon onb-icon-mint mb-2"><i class="fa-solid fa-code"></i></div>
+        <div class="onb-exp-date">janv. – mars 2026</div>
+        <h5 class="onb-card-title">Concepteur &amp; Développeur web &amp; IA</h5>
+        <p class="onb-exp-company">Le Wagon · Bootcamp full-stack · RNCP niv. 6</p>
+        <p class="onb-card-text mb-0">Formation intensive : Ruby on Rails, JavaScript, PostgreSQL, Git et IA. Projet final : RE-Play pour ENJOUÉ.</p>
       </div>
     </div>
   </div>
-</section>
 
-<%# ── BLOC 2 : Compétences ────────────────────────────────────────── %>
-<section class="py-5">
-  <div class="container">
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <span class="onboarding-section-bar"></span>
-      <h2 class="mb-0 fw-bold">Compétences</h2>
-    </div>
+  <%# ── Compétences ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2><i class="fa-solid fa-star me-2" style="font-size:1rem;"></i>Compétences</h2>
+  </div>
+  <div class="detail-card p-4 mb-4">
     <div class="d-flex flex-wrap gap-2">
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">LEAN Manufacturing</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">World Class Manufacturing</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Management opérationnel</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Change Management</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Lean Six Sigma</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Gestion de projet</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Gestion budgétaire</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-gear"></i> LEAN Manufacturing</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-award"></i> World Class Manufacturing</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-users"></i> Management opérationnel</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-arrows-spin"></i> Change Management</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-chart-line"></i> Lean Six Sigma</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-list-check"></i> Gestion de projet</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-coins"></i> Gestion budgétaire</span>
     </div>
   </div>
-</section>
 
-<%# ── BLOC 3 : Diplômes & intérêts ───────────────────────────────── %>
-<section class="bg-white py-5">
-  <div class="container">
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <span class="onboarding-section-bar"></span>
-      <h2 class="mb-0 fw-bold">Diplômes &amp; intérêts</h2>
-    </div>
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <h6 class="fw-bold text-uppercase small mb-3" style="color: #E67E22; letter-spacing: .06em;">Formation</h6>
-          <p class="mb-1 fw-semibold">Arts et Métiers ParisTech</p>
-          <p class="text-muted small mb-3">Ingénieur généraliste &middot; Master · 2000–2003</p>
-          <p class="mb-1 fw-semibold">IUT Nancy-Brabois</p>
-          <p class="text-muted small mb-0">DUT Génie Mécanique et Productique &middot; mention Bien · 1998–2000</p>
-        </div>
+  <%# ── Formation & Engagements ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2><i class="fa-solid fa-graduation-cap me-2" style="font-size:1rem;"></i>Diplômes &amp; engagements</h2>
+  </div>
+  <div class="row g-3 mb-2">
+    <div class="col-12 col-md-6">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-sub-section-title"><i class="fa-solid fa-graduation-cap me-2"></i>Formation</div>
+        <p class="onb-card-title mb-0">Arts et Métiers ParisTech</p>
+        <p class="onb-exp-company mb-3">Ingénieur généraliste · Master · 2000–2003</p>
+        <p class="onb-card-title mb-0">IUT Nancy-Brabois</p>
+        <p class="onb-exp-company mb-0">DUT Génie Mécanique · mention Bien · 1998–2000</p>
       </div>
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <h6 class="fw-bold text-uppercase small mb-3" style="color: #E67E22; letter-spacing: .06em;">Engagements &amp; intérêts</h6>
-          <p class="mb-1 fw-semibold">Bénévolat</p>
-          <p class="text-muted small mb-3">Responsable Relations Industrie, Association Gadz'arts de Cluny</p>
-          <p class="mb-1 fw-semibold">Passion</p>
-          <p class="text-muted small mb-0">Électrification et reconditionnement de vélos</p>
-        </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-sub-section-title"><i class="fa-solid fa-heart me-2"></i>Engagements &amp; passions</div>
+        <p class="onb-card-title mb-0">Bénévolat</p>
+        <p class="onb-exp-company mb-3">Responsable Relations Industrie, Association Gadz'arts de Cluny</p>
+        <p class="onb-card-title mb-0">Passion</p>
+        <p class="onb-exp-company mb-0">Électrification et reconditionnement de vélos</p>
       </div>
     </div>
   </div>
-</section>
 
-<div class="container py-4 text-center">
-  <%= link_to "← Retour à l'onboarding", onboarding_path, class: "btn onboarding-team-btn fw-bold" %>
 </div>

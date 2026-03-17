@@ -1,48 +1,26 @@
 .home-hero {
-  background: linear-gradient(135deg, $coral 0%, #FF8C5A 50%, $yellow 100%);
-  border-radius: 0 0 $border-radius-xxl $border-radius-xxl;
-  padding: 3rem 1.5rem 4.5rem;
-  color: $white;
+  background: none;
+  padding: 2rem 1.5rem 1rem;
   text-align: center;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -60px;
-    right: -60px;
-    width: 280px;
-    height: 280px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 50%;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -80px;
-    left: -40px;
-    width: 200px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 50%;
-  }
 
   .hero-title {
-    font-size: 2.6rem;
-    color: $white;
-    margin-bottom: 0.5rem;
-    position: relative;
-    z-index: 1;
+    font-size: 2.2rem;
+    color: $navy;
+    margin-bottom: 0.4rem;
   }
 
   .hero-subtitle {
-    color: rgba(255, 255, 255, 0.88);
-    font-size: 1.05rem;
-    margin-bottom: 0;
-    position: relative;
-    z-index: 1;
+    color: $gray;
+    font-size: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .home-hero-logo {
+    display: block;
+    margin: 0 auto;
+    max-height: 280px;
+    width: auto;
+    max-width: 640px;
   }
 }
 
@@ -92,6 +70,6 @@
 
   .quick-action-label {
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 1.08rem;
   }
 }
