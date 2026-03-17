@@ -27,8 +27,11 @@ class ToysController < ApplicationController
   end
 
   def new
-    @toy = Toy.new
+    @toy = Toy.new(box: @box, category: @box.category)
     authorize @toy
+    @toy.save(validate: false)
+    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a débuté la création du jouet #{@toy.id}")
+    redirect_to edit_toy_path(@toy, new: true), status: :see_other
   end
 
   def create

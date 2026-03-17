@@ -14,10 +14,8 @@
         <% end %>
       </p>
     </div>
-    <% unless params[:filter] == 'suppr' %>
-      <%= link_to new_box_path, class: "btn-new-box", title: "Nouvelle boîte" do %>
-        <i class="fa-solid fa-plus"></i>
-      <% end %>
+    <%= link_to new_box_path, class: "btn-new-box", title: "Nouvelle boîte" do %>
+      <i class="fa-solid fa-plus"></i>
     <% end %>
   </div>
 
@@ -91,7 +89,7 @@
                 <% end %>
               </div>
             </div>
-            <div class="box-card-category"><%= box.category.name %></div>
+            <div class="box-card-category"><%= truncate(box.category.name, length: 20) %></div>
             <div class="box-card-details">
               <div class="box-card-details-left">
                 <% if box.weight.present? %>

@@ -29,9 +29,13 @@ class BoxesController < ApplicationController
   def create
     @box = Box.new(box_params)
     authorize @box
-    if @box.save!
+    if @box.save
       Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} à créé la boite n#{@box.id}")
-      redirect_to box_path(@box)
+      if params[:new_flow]
+        redirect_to edit_box_path(@box, new: true), status: :see_other
+      else
+        redirect_to box_path(@box)
+      end
     else
       render :new, status: :unprocessable_entity
     end

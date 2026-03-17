@@ -29,7 +29,7 @@
       <% end %>
       <%= link_to toys_path(filter: "validated"),
             class: "filter-tab filter-tab-validated #{'active' if params[:filter] == 'validated'}" do %>
-        <i class="fa-solid fa-tag"></i>
+        <i class="fa-solid fa-store"></i>
         Prêts
         <span class="filter-count"><%= Toy.validated.count %></span>
       <% end %>
@@ -111,20 +111,20 @@
                 <% if toy.suppr? %>
                   <i class="fa-solid fa-trash-can me-1"></i>
                 <% elsif toy.market? %>
-                  <i class="fa-solid fa-tag me-1"></i>
+                  <i class="fa-solid fa-store me-1"></i>
                 <% else %>
                   <i class="fa-solid fa-hourglass-half me-1"></i>
                 <% end %>
                 N°&nbsp;<%= toy.id %>
               </div>
               <div class="toy-card-meta">
-                <span class="toy-card-category"><i class="fa-solid fa-layer-group me-1"></i><%= toy.category.name %></span>
+                <span class="toy-card-category"><i class="fa-solid fa-layer-group me-1"></i><%= truncate(toy.category.name, length: 20) %></span>
                 <div class="toy-card-conditions">
                   <span class="condition-icon <%= toy.clean? ? 'ok' : 'ko' %>" title="<%= toy.clean? ? 'Propre' : 'Pas propre' %>">
                     <i class="fa-solid fa-soap"></i>
                   </span>
                   <span class="condition-icon <%= toy.complete? ? 'ok' : 'ko' %>" title="<%= toy.complete? ? 'Complet' : 'Incomplet' %>">
-                    <i class="fa-solid fa-puzzle-piece"></i>
+                    <i class="fa-solid fa-list-check"></i>
                   </span>
                   <span class="condition-icon <%= toy.playable? ? 'ok' : 'ko' %>" title="<%= toy.playable? ? 'Jouable' : 'Non jouable' %>">
                     <i class="fa-solid fa-gamepad"></i>
