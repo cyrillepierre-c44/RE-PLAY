@@ -4,6 +4,10 @@
 .onboarding-hero {
   background-color: #1f2937;
   padding: 80px 20px;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   h1, h2, h3, h4, h5, h6 {
     color: white;
