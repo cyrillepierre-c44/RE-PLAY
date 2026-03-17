@@ -127,12 +127,32 @@
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-weight">
-        <div class="kpi-icon"><i class="fa-solid fa-weight-hanging"></i></div>
+        <div class="kpi-icon"><i class="fa-solid fa-plug"></i></div>
         <div class="kpi-value">
-          <%= number_with_precision(@boxes_weight, precision: 1, delimiter: " ") %>
+          <%= number_with_precision(@boxes_weight_electronic, precision: 1, delimiter: " ") %>
           <span class="kpi-unit">kg</span>
         </div>
-        <div class="kpi-label">Poids cumulé des boîtes</div>
+        <div class="kpi-label">Poids jouets électroniques</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="kpi-card kpi-weight">
+        <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
+        <div class="kpi-value">
+          <%= number_with_precision(@boxes_weight_non_electronic, precision: 1, delimiter: " ") %>
+          <span class="kpi-unit">kg</span>
+        </div>
+        <div class="kpi-label">Poids jouets non électroniques</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="kpi-card kpi-rework">
+        <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+        <div class="kpi-value">
+          <%= number_with_precision(@toys_price_pending, precision: 0, delimiter: " ") %>
+          <span class="kpi-unit">€</span>
+        </div>
+        <div class="kpi-label">Valeurs des jouets en attente</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
@@ -142,7 +162,7 @@
           <%= number_with_precision(@toys_price_total, precision: 0, delimiter: " ") %>
           <span class="kpi-unit">€</span>
         </div>
-        <div class="kpi-label">Valorisation IA des jouets</div>
+        <div class="kpi-label">Valeurs des jouets contrôlés</div>
       </div>
     </div>
   </div>
