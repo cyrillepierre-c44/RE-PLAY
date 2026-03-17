@@ -24,4 +24,8 @@ class PagePolicy < ApplicationPolicy
   def dashboard?
     user.admin?
   end
+
+  def export_csv?
+    user.admin?
+  end
 end
