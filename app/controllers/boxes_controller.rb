@@ -18,7 +18,7 @@ class BoxesController < ApplicationController
     @timeline = Action.where(actionable: @box)
                       .or(Action.where(actionable: toys))
                       .includes(:user)
-                      .order(created_at: :asc)
+                      .order(created_at: :desc)
   end
 
   def new
@@ -68,7 +68,11 @@ class BoxesController < ApplicationController
     @box.update(status: new_status)
     label = new_status == :empty ? "marqué la boite n°#{@box.id} comme vide" : "marqué la boite n°#{@box.id} comme non vide"
     Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} a #{label}")
-    new_status == :empty ? redirect_to(boxes_path) : redirect_to(box_path(@box))
+    if new_status == :empty
+      redirect_to boxes_path, notice: "✅ La boîte N°#{@box.id} est bien vidée !"
+    else
+      redirect_to box_path(@box)
+    end
   end
 
   private

@@ -53,6 +53,67 @@
   font-weight: 700;
 }
 
+// ── Box empty/full toggle ────────────────────────────────────
+.box-toggle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  form { margin: 0; }
+}
+
+.box-toggle-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+
+  .box-toggle-icons {
+    display: flex;
+    justify-content: space-between;
+    width: 64px;
+    font-size: 1.1rem;
+
+    .icon-full  { color: $navy; transition: color 0.3s; }
+    .icon-empty { color: rgba($navy, 0.25); transition: color 0.3s; }
+  }
+
+  .box-toggle-track {
+    width: 64px;
+    height: 32px;
+    border-radius: 16px;
+    background: $navy;
+    position: relative;
+    transition: background 0.3s;
+
+    .box-toggle-thumb {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: $white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+  }
+
+  &.is-empty {
+    .box-toggle-icons {
+      .icon-full  { color: rgba($navy, 0.25); }
+      .icon-empty { color: $sky; }
+    }
+
+    .box-toggle-track {
+      background: rgba($sky, 0.25);
+
+      .box-toggle-thumb { transform: translateX(32px); }
+    }
+  }
+}
+
 .btn-new-box {
   width: 48px;
   height: 48px;
