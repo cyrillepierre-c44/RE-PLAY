@@ -15,6 +15,10 @@
         <% end %>
         <% if @toy.price.present? %>
           <div class="toy-card-price-badge"><%= @toy.price.to_i %> €</div>
+        <% elsif @toy.photo.attached? %>
+          <div class="toy-card-price-badge" style="background:rgba(0,0,0,0.45); font-size:0.65rem; padding:0.2rem 0.5rem;">
+            <i class="fa-solid fa-robot fa-spin"></i>
+          </div>
         <% end %>
         <% if @toy.suppr? %>
           <span class="status-dot status-dot-deleted toy-card-status-dot" title="Jeté"></span>
