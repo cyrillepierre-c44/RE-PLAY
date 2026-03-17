@@ -196,6 +196,147 @@
   }
 }
 
+// ── Verify page ──────────────────────────────────────────────
+.verify-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.verify-photo-wrap {
+  position: relative;
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FFF4EC, #FFE8D6);
+}
+
+.verify-photo {
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+  display: block;
+}
+
+.verify-no-photo {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba($coral, 0.35);
+  font-size: 4rem;
+}
+
+.verify-photo-overlay {
+  position: absolute;
+  bottom: 0.75rem;
+  right: 0.75rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba($white, 0.88);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: $coral;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.15s;
+
+  &:hover { transform: scale(1.1); }
+}
+
+// Condition toggles
+.verify-conditions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.condition-toggle-input { display: none; }
+
+.condition-toggle-label {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: $border-radius-xl;
+  background: rgba($danger-red, 0.08);
+  color: rgba($danger-red, 0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border: 2px solid transparent;
+
+  i { font-size: 1.4rem; }
+
+  &:hover { border-color: rgba($mint, 0.4); }
+}
+
+.condition-toggle-input:checked + .condition-toggle-label {
+  background: rgba($mint, 0.15);
+  color: darken($mint, 15%);
+  border-color: rgba($mint, 0.3);
+}
+
+// Champs verify
+.verify-select,
+.verify-input {
+  font-size: 1rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: $border-radius-lg !important;
+  border: 1.5px solid #E2E8F0 !important;
+
+  &:focus {
+    border-color: $coral !important;
+    box-shadow: 0 0 0 3px rgba($coral, 0.15) !important;
+  }
+}
+
+// Boutons décision
+.verify-decisions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.verify-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.85rem 0.5rem;
+  border-radius: $border-radius-xl;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  i { font-size: 1.4rem; }
+
+  &:hover { transform: translateY(-2px); box-shadow: $box-shadow; }
+
+  &.verify-btn-market {
+    background: rgba($mint, 0.15);
+    color: darken($mint, 15%);
+  }
+  &.verify-btn-review {
+    background: rgba($yellow, 0.25);
+    color: darken($yellow, 35%);
+  }
+  &.verify-btn-suppr {
+    background: rgba($danger-red, 0.1);
+    color: $danger-red;
+  }
+}
+
 // ── Box Show ─────────────────────────────────────────────────
 .box-show-icon {
   width: 72px;

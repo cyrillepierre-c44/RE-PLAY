@@ -1,134 +1,141 @@
-<% content_for :title, "Contrôle qualité · Jouet ##{@toy.id} · RE-PLAY" %>
+<% content_for :title, "Contrôle qualité · Jouet N°#{@toy.id} · RE-PLAY" %>
 
-<div class="form-page">
-  <div class="container">
-    <%= link_to toy_path(@toy), class: "btn btn-ghost btn-sm mb-3" do %>
-      <i class="fa-solid fa-arrow-left me-1"></i>Retour au jouet #<%= @toy.id %>
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <%= link_to toy_path(@toy), class: "btn-back-boxes" do %>
+      <span style="color:#000;">←</span>
+      <i class="fa-solid fa-puzzle-piece"></i>
     <% end %>
-
-    <div class="form-card" style="max-width: 620px;">
-      <div class="form-card-header" style="background: linear-gradient(135deg, rgba(155,93,229,0.08), rgba(76,201,240,0.08));">
-        <div class="form-card-icon" style="background: linear-gradient(135deg, rgba(155,93,229,0.15), rgba(76,201,240,0.2)); color: #9B5DE5;">
-          <i class="fa-solid fa-clipboard-check"></i>
-        </div>
-        <h1 class="form-card-title">Contrôle qualité</h1>
-        <p class="form-card-subtitle">
-          Jouet #<%= @toy.id %> · <%= @toy.category.name %>
-        </p>
-      </div>
-
-      <div class="form-card-body">
-        <% if @toy.photo.attached? %>
-          <div class="text-center mb-4">
-            <%= image_tag @toy.photo, class: "current-photo", style: "max-width: 240px; display: block; margin: 0 auto;" %>
-          </div>
-        <% end %>
-
-        <%= simple_form_for(@toy, url: confirm_verify_toy_path(@toy), method: :patch) do |f| %>
-
-          <%# Photo update %>
-          <div class="mb-3">
-            <label class="form-label">Mettre à jour la photo</label>
-            <div class="photo-upload-zone">
-              <div class="upload-icon"><i class="fa-solid fa-camera"></i></div>
-              <%= f.input :photo,
-                as: :file,
-                label: false,
-                input_html: { class: "form-control", id: "toy-photo-input", accept: "image/*",
-                              style: "background:transparent; border:none; padding:0; font-size:0.85rem;" } %>
-              <div id="photo-preview" class="mt-2 text-center"></div>
-            </div>
-          </div>
-
-          <script>
-            document.addEventListener('DOMContentLoaded', function() {
-              const photoInput = document.getElementById('toy-photo-input');
-              const previewContainer = document.getElementById('photo-preview');
-              if (photoInput) {
-                photoInput.addEventListener('change', function(event) {
-                  previewContainer.innerHTML = '';
-                  if (event.target.files && event.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                      const img = document.createElement('img');
-                      img.src = e.target.result;
-                      img.style.maxWidth = '200px';
-                      img.style.borderRadius = '0.75rem';
-                      img.alt = 'Aperçu';
-                      previewContainer.appendChild(img);
-                    };
-                    reader.readAsDataURL(event.target.files[0]);
-                  }
-                });
-              }
-            });
-          </script>
-
-          <%# Catégorie %>
-          <div class="mb-3">
-            <%= f.association :category,
-              label: "Catégorie",
-              input_html: { class: "form-select" },
-              label_html: { class: "form-label" } %>
-          </div>
-
-      <div class="mb-3">
-        <%= f.association :category,
-          label: "Catégorie du jouet",
-          input_html: { class: "form-control", selected: @box.category.name } %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.input :barcode,
-          label: "Identification du jouet (facultatif)",
-          input_html: { class: "form-control" } %>
-      </div>
-
-      <div class="mb-3 form-check">
-        <%= f.input :clean,
-          label: "Cocher si le jouet est propre",
-          input_html: { class: "form-check-input" },
-          wrapper_html: { class: "form-check" } %>
-      </div>
-
-      <div class="mb-3 form-check">
-        <%= f.input :complete,
-          label: "Cocher si le jouet est complet",
-          input_html: { class: "form-check-input" },
-          wrapper_html: { class: "form-check" } %>
-      </div>
-
-      <div class="mb-3 form-check">
-        <%= f.input :playable,
-          label: "Cocher si le jouet est jouable",
-          input_html: { class: "form-check-input" },
-          wrapper_html: { class: "form-check" } %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.input :price,
-          label: "Prix (€)",
-          as: :numeric,
-          input_html: { class: "form-control", step: 0.01 } %>
-      </div>
-
-      <div class="mb-3">
-        <%= f.input :location,
-          label: "Lieu où va etre rangé le jouet",
-          required: true,
-          placeholder: "Rack A, Etagère 0, Boîte 0",
-          input_html: {
-            class: "form-control",
-              value: @toy.location || "Rack A, Etagère 0, Boîte 0"
-          } %>
-      </div>
-
-
-      <div class="d-flex gap-2 justify-content-center">
-        <%= button_tag "Mise en vente", name:  :status, value: "market", class: "btn btn-success" %>
-        <%= button_tag "Retour en valorisation", name: :status, value: "review", class: "btn btn-warning" %>
-        <%= button_tag "Supprimer", name: :status, value: "suppr", class: "btn btn-danger" %>
-      </div>
-    <% end %>
+    <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-puzzle-piece me-1"></i>N°&nbsp;<%= @toy.id %></span>
   </div>
+
+  <div class="verify-header mb-3">
+    <h1 class="toy-show-title">
+      <i class="fa-solid fa-magnifying-glass me-2"></i>Contrôle qualité
+    </h1>
+  </div>
+
+  <%= simple_form_for(@toy, url: confirm_verify_toy_path(@toy), method: :patch) do |f| %>
+
+    <div class="row g-3">
+
+      <%# ── Photo ── %>
+      <div class="col-12 col-md-4">
+        <div class="verify-photo-wrap">
+          <% if @toy.photo.attached? %>
+            <%= image_tag @toy.photo, class: "verify-photo", id: "photo-preview-img" %>
+          <% else %>
+            <div class="verify-no-photo" id="photo-preview-img">
+              <i class="fa-solid fa-image"></i>
+            </div>
+          <% end %>
+          <label class="verify-photo-overlay" for="toy-photo-input" title="Changer la photo">
+            <i class="fa-solid fa-camera"></i>
+          </label>
+          <%= f.input :photo,
+              as: :file,
+              label: false,
+              input_html: { id: "toy-photo-input", accept: "image/*", style: "display:none;" } %>
+          <div id="photo-new-preview" class="mt-2 text-center" style="display:none;">
+            <img id="photo-preview-new" src="" style="max-width:100%; border-radius:0.75rem;" alt="Aperçu">
+          </div>
+        </div>
+      </div>
+
+      <%# ── Champs & conditions ── %>
+      <div class="col-12 col-md-8">
+
+        <%# Conditions toggle %>
+        <div class="verify-conditions mb-3">
+          <input type="hidden" name="toy[clean]" value="0">
+          <input type="checkbox" name="toy[clean]" value="1" id="toggle-clean" class="condition-toggle-input" <%= 'checked' if @toy.clean? %>>
+          <label for="toggle-clean" class="condition-toggle-label">
+            <i class="fa-solid fa-soap"></i>
+            <span>Propre</span>
+          </label>
+
+          <input type="hidden" name="toy[complete]" value="0">
+          <input type="checkbox" name="toy[complete]" value="1" id="toggle-complete" class="condition-toggle-input" <%= 'checked' if @toy.complete? %>>
+          <label for="toggle-complete" class="condition-toggle-label">
+            <i class="fa-solid fa-puzzle-piece"></i>
+            <span>Complet</span>
+          </label>
+
+          <input type="hidden" name="toy[playable]" value="0">
+          <input type="checkbox" name="toy[playable]" value="1" id="toggle-playable" class="condition-toggle-input" <%= 'checked' if @toy.playable? %>>
+          <label for="toggle-playable" class="condition-toggle-label">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>Jouable</span>
+          </label>
+        </div>
+
+        <%# Catégorie %>
+        <div class="mb-2">
+          <%= f.association :category,
+              label: false,
+              prompt: "Catégorie…",
+              input_html: { class: "form-select verify-select" } %>
+        </div>
+
+        <%# Barcode + Prix côte à côte %>
+        <div class="row g-2 mb-2">
+          <div class="col-6">
+            <%= f.input :barcode,
+                label: false,
+                placeholder: "Code-barres",
+                input_html: { class: "form-control verify-input" } %>
+          </div>
+          <div class="col-6">
+            <%= f.input :price,
+                label: false,
+                as: :numeric,
+                placeholder: "Prix (€)",
+                input_html: { class: "form-control verify-input", step: 0.01 } %>
+          </div>
+        </div>
+
+        <%# Emplacement %>
+        <div class="mb-3">
+          <%= f.input :location,
+              label: false,
+              required: true,
+              placeholder: "Emplacement : Rack A, Étagère 0…",
+              input_html: { class: "form-control verify-input", value: @toy.location.presence || "Rack A, Étagère 0, Boîte 0" } %>
+        </div>
+
+        <%# Boutons décision %>
+        <div class="verify-decisions">
+          <%= button_tag name: :status, value: "market", class: "verify-btn verify-btn-market" do %>
+            <i class="fa-solid fa-tag"></i>
+            <span>Mise en vente</span>
+          <% end %>
+          <%= button_tag name: :status, value: "review", class: "verify-btn verify-btn-review" do %>
+            <i class="fa-solid fa-rotate-left"></i>
+            <span>Revaloriser</span>
+          <% end %>
+          <%= button_tag name: :status, value: "suppr", class: "verify-btn verify-btn-suppr",
+              data: { confirm: "Supprimer définitivement ce jouet ?" } do %>
+            <i class="fa-solid fa-trash"></i>
+            <span>Jeter</span>
+          <% end %>
+        </div>
+
+      </div>
+    </div>
+
+  <% end %>
 </div>
+
+<script>
+  document.getElementById('toy-photo-input').addEventListener('change', function(e) {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const preview = document.getElementById('photo-preview-new');
+        preview.src = ev.target.result;
+        document.getElementById('photo-new-preview').style.display = 'block';
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  });
+</script>

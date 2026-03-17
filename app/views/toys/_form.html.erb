@@ -1,103 +1,78 @@
 <%= simple_form_for @toy.persisted? ? @toy : [@box, @toy] do |f| %>
 
-  <%# Photo %>
-  <div class="mb-4">
-    <label class="form-label">Photo du jouet</label>
+  <%# Photo à gauche + icône changement à droite %>
+  <div class="d-flex align-items-center mb-2">
     <% if @toy.photo.attached? %>
-      <div class="mb-2 text-center">
-        <%= image_tag @toy.photo, class: "current-photo d-block mx-auto" %>
-        <span style="font-size:0.78rem; color:#9CA3AF; margin-top:0.3rem; display:block;">Photo actuelle</span>
+      <img id="photo-current" src="<%= url_for(@toy.photo) %>" style="height:192px; width:auto; max-width:calc(100% - 96px); object-fit:contain; border-radius:0.75rem; display:block;">
+    <% else %>
+      <div style="height:160px; width:160px; background:linear-gradient(135deg,#FFF4EC,#FFE8D6); border-radius:0.75rem; display:flex; align-items:center; justify-content:center; color:rgba(255,107,53,0.3); font-size:3.5rem; flex-shrink:0;">
+        <i class="fa-solid fa-image"></i>
       </div>
     <% end %>
-    <div class="photo-upload-zone" id="photo-drop-zone">
-      <div class="upload-icon"><i class="fa-solid fa-camera"></i></div>
-      <%= f.input :photo,
-        as: :file,
-        label: false,
-        input_html: { class: "form-control", id: "toy-photo-input", accept: "image/*",
-                      style: "background:transparent; border:none; padding:0; font-size:0.85rem;" } %>
-      <div id="photo-preview" class="mt-2 text-center"></div>
+    <img id="photo-preview" src="" style="display:none; height:192px; width:auto; max-width:calc(100% - 96px); object-fit:contain; border-radius:0.75rem;">
+    <div class="flex-grow-1 d-flex justify-content-center">
+      <label for="toy-photo-input" class="verify-photo-overlay position-static" title="Changer la photo" style="flex-shrink:0; width:72px; height:72px; font-size:2.2rem; border-radius:0.75rem;">
+        <i class="fa-solid fa-camera-rotate"></i>
+      </label>
     </div>
+    <%= f.input :photo, as: :file, label: false,
+        input_html: { id: "toy-photo-input", accept: "image/*", style: "display:none;" } %>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const photoInput = document.getElementById('toy-photo-input');
-      const previewContainer = document.getElementById('photo-preview');
-      if (photoInput) {
-        photoInput.addEventListener('change', function(event) {
-          previewContainer.innerHTML = '';
-          if (event.target.files && event.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const img = document.createElement('img');
-              img.src = e.target.result;
-              img.style.maxWidth = '160px';
-              img.style.borderRadius = '0.75rem';
-              img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-              img.alt = 'Aperçu';
-              previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(event.target.files[0]);
-          }
-        });
+    document.getElementById('toy-photo-input').addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const p = document.getElementById('photo-preview');
+          p.src = ev.target.result;
+          p.style.display = 'block';
+        };
+        reader.readAsDataURL(e.target.files[0]);
       }
     });
   </script>
 
   <%# Catégorie %>
-  <div class="mb-3">
-    <%= f.association :category,
-      label: "Catégorie du jouet",
-      selected: @toy.category&.id || @box&.category&.id,
-      input_html: { class: "form-select" },
-      label_html: { class: "form-label" } %>
+  <div class="mb-2">
+    <%= f.association :category, label: false, prompt: "Catégorie…",
+        selected: @toy.category&.id || @box&.category&.id,
+        input_html: { class: "form-select verify-select" } %>
   </div>
 
   <%# Barcode %>
-  <div class="mb-3">
-    <%= f.input :barcode,
-      label: "Code-barres / Référence (facultatif)",
-      input_html: { class: "form-control", placeholder: "Scannez ou saisissez" },
-      label_html: { class: "form-label" } %>
+  <div class="mb-2">
+    <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Facultatif</div>
+    <%= f.input :barcode, label: false,
+        input_html: { class: "form-control verify-input", placeholder: "Code-barres" } %>
   </div>
 
   <%# État %>
-  <div class="mb-2">
-    <label class="form-label">État du jouet</label>
-  </div>
-  <div class="d-flex flex-column gap-2 mb-4">
-    <div class="form-check-custom">
-      <%= f.check_box :clean, class: "form-check-input", id: "toy_clean" %>
-      <%= f.label :clean, class: "form-check-label", for: "toy_clean" do %>
-        <i class="fa-solid fa-soap"></i> Le jouet est propre
-      <% end %>
-    </div>
-    <div class="form-check-custom">
-      <%= f.check_box :complete, class: "form-check-input", id: "toy_complete" %>
-      <%= f.label :complete, class: "form-check-label", for: "toy_complete" do %>
-        <i class="fa-solid fa-puzzle-piece"></i> Le jouet est complet (toutes les pièces présentes)
-      <% end %>
-    </div>
-    <div class="form-check-custom">
-      <%= f.check_box :playable, class: "form-check-input", id: "toy_playable" %>
-      <%= f.label :playable, class: "form-check-label", for: "toy_playable" do %>
-        <i class="fa-solid fa-gamepad"></i> Le jouet est fonctionnel
-      <% end %>
-    </div>
+  <div class="verify-conditions mb-2">
+    <%= f.check_box :clean, class: "condition-toggle-input", id: "toy_clean" %>
+    <%= f.label :clean, class: "condition-toggle-label", for: "toy_clean" do %>
+      <i class="fa-solid fa-soap"></i><span>Propre</span>
+    <% end %>
+    <%= f.check_box :complete, class: "condition-toggle-input", id: "toy_complete" %>
+    <%= f.label :complete, class: "condition-toggle-label", for: "toy_complete" do %>
+      <i class="fa-solid fa-puzzle-piece"></i><span>Complet</span>
+    <% end %>
+    <%= f.check_box :playable, class: "condition-toggle-input", id: "toy_playable" %>
+    <%= f.label :playable, class: "condition-toggle-label", for: "toy_playable" do %>
+      <i class="fa-solid fa-gamepad"></i><span>Jouable</span>
+    <% end %>
   </div>
 
-  <%# Prix IA %>
-  <div class="mb-4">
-    <%= f.input :price,
-      label: "Prix suggéré par l'IA (€)",
-      input_html: { class: "form-control", placeholder: "Sera calculé automatiquement" },
-      label_html: { class: "form-label" },
-      hint: "Ce champ est rempli automatiquement par l'IA après soumission." %>
+  <%# Prix %>
+  <div class="mb-2">
+    <%= f.input :price, label: false, as: :numeric,
+        input_html: { class: "form-control verify-input", placeholder: "Prix (€)", step: 0.01 } %>
   </div>
 
   <div class="d-grid">
-    <%= f.button :submit, class: "btn btn-primary btn-lg" %>
+    <button type="submit" class="btn btn-primary btn-lg">
+      <i class="fa-solid fa-check" style="font-size:1.5rem;"></i>
+    </button>
   </div>
 
 <% end %>
