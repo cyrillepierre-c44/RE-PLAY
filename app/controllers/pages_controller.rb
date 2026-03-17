@@ -1,3 +1,5 @@
+require "csv"
+
 class PagesController < ApplicationController
   include DashboardPareto
 
@@ -26,6 +28,46 @@ class PagesController < ApplicationController
   def loic_laplagne
   end
   
+  def export_csv
+    authorize :page, :export_csv?
+    @period      = params[:period].presence || "prev_day"
+    @type_filter = params[:type].presence
+    @category_id = params[:category_id].presence
+    @user_id     = params[:user_id].presence
+    @start_date  = params[:start_date].presence
+    @end_date    = params[:end_date].presence
+    actions = filtered_actions.order(created_at: :desc).includes(:user).preload(:actionable)
+
+    csv_data = CSV.generate(headers: true, col_sep: ";") do |csv|
+      csv << ["Date", "Utilisateur", "Rôle", "Type", "Action", "Objet"]
+      actions.each do |action|
+        action_label = if action.content&.include?("créé") then "Création"
+                       elsif action.content&.include?("updaté") then "Mise à jour"
+                       elsif action.content&.include?("passé") then "Validation"
+                       elsif action.content&.include?("supprimé") then "Suppression"
+                       else "Autre"
+                       end
+        type  = action.actionable_type == "Toy" ? "Jouet" : "Boîte"
+        role  = action.user&.admin ? "Admin" : "Utilisateur"
+        objet = "#{type} \##{action.actionable_id}"
+        csv << [
+          action.created_at.strftime("%d/%m/%Y %H:%M"),
+          action.user&.email&.split("@")&.first,
+          role,
+          type,
+          action_label,
+          objet
+        ]
+      end
+    end
+
+    filename = "journal_actions_#{Date.current.strftime('%Y%m%d')}.csv"
+    send_data "\xEF\xBB\xBF#{csv_data}",
+              filename: filename,
+              type: "text/csv; charset=utf-8",
+              disposition: "attachment"
+  end
+
   def dashboard
     authorize :page, :dashboard?
     @period      = params[:period].presence || "prev_day"
@@ -111,8 +153,11 @@ class PagesController < ApplicationController
     @box_actions_count = @actions.where(actionable_type: "Box").count
     @box_ids           = @actions.where(actionable_type: "Box").pluck(:actionable_id).uniq
     @toy_ids           = @actions.where(actionable_type: "Toy").pluck(:actionable_id).uniq
-    @boxes_weight      = Box.where(id: @box_ids).sum(:weight)
-    @toys_price_total  = Toy.where(id: @toy_ids).sum(:price)
+    @boxes_weight              = Box.where(id: @box_ids).sum(:weight)
+    @boxes_weight_electronic   = Box.where(id: @box_ids, electronic: true).sum(:weight)
+    @boxes_weight_non_electronic = Box.where(id: @box_ids, electronic: false).sum(:weight)
+    @toys_price_total   = Toy.validated.where(id: @toy_ids).sum(:price)
+    @toys_price_pending = Toy.waiting.where(id: @toy_ids).sum(:price)
   end
 
   def build_rework_stats

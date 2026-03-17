@@ -25,5 +25,6 @@ Rails.application.routes.draw do
   get "equipe/marc-thomas", to: "pages#marc_thomas", as: :marc_thomas
   get "equipe/loic-laplagne", to: "pages#loic_laplagne", as: :loic_laplagne
 
+  get "dashboard/export_csv", to: "pages#export_csv", as: :dashboard_export_csv
   get "dashboard", to: "pages#dashboard"
 end
