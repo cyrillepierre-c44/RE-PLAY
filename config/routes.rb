@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     end
   end
   root to: "pages#home"
+  
   resources :boxes, only: [:index, :show, :new, :create, :edit, :update] do
     resources :toys, only: [:new, :create]
     member do

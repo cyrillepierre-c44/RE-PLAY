@@ -17,9 +17,17 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <%# ── Open Graph ─────────────────────────────────────────────────── %>
+    <meta property="og:title"       content="<%= content_for(:title) || "RE-PLAY · Enjoué" %>">
+    <meta property="og:description" content="La plateforme de gestion des jouets reconditionnés par ENJOUÉ — traçabilité digitale, contrôle qualité et prix assisté par IA.">
+    <meta property="og:type"        content="website">
+    <meta property="og:url"         content="<%= request.original_url %>">
+    <meta property="og:image"        content="<%= image_url('og-image.png') %>">
+    <meta property="og:image:width"  content="1200">
+    <meta property="og:image:height" content="630">
+    <%= favicon_link_tag 'icons/favicon-32x32.png', type: 'image/png', sizes: '32x32' %>
+    <!-- <link rel="icon" href="/icon.svg" type="image/svg+xml"> -->
+    <!-- <link rel="apple-touch-icon" href="/icon.png"> -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload", media: "all" %>
     <%= javascript_importmap_tags %>
     <link rel="manifest" href="<%= pwa_manifest_path %>">
