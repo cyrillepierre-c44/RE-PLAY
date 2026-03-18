@@ -31,6 +31,42 @@
   z-index: 2;
 }
 
+// ── Version compacte mobile (iPhone 393×852) ──
+@media (max-width: 575.98px) {
+  .home-hero {
+    padding: 1rem 1rem 0.5rem;
+
+    .hero-title {
+      font-size: 1.6rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .home-hero-logo {
+      max-height: 140px;
+    }
+  }
+
+  .home-hero + .container {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .quick-action-card {
+    padding: 1rem 0.75rem;
+    gap: 0.4rem;
+
+    .quick-action-icon {
+      width: 48px;
+      height: 48px;
+      font-size: 1.25rem;
+    }
+
+    .quick-action-label {
+      font-size: 0.85rem;
+    }
+  }
+}
+
 .quick-action-card {
   background: $white;
   border-radius: $border-radius-xl;
@@ -42,9 +78,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   transition: all 0.22s ease;
   border: 1.5px solid transparent;
+  width: 100%;
+  height: 100%;
 
   &:hover {
     transform: translateY(-5px);

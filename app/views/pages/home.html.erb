@@ -1,11 +1,11 @@
-<% content_for :title, "Accueil · RE-PLAY" %>
+<% content_for :title, "Accueil · RE-PLAY by Enjoué" %>
 
 <div class="home-hero">
   <h1 class="hero-title">
     <% if user_signed_in? %>
       Bonjour <%= truncate(current_user.email.split('@').first.capitalize, length: 12, omission: '…') %>&nbsp;!
     <% else %>
-      Bienvenue sur RE-PLAY
+      Bienvenue sur <span style="white-space: nowrap;">Re-play</span>
     <% end %>
   </h1>
 
@@ -15,7 +15,7 @@
 <% if user_signed_in? %>
   <div class="container mt-4 mb-5">
 <div class="row g-3">
-      <div class="col-6 col-md-3">
+      <div class="col-6 col-md-3 d-flex">
         <%= link_to boxes_path, class: "quick-action-card" do %>
           <div class="quick-action-icon icon-boxes">
             <i class="fa-solid fa-box-open"></i>
@@ -23,7 +23,7 @@
           <span class="quick-action-label">Voir les boîtes</span>
         <% end %>
       </div>
-      <div class="col-6 col-md-3">
+      <div class="col-6 col-md-3 d-flex">
         <%= link_to toys_path, class: "quick-action-card" do %>
           <div class="quick-action-icon icon-toys">
             <i class="fa-solid fa-puzzle-piece"></i>
@@ -31,7 +31,7 @@
           <span class="quick-action-label">Voir les jouets</span>
         <% end %>
       </div>
-      <div class="col-12 col-sm-6 col-md-3">
+      <div class="col-6 col-md-3 d-flex">
         <%= link_to new_box_path, class: "quick-action-card" do %>
           <div class="quick-action-icon icon-new">
             <i class="fa-solid fa-plus"></i>
@@ -39,7 +39,7 @@
           <span class="quick-action-label">Nouvelle boîte</span>
         <% end %>
       </div>
-      <div class="col-12 col-sm-6 col-md-3">
+      <div class="col-6 col-md-3 d-flex">
         <%= link_to toys_path(filter: "waiting"), class: "quick-action-card" do %>
           <div class="quick-action-icon icon-verify">
             <i class="fa-solid fa-magnifying-glass"></i>

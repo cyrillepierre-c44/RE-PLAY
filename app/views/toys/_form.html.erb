@@ -80,14 +80,6 @@
     <% end %>
   </div>
 
-  <%# Prix — masqué à la création, calculé par IA %>
-  <% unless params[:new] || @toy.new_record? %>
-    <div class="mb-2">
-      <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;"><i class="fa-solid fa-robot" style="font-size:0.7rem;"></i> Suggéré par IA</div>
-      <%= f.input :price, label: false, as: :numeric,
-          input_html: { class: "form-control verify-input", placeholder: "Prix (€)", step: 0.01 } %>
-    </div>
-  <% end %>
 
   <div class="d-grid">
     <button type="submit" class="btn btn-primary btn-lg">
