@@ -69,6 +69,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_18_085314) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "pg_search_documents", force: :cascade do |t|
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.bigint "searchable_id"
+    t.string "searchable_type"
+    t.datetime "updated_at", null: false
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
+  end
+
   create_table "solid_cable_messages", force: :cascade do |t|
     t.binary "channel", null: false
     t.bigint "channel_hash", null: false

@@ -1,129 +1,108 @@
-<%# ── HERO ─────────────────────────────────────────────────────────── %>
-<div class="onboarding-hero">
-  <div class="container pb-5 text-center text-white d-flex flex-column align-items-center">
-    <%= image_tag "marc", alt: "Marc Thomas", class: "onboarding-avatar mb-4", style: "width: 300px; height: 300px;" %>
-    <h1 class="display-5 fw-bold mb-1">Marc Thomas</h1>
-    <p class="lead onboarding-hero-sub mb-0">Consultant en financement de projets innovants et en stratégie d’entreprise.</p>
-  </div>
-</div>
+<% content_for :title, "Marc Thomas · RE-PLAY" %>
 
-<%# ── BIO ─────────────────────────────────────────────────────────── %>
-<div class="container my-5">
-  <div class="card border-0 shadow-sm onboarding-intro-card p-4 p-md-5">
-    <p class="fs-5 lh-lg mb-0">
-      Après plusieurs années en conseil en financement de projets innovants, Marc est passé de
-      l'accompagnement des solutions à leur création directe, fort d'un Master en Management de l'Innovation
-      et d'une solide culture des enjeux business.
-      La formation full-stack développeur web &amp; IA du Wagon lui a fourni les outils techniques pour
-      franchir ce cap : Ruby on Rails, JavaScript, PostgreSQL, APIs REST et intégration d'intelligence artificielle.
-      Son double profil business-tech a été un atout clé dans la conception de RE-PLAY, en faisant le pont
-      entre les besoins opérationnels d'ENJOUÉ et les choix d'architecture de l'application.
+<div class="container py-4">
+
+  <%= link_to onboarding_path, class: "btn-back-boxes mb-3 d-inline-block" do %>
+    <span style="color:#000;">←</span> Guide
+  <% end %>
+
+  <%# ── En-tête profil ── %>
+  <div class="detail-card p-4 text-center mb-4">
+    <%= image_tag "marc", alt: "Marc Thomas", class: "onb-avatar onb-avatar-lg mb-3" %>
+    <h1 class="toy-show-title mb-1">Marc Thomas</h1>
+    <div class="onb-team-role mb-2">Développeur</div>
+    <p class="onb-tagline">Développeur Web Full-Stack junior · Business &amp; Tech</p>
+  </div>
+
+  <%# ── Bio ── %>
+  <div class="detail-card p-4 mb-4 onb-bio-card">
+    <p class="onb-bio-text mb-0">
+      Après plusieurs années en conseil en financement de projets innovants, Marc souhaitait passer de
+      l'accompagnement des solutions à leur création directe, fort d'un Master en Management de l'Innovation.
+      La formation full-stack du Wagon lui a fourni les outils techniques : Ruby on Rails, JavaScript,
+      PostgreSQL et IA. Son double profil business-tech a été un atout clé dans la conception de RE-Play.
     </p>
   </div>
-</div>
 
-<%# ── BLOC 1 : 2 dernières expériences ───────────────────────────── %>
-<section class="bg-white py-5">
-  <div class="container">
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <span class="onboarding-section-bar"></span>
-      <h2 class="mb-0 fw-bold">Expériences récentes</h2>
+  <%# ── Expériences ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2><i class="fa-solid fa-briefcase me-2" style="font-size:1rem;"></i>Expériences récentes</h2>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-exp-icon onb-icon-coral mb-2"><i class="fa-solid fa-chart-line"></i></div>
+        <div class="onb-exp-date">mars 2022 – sept. 2025</div>
+        <h5 class="onb-card-title">Consultant en financement de projet</h5>
+        <p class="onb-exp-company">EPSA · CDI · Lyon</p>
+        <p class="onb-card-text mb-0">Accompagnement stratégique et financement de projets innovants auprès d'entreprises.</p>
+      </div>
     </div>
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-            <h5 class="fw-bold mb-0">Consultant en financement de projet</h5>
-            <span class="badge onboarding-role-badge">mars 2022 – sept. 2025</span>
-          </div>
-          <p class="text-muted mb-2">EPSA &middot; CDI &middot; Lyon</p>
-          <p class="mb-0 small">
-            Accompagnement stratégique et financement de projets innovants auprès d'entreprises.
-          </p>
-        </div>
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-exp-icon onb-icon-sky mb-2"><i class="fa-solid fa-headset"></i></div>
+        <div class="onb-exp-date">oct. – déc. 2021</div>
+        <h5 class="onb-card-title">Customer Success Manager</h5>
+        <p class="onb-exp-company">Agicap · Lyon</p>
+        <p class="onb-card-text mb-0">Accompagnement des clients dans l'adoption d'une solution SaaS de gestion de trésorerie.</p>
       </div>
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-            <h5 class="fw-bold mb-0">Customer Success Manager</h5>
-            <span class="badge onboarding-role-badge">oct. – déc. 2021</span>
-          </div>
-          <p class="text-muted mb-2">Agicap &middot; Lyon</p>
-          <p class="mb-0 small">
-            Accompagnement des clients dans l'adoption d'une solution SaaS de gestion de trésorerie.
-          </p>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
-            <h5 class="fw-bold mb-0">Concepteur &amp; Développeur web &amp; IA</h5>
-            <span class="badge onboarding-role-badge">janv. – mars 2026</span>
-          </div>
-          <p class="text-muted mb-2">Le Wagon &middot; Bootcamp full-stack &middot; RNCP niveau 6</p>
-          <p class="mb-0 small">
-            Formation intensive : Ruby on Rails, JavaScript, PostgreSQL, Git et intégration d'IA.
-            Projet final : conception de l'application RE-Play pour ENJOUÉ.
-          </p>
-        </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-exp-icon onb-icon-mint mb-2"><i class="fa-solid fa-code"></i></div>
+        <div class="onb-exp-date">janv. – mars 2026</div>
+        <h5 class="onb-card-title">Concepteur &amp; Développeur web &amp; IA</h5>
+        <p class="onb-exp-company">Le Wagon · Bootcamp full-stack · RNCP niv. 6</p>
+        <p class="onb-card-text mb-0">Formation intensive : Ruby on Rails, JavaScript, PostgreSQL, Git et IA. Projet final : RE-Play pour ENJOUÉ.</p>
       </div>
     </div>
   </div>
-</section>
 
-<%# ── BLOC 2 : Compétences ────────────────────────────────────────── %>
-<section class="py-5">
-  <div class="container">
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <span class="onboarding-section-bar"></span>
-      <h2 class="mb-0 fw-bold">Compétences</h2>
-    </div>
+  <%# ── Compétences ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2><i class="fa-solid fa-star me-2" style="font-size:1rem;"></i>Compétences</h2>
+  </div>
+  <div class="detail-card p-4 mb-4">
     <div class="d-flex flex-wrap gap-2">
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Ruby on Rails</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">JavaScript</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">HTML / CSS</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">PostgreSQL</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">APIs REST</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Git / GitHub</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Agile</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">IA</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Gestion de projet</span>
-      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Financement de l'innovation</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-gem"></i> Ruby on Rails</span>
+      <span class="onb-skill-tag"><i class="fa-brands fa-js"></i> JavaScript</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-code"></i> HTML / CSS</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-database"></i> PostgreSQL</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-plug"></i> APIs REST</span>
+      <span class="onb-skill-tag"><i class="fa-brands fa-github"></i> Git / GitHub</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-arrows-spin"></i> Agile</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-robot"></i> IA</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-list-check"></i> Gestion de projet</span>
+      <span class="onb-skill-tag"><i class="fa-solid fa-lightbulb"></i> Financement de l'innovation</span>
     </div>
   </div>
-</section>
 
-<%# ── BLOC 3 : Diplômes & intérêts ───────────────────────────────── %>
-<section class="bg-white py-5">
-  <div class="container">
-    <div class="d-flex align-items-center gap-2 mb-4">
-      <span class="onboarding-section-bar"></span>
-      <h2 class="mb-0 fw-bold">Diplômes &amp; intérêts</h2>
-    </div>
-    <div class="row g-4">
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <h6 class="fw-bold text-uppercase small mb-3" style="color: #E67E22; letter-spacing: .06em;">Formation</h6>
-          <p class="mb-1 fw-semibold">Université Lumière Lyon 2</p>
-          <p class="text-muted small mb-3">Master MIPI — Management de l'Innovation &amp; Propriété Intellectuelle &middot; 2019–2021</p>
-          <p class="mb-1 fw-semibold">Université de Rennes</p>
-          <p class="text-muted small mb-1">Licence, Business/Managerial Economics &middot; 2015–2019</p>
-          <p class="text-muted small mb-0">Activités et associations : soutien scolaire au sein de ZupdeCo — soutien scolaire à des collégiens en situation de décrochage</p>
-        </div>
+  <%# ── Formation & Engagements ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2><i class="fa-solid fa-graduation-cap me-2" style="font-size:1rem;"></i>Diplômes &amp; engagements</h2>
+  </div>
+  <div class="row g-3 mb-2">
+    <div class="col-12 col-md-6">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-sub-section-title"><i class="fa-solid fa-graduation-cap me-2"></i>Formation</div>
+        <p class="onb-card-title mb-0">Le Wagon</p>
+        <p class="onb-exp-company mb-3">Concepteur &amp; Développeur d'apps web · RNCP niv. 6 · 2026</p>
+        <p class="onb-card-title mb-0">Université Lumière Lyon 2</p>
+        <p class="onb-exp-company mb-0">Master MIPI — Management de l'Innovation &amp; PI · 2019–2021</p>
       </div>
-      <div class="col-md-6">
-        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
-          <h6 class="fw-bold text-uppercase small mb-3" style="color: #E67E22; letter-spacing: .06em;">Engagements</h6>
-          <p class="mb-1 fw-semibold">ZUPdeCO</p>
-          <p class="text-muted small mb-3">Bénévole &middot; 10 ans &middot; Services sociaux</p>
-          <p class="mb-1 fw-semibold">EPA Bretagne</p>
-          <p class="text-muted small mb-0">Étudiant startupeur &middot; 8 ans &middot; Autonomisation économique</p>
-        </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-sub-section-title"><i class="fa-solid fa-heart me-2"></i>Engagements</div>
+        <p class="onb-card-title mb-0">ZUPdeCO</p>
+        <p class="onb-exp-company mb-3">Bénévole · 10 ans · Services sociaux</p>
+        <p class="onb-card-title mb-0">EPA Bretagne</p>
+        <p class="onb-exp-company mb-0">Étudiant startupeur · 8 ans · Autonomisation économique</p>
       </div>
     </div>
   </div>
-</section>
 
-<div class="container py-4 text-center">
-  <%= link_to "← Retour à l'onboarding", onboarding_path, class: "btn onboarding-team-btn fw-bold" %>
 </div>
