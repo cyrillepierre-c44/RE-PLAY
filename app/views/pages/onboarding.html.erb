@@ -1,6 +1,17 @@
-<% content_for :title, "Guide · RE-PLAY" %>
+<% content_for :title, "Guide d'utilisation · RE-PLAY" %>
 
 <div class="container py-4">
+<%# ── HERO ──────────────────────────────────────────────────────────── %>
+<div class="onboarding-hero">
+  <div class="container py-5 text-center text-white">
+    <span class="badge onboarding-badge mb-3 px-3 py-2 fs-6">RE-PLAY × ENJOUÉ</span>
+    <h1 class="display-4 fw-bold mb-3">Bienvenue sur RE-PLAY</h1>
+    <p class="lead mb-4 onboarding-hero-sub">
+      La plateforme de gestion des jouets reconditionnés par ENJOUÉ
+    </p>
+    <%= link_to "Découvrir Enjoué", enjoue_path, class: "btn onboarding-cta btn-lg fw-bold" %>
+  </div>
+</div>
 
   <%# ── En-tête ── %>
   <div class="text-center mb-4">

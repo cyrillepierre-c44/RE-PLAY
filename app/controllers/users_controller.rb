@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
   def index
-    @users = policy_scope(User).order(created_at: :desc)
+    @users = policy_scope(User).order(
+      Arel.sql("CASE WHEN disabled = true THEN 2 WHEN admin = true THEN 0 ELSE 1 END"),
+      created_at: :desc
+    )
   end
 
   def disable
