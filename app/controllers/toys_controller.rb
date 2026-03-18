@@ -56,7 +56,7 @@ class ToysController < ApplicationController
 
   def update
     authorize @toy
-    if @toy.update(toy_params)
+    if @toy.update(toy_params.merge(price: nil))
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} à updaté le jouet n#{@toy.id}")

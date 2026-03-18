@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
-  resources :users, only: [:index, :destroy]
+  resources :users, only: [:index] do
+    member do
+      patch :disable
+      patch :enable
+    end
+  end
   root to: "pages#home"
   resources :boxes, only: [:index, :show, :new, :create, :edit, :update] do
     resources :toys, only: [:new, :create]

@@ -3,14 +3,17 @@ class UsersController < ApplicationController
     @users = policy_scope(User).order(created_at: :desc)
   end
 
-  def destroy
+  def disable
     @user = User.find(params[:id])
     authorize @user
-    if @user == current_user
-      redirect_to users_path, alert: "Vous ne pouvez pas supprimer votre propre compte."
-    else
-      @user.destroy
-      redirect_to users_path, notice: "Compte supprimé.", status: :see_other
-    end
+    @user.update!(disabled: true)
+    redirect_to users_path, notice: "Compte désactivé.", status: :see_other
+  end
+
+  def enable
+    @user = User.find(params[:id])
+    authorize @user
+    @user.update!(disabled: false)
+    redirect_to users_path, notice: "Compte réactivé.", status: :see_other
   end
 end
