@@ -300,6 +300,7 @@
 // Filter tabs
 .filter-tabs {
   display: flex;
+  gap: 17px;
   background: $white;
   border-radius: $border-radius-pill;
   padding: 0.25rem;
@@ -348,5 +349,6 @@
     &.filter-tab-box-active.active { background: $yellow;      color: #000; box-shadow: 0 2px 8px rgba($yellow, 0.45); }
     &.filter-tab-box-empty.active  { background: $sky;         color: #000; box-shadow: 0 2px 8px rgba($sky, 0.35); }
     &.filter-tab-box-suppr.active  { background: $danger-red;  color: #000; box-shadow: 0 2px 8px rgba($danger-red, 0.35); }
+    &.filter-tab-period.active     { background: $coral;       color: $white; box-shadow: 0 2px 8px rgba($coral, 0.35); }
   }
 }

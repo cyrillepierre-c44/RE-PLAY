@@ -141,6 +141,7 @@ class PagesController < ApplicationController
   def build_dashboard_stats
     build_count_stats
     build_rework_stats
+    build_rework_creator_stats
     build_type_stats
     build_pareto_stats
   end
@@ -161,10 +162,43 @@ class PagesController < ApplicationController
   end
 
   def build_rework_stats
-    rework_scope     = @actions.where("content LIKE ?", "%updaté%")
-    @rework_total    = rework_scope.count
-    @rework_by_admin = rework_scope.joins(:user).where(users: { admin: true }).count
-    @rework_by_user  = rework_scope.joins(:user).where(users: { admin: false }).count
+    # "Mises à jour" dans Types d'actions — toute modification d'un jouet/boîte
+    @rework_total    = @actions.where("content LIKE ?", "%updaté%").count
+
+    # Retouches = jouets renvoyés via "Revaloriser" (statut review) — Analyse des retouches
+    review_scope     = @actions.where("content LIKE ?", "%en statut: review%")
+    @review_total    = review_scope.count
+    @review_by_admin = review_scope.joins(:user).where(users: { admin: true }).count
+    @review_by_user  = review_scope.joins(:user).where(users: { admin: false }).count
+  end
+
+  def build_rework_creator_stats
+    # Toys sent back for revalorisation (Revaloriser button) in the filtered period
+    revalue_toy_ids = @actions
+      .where(actionable_type: "Toy")
+      .where("content LIKE ?", "%en statut: review%")
+      .pluck(:actionable_id)
+
+    return @rework_by_creator = [] if revalue_toy_ids.empty?
+
+    # Map each toy to its original creator (first "créé" action)
+    creator_map = Action
+      .select("DISTINCT ON (actionable_id) actionable_id, user_id")
+      .where(actionable_type: "Toy", actionable_id: revalue_toy_ids.uniq)
+      .where("content LIKE ?", "%créé%")
+      .order("actionable_id, created_at ASC")
+      .each_with_object({}) { |a, h| h[a.actionable_id] = a.user_id }
+
+    # Aggregate rework count per creator
+    counts = Hash.new(0)
+    revalue_toy_ids.each { |toy_id| counts[creator_map[toy_id]] += 1 if creator_map[toy_id] }
+
+    users = User.where(id: counts.keys).index_by(&:id)
+
+    @rework_by_creator = counts
+      .map { |user_id, count| { user: users[user_id], count: count } }
+      .sort_by { |item| -item[:count] }
+      .first(10)
   end
 
   def build_type_stats

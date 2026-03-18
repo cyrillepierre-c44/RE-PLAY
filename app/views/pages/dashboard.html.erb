@@ -1,101 +1,89 @@
 <% content_for :title, "Tableau de bord · RE-PLAY" %>
 
-<div class="dashboard-hero">
-  <div class="container">
-    <h1 class="dashboard-title">
-      <i class="fa-solid fa-chart-bar me-2"></i>Tableau de bord
-    </h1>
-    <p class="dashboard-subtitle">Analyse des actions admin &amp; utilisateurs</p>
+<div class="container py-4">
+
+  <%# ── Titre ── %>
+  <div class="onb-section-title mb-4">
+    <span class="onb-section-bar"></span>
+    <h2><i class="fa-solid fa-chart-bar me-2"></i>Tableau de bord</h2>
   </div>
-</div>
 
-<div class="container dashboard-container">
-
-  <%# ── Filtres ─────────────────────────────────────────────── %>
+  <%# ── Filtres ── %>
   <%= form_with url: dashboard_path, method: :get, local: true,
-        class: "dashboard-filters card mb-4",
+        class: "detail-card p-4 mb-4",
         data: { controller: "date-range", action: "submit->date-range#submit" } do |f| %>
-    <div class="card-body">
 
-      <%# Période %>
-      <div class="filter-group">
-        <label class="filter-label"><i class="fa-regular fa-calendar me-1"></i>Période</label>
-        <%= f.hidden_field :period, value: @period %>
-        <div class="btn-group period-btns" role="group">
-          <% [["today", "Aujourd'hui"], ["prev_day", "Jour précédent"], ["last_week", "Semaine dernière"], ["custom", "Sélection libre"]].each do |val, label| %>
-            <button type="button"
-                    class="btn btn-period <%= 'active' if @period == val %>"
-                    data-period="<%= val %>"
-                    data-date-range-target="periodBtn"
-                    data-action="click->date-range#select">
-              <% if val == "custom" %><i class="fa-regular fa-calendar-days me-1"></i><% end %>
-              <%= label %>
-            </button>
-          <% end %>
+    <%= f.hidden_field :period, value: @period %>
+
+    <%# Période — filter-tabs %>
+    <div class="filter-tabs mb-3">
+      <% [["today", "fa-calendar-day", "Aujourd'hui"], ["prev_day", "fa-clock-rotate-left", "Hier"], ["last_week", "fa-calendar-week", "Semaine"], ["custom", "fa-calendar-plus", "Dates"]].each do |val, icon, label| %>
+        <button type="button"
+                class="filter-tab filter-tab-period <%= 'active' if @period == val %>"
+                data-period="<%= val %>"
+                data-date-range-target="periodBtn"
+                data-action="click->date-range#select">
+          <i class="fa-solid <%= icon %>"></i>
+          <span class="d-none d-sm-inline"><%= label %></span>
+        </button>
+      <% end %>
+    </div>
+
+    <%# Feedback période %>
+    <div data-date-range-target="feedback" class="dash-period-feedback"></div>
+
+    <%# Panneau dates libres %>
+    <div data-date-range-target="customPanel"
+         class="custom-date-panel mb-3 <%= 'd-none' unless @period == 'custom' %>">
+      <div class="d-flex gap-3 flex-wrap">
+        <div>
+          <label class="filter-label">Du</label>
+          <%= f.date_field :start_date, value: @start_date, class: "form-control form-control-sm date-input" %>
         </div>
-      </div>
-
-      <%# Panneau sélection libre %>
-      <div data-date-range-target="customPanel"
-           class="custom-date-panel mt-3 <%= 'd-none' unless @period == 'custom' %>">
-        <div class="d-flex align-items-end gap-3 flex-wrap">
-          <div class="filter-group">
-            <label class="filter-label">Du</label>
-            <%= f.date_field :start_date, value: @start_date,
-                  class: "form-control form-control-sm date-input",
-                  placeholder: "jj/mm/aaaa" %>
-          </div>
-          <div class="filter-group">
-            <label class="filter-label">Au</label>
-            <%= f.date_field :end_date, value: @end_date,
-                  class: "form-control form-control-sm date-input",
-                  placeholder: "jj/mm/aaaa" %>
-          </div>
-          <div class="filter-group" style="flex-direction: row; gap: 0.5rem;">
-            <%= f.submit "Appliquer", class: "btn btn-primary btn-sm",
-                  data: { action: "click->date-range#setAnchor", anchor: "filtres-secondaires" } %>
-          </div>
-        </div>
-      </div>
-
-      <div id="filtres-secondaires" class="filter-row mt-3">
-        <%# Type %>
-        <div class="filter-group">
-          <label class="filter-label"><i class="fa-solid fa-filter me-1"></i>Type</label>
-          <%= f.select :type,
-            [["Tous", ""], ["Jouets", "toys"], ["Boîtes", "boxes"]],
-            { selected: @type_filter.to_s },
-            class: "form-select form-select-sm filter-select" %>
-        </div>
-
-        <%# Catégorie %>
-        <div class="filter-group">
-          <label class="filter-label"><i class="fa-solid fa-tag me-1"></i>Catégorie</label>
-          <%= f.select :category_id,
-            [["Toutes", ""]] + @categories.map { |c| [c.name, c.id] },
-            { selected: @category_id.to_s },
-            class: "form-select form-select-sm filter-select" %>
-        </div>
-
-        <%# Utilisateur %>
-        <div class="filter-group">
-          <label class="filter-label"><i class="fa-regular fa-user me-1"></i>Utilisateur</label>
-          <%= f.select :user_id,
-            [["Tous", ""]] + @users.map { |u| ["#{u.email.split('@').first}#{u.admin ? ' (admin)' : ''}", u.id] },
-            { selected: @user_id.to_s },
-            class: "form-select form-select-sm filter-select" %>
-        </div>
-
-        <div class="filter-group filter-actions">
-          <%= f.submit "Appliquer", class: "btn btn-primary btn-sm",
-                data: { action: "click->date-range#setAnchor", anchor: "resultats" } %>
-          <%= link_to "Réinitialiser", dashboard_path, class: "btn btn-ghost btn-sm" %>
+        <div>
+          <label class="filter-label">Au</label>
+          <%= f.date_field :end_date, value: @end_date, class: "form-control form-control-sm date-input" %>
         </div>
       </div>
     </div>
+
+    <%# Filtres secondaires — type / catégorie / utilisateur %>
+    <div id="filtres-secondaires" class="d-flex flex-wrap gap-2 mb-3">
+      <div>
+        <label class="filter-label"><i class="fa-solid fa-filter me-1"></i>Type</label>
+        <%= f.select :type,
+          [["Tous", ""], ["Jouets", "toys"], ["Boîtes", "boxes"]],
+          { selected: @type_filter.to_s },
+          class: "form-select form-select-sm filter-select" %>
+      </div>
+      <div>
+        <label class="filter-label"><i class="fa-solid fa-tag me-1"></i>Catégorie</label>
+        <%= f.select :category_id,
+          [["Toutes", ""]] + @categories.map { |c| [c.name, c.id] },
+          { selected: @category_id.to_s },
+          class: "form-select form-select-sm filter-select" %>
+      </div>
+      <div>
+        <label class="filter-label"><i class="fa-regular fa-user me-1"></i>Utilisateur</label>
+        <%= f.select :user_id,
+          [["Tous", ""]] + @users.map { |u| ["#{u.email.split('@').first}#{u.admin ? ' (admin)' : ''}", u.id] },
+          { selected: @user_id.to_s },
+          class: "form-select form-select-sm filter-select" %>
+      </div>
+    </div>
+
+    <%# Action — un seul bouton %>
+    <div class="d-flex gap-2">
+      <%= f.submit "Appliquer les filtres", class: "btn btn-coral flex-grow-1",
+            data: { action: "click->date-range#setAnchor", anchor: "resultats" } %>
+      <%= link_to dashboard_path, class: "btn btn-ghost" do %>
+        <i class="fa-solid fa-xmark"></i>
+      <% end %>
+    </div>
+
   <% end %>
 
-  <%# ── KPIs principaux ─────────────────────────────────────── %>
+  <%# ── KPIs principaux ── %>
   <div id="resultats" class="row g-3 mb-4">
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-total">
@@ -167,13 +155,14 @@
     </div>
   </div>
 
-  <%# ── Répartition objets ──────────────────────────────────── %>
+  <%# ── Répartition objets ── %>
   <div class="row g-3 mb-4">
     <div class="col-md-6">
-      <div class="dashboard-card">
-        <h2 class="dashboard-card-title">
-          <i class="fa-solid fa-puzzle-piece me-2 text-sky"></i>Jouets vs Boîtes
-        </h2>
+      <div class="detail-card p-4 h-100">
+        <div class="onb-section-title mb-3">
+          <span class="onb-section-bar"></span>
+          <h2><i class="fa-solid fa-puzzle-piece me-2 text-sky"></i>Jouets vs Boîtes</h2>
+        </div>
         <div class="split-stats">
           <div class="split-item">
             <span class="split-value text-sky"><%= @toy_actions_count %></span>
@@ -199,10 +188,11 @@
     </div>
 
     <div class="col-md-6">
-      <div class="dashboard-card">
-        <h2 class="dashboard-card-title">
-          <i class="fa-solid fa-user-shield me-2 text-purple"></i>Admin vs Utilisateurs
-        </h2>
+      <div class="detail-card p-4 h-100">
+        <div class="onb-section-title mb-3">
+          <span class="onb-section-bar"></span>
+          <h2><i class="fa-solid fa-user-shield me-2 text-purple"></i>Admin vs Utilisateurs</h2>
+        </div>
         <div class="split-stats">
           <div class="split-item">
             <span class="split-value text-purple"><%= @actions_by_admin %></span>
@@ -228,11 +218,12 @@
     </div>
   </div>
 
-  <%# ── Analyse des types d'actions ────────────────────────── %>
-  <div class="dashboard-card mb-4">
-    <h2 class="dashboard-card-title">
-      <i class="fa-solid fa-list-check me-2 text-yellow"></i>Types d'actions
-    </h2>
+  <%# ── Types d'actions ── %>
+  <div class="detail-card p-4 mb-4">
+    <div class="onb-section-title mb-3">
+      <span class="onb-section-bar"></span>
+      <h2><i class="fa-solid fa-list-check me-2 text-yellow"></i>Types d'actions</h2>
+    </div>
     <div class="action-types-grid">
       <div class="action-type-item action-type-create">
         <i class="fa-solid fa-plus-circle"></i>
@@ -257,47 +248,48 @@
     </div>
   </div>
 
-  <%# ── Analyse rework détaillée ───────────────────────────── %>
-  <div class="dashboard-card mb-4">
-    <h2 class="dashboard-card-title">
-      <i class="fa-solid fa-rotate me-2 text-coral"></i>Analyse des retouches
-    </h2>
-    <div class="rework-grid">
-      <div class="rework-total">
-        <span class="rework-number"><%= @rework_total %></span>
-        <span class="rework-desc">Total retouches sur la période</span>
+  <%# ── Top 10 retouches par créateur ── %>
+  <div class="detail-card p-4 mb-4">
+    <div class="onb-section-title mb-3">
+      <span class="onb-section-bar"></span>
+      <h2><i class="fa-solid fa-triangle-exclamation me-2 text-coral"></i>Top 10 retouches par créateur</h2>
+    </div>
+
+    <% if @rework_by_creator.empty? %>
+      <div class="empty-state">
+        <i class="fa-solid fa-inbox"></i>
+        <p>Aucune revalorisation sur cette période.</p>
       </div>
-      <div class="rework-breakdown">
-        <div class="rework-row">
-          <span class="rework-role role-admin">
-            <i class="fa-solid fa-shield-halved me-1"></i>Admin
-          </span>
-          <div class="rework-bar-wrap">
-            <% pct_admin = @rework_total > 0 ? (@rework_by_admin.to_f / @rework_total * 100).round : 0 %>
-            <div class="rework-bar" style="width: <%= pct_admin %>%"></div>
+    <% else %>
+      <% max_count = @rework_by_creator.first[:count].to_f %>
+      <div class="rework-chart">
+        <% @rework_by_creator.each do |item| %>
+          <% pct = (item[:count] / max_count * 100).round %>
+          <div class="rework-chart-col">
+            <div class="rework-chart-value"><%= item[:count] %></div>
+            <div class="rework-chart-bar" style="height: <%= pct %>%"></div>
+            <div class="rework-chart-label" title="<%= item[:user]&.email %>">
+              <%= item[:user]&.email&.split('@')&.first || "?" %>
+            </div>
           </div>
-          <span class="rework-count"><%= @rework_by_admin %></span>
-        </div>
-        <div class="rework-row">
-          <span class="rework-role role-user">
-            <i class="fa-solid fa-user me-1"></i>Utilisateur
-          </span>
-          <div class="rework-bar-wrap">
-            <% pct_user = @rework_total > 0 ? (@rework_by_user.to_f / @rework_total * 100).round : 0 %>
-            <div class="rework-bar rework-bar-user" style="width: <%= pct_user %>%"></div>
-          </div>
-          <span class="rework-count"><%= @rework_by_user %></span>
-        </div>
+        <% end %>
       </div>
+    <% end %>
+
+    <div class="rework-chart-footer mt-3">
+      <span class="rework-number"><%= @review_by_admin %></span>
+      <span class="rework-chart-footer-label">retouche<%= @review_by_admin > 1 ? 's' : '' %> au total sur la période</span>
     </div>
   </div>
 
-  <%# ── Pareto des catégories ──────────────────────────────────────── %>
-  <div class="dashboard-card mb-4">
-    <h2 class="dashboard-card-title">
-      <i class="fa-solid fa-ranking-star me-2 text-coral"></i>Pareto des catégories
-      <span class="pareto-subtitle">Classées par valorisation IA · poids affiché en contexte</span>
-    </h2>
+  <%# ── Pareto des catégories ── %>
+  <div class="detail-card p-4 mb-4">
+    <div class="onb-section-title mb-3">
+      <span class="onb-section-bar"></span>
+      <h2>
+        <i class="fa-solid fa-ranking-star me-2 text-coral"></i>Catégories les plus rentables
+      </h2>
+    </div>
 
     <% if @pareto_data.empty? %>
       <div class="empty-state">
@@ -307,14 +299,10 @@
     <% else %>
       <div class="pareto-chart">
         <% @pareto_data.each_with_index do |row, index| %>
-          <% vital     = row[:cumulative] <= 80 %>
-          <% threshold = index > 0 && @pareto_data[index - 1][:cumulative] <= 80 && !vital %>
-          <% if threshold %>
-            <div class="pareto-threshold-line"><span>seuil 80 %</span></div>
-          <% end %>
-          <div class="pareto-row <%= vital ? 'pareto-vital' : 'pareto-trivial' %>">
+          <% next if row[:cumulative] > 80 %>
+          <div class="pareto-row pareto-vital">
             <div class="pareto-rank">
-              <span class="rank-badge <%= vital ? 'rank-vital' : 'rank-trivial' %>"><%= index + 1 %></span>
+              <span class="rank-badge rank-vital"><%= index + 1 %></span>
             </div>
             <div class="pareto-category">
               <span class="pareto-cat-name"><%= row[:category]&.name || "Catégorie ##{row[:category]&.id}" %></span>
@@ -338,32 +326,32 @@
               </div>
             </div>
             <div class="pareto-cumul">
-              <div class="cumul-badge <%= vital ? 'cumul-vital' : 'cumul-trivial' %>"><%= row[:cumulative] %>%</div>
+              <div class="cumul-badge cumul-vital"><%= row[:cumulative] %>%</div>
               <span class="cumul-label">cumulé</span>
             </div>
           </div>
         <% end %>
       </div>
-      <div class="pareto-legend mt-3">
-        <span class="legend-vital"><i class="fa-solid fa-circle-dot me-1"></i>Essentiels — représentent 80% de la valeur</span>
-        <span class="legend-trivial"><i class="fa-regular fa-circle me-1"></i>Secondaires — représentent 20% restants</span>
-      </div>
     <% end %>
   </div>
 
-  <%# ── Journal des actions ─────────────────────────────────── %>
-  <div class="dashboard-card mb-5">
+  <%# ── Journal des actions ── %>
+  <div class="detail-card p-4 mb-5">
     <div class="d-flex justify-content-between align-items-center mb-3">
-      <h2 class="dashboard-card-title mb-0">
-        <i class="fa-solid fa-clock-rotate-left me-2 text-navy"></i>
-        Journal des actions
-        <span class="badge bg-light text-muted ms-2" style="font-size: 0.75rem; font-weight: 600;"><%= @recent_actions.size %></span>
-      </h2>
+      <div class="onb-section-title mb-0">
+        <span class="onb-section-bar"></span>
+        <h2>
+          <i class="fa-solid fa-clock-rotate-left me-2 text-navy"></i>
+          Journal des actions
+          <span class="badge bg-light text-muted ms-2" style="font-size: 0.75rem; font-weight: 600;"><%= @recent_actions.size %></span>
+        </h2>
+      </div>
       <%= link_to dashboard_export_csv_path(
             period: @period, type: @type_filter, category_id: @category_id,
             user_id: @user_id, start_date: @start_date, end_date: @end_date),
-            class: "btn btn-sm btn-outline-secondary" do %>
-        <i class="fa-solid fa-file-csv me-1"></i>Exporter CSV
+            class: "btn-ghost-coral btn-sm d-flex align-items-center gap-1" do %>
+        <i class="fa-solid fa-arrow-down-to-line"></i>
+        <span class="d-none d-sm-inline">Exporter CSV</span>
       <% end %>
     </div>
 
@@ -373,50 +361,27 @@
         <p>Aucune action sur cette période.</p>
       </div>
     <% else %>
-      <div class="table-responsive">
-        <table class="table table-actions">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Utilisateur</th>
-              <th>Rôle</th>
-              <th>Type</th>
-              <th>Action</th>
-              <th>Objet</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @recent_actions.each do |action| %>
-              <% action_type = if action.content&.include?("créé") then :create
-                               elsif action.content&.include?("updaté") then :update
-                               elsif action.content&.include?("passé") then :verify
-                               elsif action.content&.include?("supprimé") then :delete
-                               else :other
-                               end %>
-              <tr>
-                <td class="text-nowrap text-muted" style="font-size: 0.82rem;">
+      <div class="toy-show-timeline-scroll dash-journal-scroll">
+        <div class="toy-show-timeline">
+          <% @recent_actions.each do |action| %>
+            <% action_type = if action.content&.include?("créé") then :create
+                             elsif action.content&.include?("updaté") then :update
+                             elsif action.content&.include?("passé") then :verify
+                             elsif action.content&.include?("supprimé") then :delete
+                             else :other
+                             end %>
+            <div class="toy-show-timeline-item">
+              <div class="toy-show-timeline-dot"></div>
+              <div class="toy-show-timeline-content">
+                <div class="toy-show-timeline-date">
                   <%= action.created_at.strftime("%d/%m %H:%M") %>
-                </td>
-                <td>
-                  <span class="user-badge">
-                    <%= action.user&.email&.split('@')&.first %>
-                  </span>
-                </td>
-                <td>
+                  &nbsp;·&nbsp;
+                  <span class="user-badge"><%= action.user&.email&.split('@')&.first %></span>
                   <% if action.user&.admin %>
-                    <span class="role-pill role-pill-admin">Admin</span>
-                  <% else %>
-                    <span class="role-pill role-pill-user">Utilisateur</span>
+                    <span class="role-pill role-pill-admin ms-1">Admin</span>
                   <% end %>
-                </td>
-                <td>
-                  <% if action.actionable_type == "Toy" %>
-                    <span class="type-pill type-pill-toy"><i class="fa-solid fa-puzzle-piece me-1"></i>Jouet</span>
-                  <% else %>
-                    <span class="type-pill type-pill-box"><i class="fa-solid fa-box me-1"></i>Boîte</span>
-                  <% end %>
-                </td>
-                <td>
+                </div>
+                <div class="toy-show-timeline-text d-flex flex-wrap align-items-center gap-1">
                   <span class="action-badge action-badge-<%= action_type %>">
                     <%= case action_type
                         when :create  then "Création"
@@ -426,22 +391,25 @@
                         else               "Autre"
                         end %>
                   </span>
-                </td>
-                <td style="font-size: 0.85rem; color: #6B7280;">
+                  <% if action.actionable_type == "Toy" %>
+                    <span class="type-pill type-pill-toy"><i class="fa-solid fa-puzzle-piece me-1"></i>Jouet</span>
+                  <% else %>
+                    <span class="type-pill type-pill-box"><i class="fa-solid fa-box me-1"></i>Boîte</span>
+                  <% end %>
                   <% if action.actionable.present? %>
                     <% if action.actionable_type == "Toy" %>
-                      <%= link_to "Jouet ##{action.actionable_id}", toy_path(action.actionable_id), class: "text-decoration-none text-muted" %>
+                      <%= link_to "##{action.actionable_id}", toy_path(action.actionable_id), class: "text-decoration-none text-muted", style: "font-size: 0.82rem;" %>
                     <% else %>
-                      <%= link_to "Boîte ##{action.actionable_id}", box_path(action.actionable_id), class: "text-decoration-none text-muted" %>
+                      <%= link_to "##{action.actionable_id}", box_path(action.actionable_id), class: "text-decoration-none text-muted", style: "font-size: 0.82rem;" %>
                     <% end %>
                   <% else %>
-                    <span class="text-muted">#<%= action.actionable_id %> (supprimé)</span>
+                    <span class="text-muted" style="font-size: 0.82rem;">#<%= action.actionable_id %> (supprimé)</span>
                   <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>

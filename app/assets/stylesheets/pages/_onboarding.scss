@@ -1,150 +1,235 @@
-// ── Onboarding page ──────────────────────────────────────────────────
+// ── Onboarding ────────────────────────────────────────────────────────
 
-// Hero
-.onboarding-hero {
-  background-color: $navy;
-  padding: 72px 20px;
-  min-height: 80vh;
+.onb-logo {
+  max-height: 80px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.onb-intro-text {
+  color: $gray;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+// Section heading
+.onb-section-title {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
 
-  h1, h2, h3, h4, h5, h6 {
-    color: white;
-  }
-
-  .onboarding-hero-sub {
-    color: rgba(255, 255, 255, 0.75);
-    max-width: 520px;
-    margin-inline: auto;
+  h2 {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: $navy;
+    margin: 0;
   }
 }
 
-.onboarding-badge {
-  background-color: $coral;
-  color: white;
-  letter-spacing: 0.05em;
-  font-family: $headers-font;
-}
-
-.onboarding-cta {
-  background-color: $coral;
-  color: white;
-  border: none;
-  font-family: $headers-font;
-  font-size: 1.1rem;
-  padding: 0.65rem 2rem;
-
-  &:hover {
-    background-color: darken($coral, 8%);
-    color: white;
-  }
-}
-
-// Intro card
-.onboarding-intro-card {
-  border-left: 4px solid $coral !important;
-  background: $white;
-  border-radius: $border-radius-xxl;
-  box-shadow: $card-box-shadow;
-}
-
-// Section heading bar (accent gauche)
-.onboarding-section-bar {
+.onb-section-bar {
   display: inline-block;
-  width: 5px;
-  height: 28px;
-  background-color: $coral;
+  width: 4px;
+  height: 1.3rem;
+  background: $coral;
   border-radius: 3px;
   flex-shrink: 0;
 }
 
-// Mission step cards
-.onboarding-step-card {
-  border-radius: $border-radius-xxl;
-  box-shadow: $card-box-shadow;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
+// Mission icon wraps
+.onb-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: $border-radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+
+  &.onb-icon-coral { background: linear-gradient(135deg, #FFF4EC, #FFD6B8); color: $coral; }
+  &.onb-icon-mint  { background: linear-gradient(135deg, #EDFCF6, #B8F5E0); color: darken($mint, 12%); }
+  &.onb-icon-sky   { background: linear-gradient(135deg, #E8FBFF, #B8EEFF); color: darken($sky, 10%); }
+}
+
+.onb-card-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: $navy;
+  margin-bottom: 0.4rem;
+}
+
+.onb-card-text {
+  font-size: 1rem;
+  color: $gray;
+  line-height: 1.6;
+  margin: 0;
+}
+
+// Steps timeline
+.onb-steps {
+  display: flex;
+  flex-direction: column;
+}
+
+.onb-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.onb-step-line {
+  width: 2px;
+  height: 1.25rem;
+  background: linear-gradient(to bottom, rgba($coral, 0.25), rgba($navy, 0.1));
+  margin-left: 25px;
+}
+
+.onb-step-dot {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+
+  &.onb-step-dot-coral  { background: linear-gradient(135deg, #FFF4EC, #FFD6B8); color: $coral; }
+  &.onb-step-dot-yellow { background: linear-gradient(135deg, #FFFBEC, #FFE8A0); color: darken($yellow, 25%); }
+  &.onb-step-dot-sky    { background: linear-gradient(135deg, #E8FBFF, #B8EEFF); color: darken($sky, 10%); }
+  &.onb-step-dot-mint   { background: linear-gradient(135deg, #EDFCF6, #B8F5E0); color: darken($mint, 12%); }
+}
+
+.onb-step-body {
+  padding-top: 0.2rem;
+}
+
+.onb-step-label {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: $navy;
+  margin-bottom: 0.15rem;
+}
+
+.onb-step-desc {
+  font-size: 1rem;
+  color: $gray;
+  line-height: 1.5;
+}
+
+// Skill tags (remplace les badges illisibles)
+.onb-skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35em 0.85em;
+  border-radius: 50rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  background: rgba($navy, 0.06);
+  color: $navy;
+  border: 1px solid rgba($navy, 0.12);
+}
+
+// Profile header
+.onb-avatar-lg {
+  width: 110px !important;
+  height: 110px !important;
+}
+
+.onb-tagline {
+  color: $gray;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.onb-bio-card {
+  border-left: 4px solid $coral !important;
+}
+
+.onb-bio-text {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #374151;
+}
+
+// Experience cards
+.onb-exp-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: $border-radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+
+  &.onb-icon-coral { background: linear-gradient(135deg, #FFF4EC, #FFD6B8); color: $coral; }
+  &.onb-icon-mint  { background: linear-gradient(135deg, #EDFCF6, #B8F5E0); color: darken($mint, 12%); }
+  &.onb-icon-sky   { background: linear-gradient(135deg, #E8FBFF, #B8EEFF); color: darken($sky, 10%); }
+}
+
+.onb-exp-date {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: $coral;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.onb-exp-company {
+  font-size: 0.85rem;
+  color: $gray;
+  margin-bottom: 0.5rem;
+}
+
+.onb-sub-section-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $coral;
+  margin-bottom: 0.75rem;
+}
+
+// Team
+.onb-team-card {
+  display: block;
+  text-decoration: none;
+  transition: transform 0.18s, box-shadow 0.18s;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: $box-shadow-lg;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba($navy, 0.12) !important;
   }
 }
 
-.onboarding-step-number {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
+.onb-avatar {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
   border-radius: 50%;
-  background-color: $coral;
-  color: white;
-  font-family: $headers-font;
-  font-size: 1.3rem;
+  border: 3px solid rgba($coral, 0.35);
+  display: block;
+  margin: 0 auto;
 }
 
-.onboarding-step-icon {
-  font-size: 1.6rem;
-  color: $coral;
+.onb-team-name {
+  font-weight: 800;
+  font-size: 1rem;
+  color: $navy;
   margin-bottom: 0.25rem;
 }
 
-// Team cards
-.onboarding-team-card {
-  border-radius: $border-radius-xxl;
-  box-shadow: $card-box-shadow;
-  transition: transform 0.22s ease, box-shadow 0.22s ease;
-
-  &:hover {
-    transform: translateY(-4px);
-    box-shadow: $box-shadow-lg;
-  }
-}
-
-.onboarding-avatar {
-  display: block;
-  margin: 0 auto;
-  width: 96px;
-  height: 96px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid $coral;
-  box-shadow: 0 2px 12px rgba($coral, 0.25);
-}
-
-.onboarding-role-badge {
-  background-color: rgba($coral, 0.1);
-  color: $coral;
-  font-weight: 700;
+.onb-team-role {
+  display: inline-block;
   font-size: 0.75rem;
-  letter-spacing: 0.04em;
-  border-radius: $border-radius-pill;
-  padding: 0.35em 0.85em;
-}
-
-.onboarding-team-btn {
-  background-color: rgba($navy, 0.08);
-  color: $navy;
-  border: 1.5px solid rgba($navy, 0.15);
-  font-family: $headers-font;
-  font-size: 0.95rem;
-  height: 40px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  border-radius: $border-radius-lg;
-  padding: 0 1rem;
-  text-decoration: none;
-  transition: all 0.2s;
-
-  i { color: $coral; }
-
-  &:hover {
-    background-color: $coral;
-    border-color: $coral;
-    color: white;
-
-    i { color: white; }
-  }
+  font-weight: 700;
+  background: rgba($coral, 0.1);
+  color: $coral;
+  border-radius: 50rem;
+  padding: 0.15em 0.75em;
 }
