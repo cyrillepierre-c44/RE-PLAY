@@ -1,95 +1,113 @@
-<% content_for :title, "Loïc Laplagne · RE-PLAY" %>
-
-<div class="container py-4">
-
-  <%= link_to onboarding_path, class: "btn-back-boxes mb-3 d-inline-block" do %>
-    <span style="color:#000;">←</span> Guide
-  <% end %>
-
-  <%# ── En-tête profil ── %>
-  <div class="detail-card p-4 text-center mb-4">
-    <%= image_tag "loic", alt: "Loïc Laplagne", class: "onb-avatar onb-avatar-lg mb-3" %>
-    <h1 class="toy-show-title mb-1">Loïc Laplagne</h1>
-    <div class="onb-team-role mb-2">Développeur</div>
-    <p class="onb-tagline">Coordination de projets institutionnels · Gestion de financements publics</p>
-  </div>
-
-  <%# ── Bio ── %>
-  <div class="detail-card p-4 mb-4 onb-bio-card">
-    <p class="onb-bio-text mb-0">
-      Fort d'un parcours entre coordination de projets institutionnels, création d'entreprise et accompagnement
-      de porteurs de projets, Loïc a développé une expertise solide en gestion de projet et mise en réseau
-      d'acteurs. La formation full-stack du Wagon lui a permis d'ajouter une dimension technique à cette vision
-      stratégique : Ruby on Rails, SQL, JavaScript et IA.
+<%# ── HERO ─────────────────────────────────────────────────────────── %>
+<div class="onboarding-hero">
+  <div class="container pb-5 text-center text-white d-flex flex-column align-items-center">
+    <%= image_tag "loic", alt: "Loïc Laplagne", class: "onboarding-avatar mb-4", style: "width: 300px; height: 300px;" %>
+    <h1 class="display-5 fw-bold mb-1">Loïc Laplagne</h1>
+    <p class="lead onboarding-hero-sub mb-0">
+      Chargé de mission &middot; Coordination de projets institutionnels &middot; Gestion de financements publics
     </p>
   </div>
+</div>
 
-  <%# ── Expériences ── %>
-  <div class="onb-section-title">
-    <span class="onb-section-bar"></span>
-    <h2><i class="fa-solid fa-briefcase me-2" style="font-size:1rem;"></i>Expériences récentes</h2>
+<%# ── BIO ─────────────────────────────────────────────────────────── %>
+<div class="container my-5">
+  <div class="card border-0 shadow-sm onboarding-intro-card p-4 p-md-5">
+    <p class="fs-5 lh-lg mb-0">
+    Loïc accompagne les porteurs de projets au cœur de la French Tech, pilote le montage de dossiers de subventions dans le cadre des AMI ministériels et préfectoraux, et soutient l’export aux côtés de Business France. Avec un parcours mêlant coordination institutionnelle, entrepreneuriat et mise en réseau d’acteurs, il a développé une forte capacité à structurer, accélérer et connecter des projets à impact. Formé au développement web & IA au Wagon (Ruby on Rails, SQL, JavaScript, IA), il apporte une dimension technique qui lui a permis de contribuer au support fonctionnel et au développement de RE‑Play.
+    </p>
   </div>
-  <div class="row g-3 mb-4">
-    <div class="col-12 col-md-6">
-      <div class="detail-card p-4 h-100">
-        <div class="onb-exp-icon onb-icon-coral mb-2"><i class="fa-solid fa-landmark"></i></div>
-        <div class="onb-exp-date">oct. 2021 – juin 2023</div>
-        <h5 class="onb-card-title">Responsable adjoint — Fonds de Coopération Régionale</h5>
-        <p class="onb-exp-company">GIP l'Europe à Mayotte · Mayotte</p>
-        <p class="onb-card-text mb-0">Instruction des dossiers de financement européens, suivi du programme INTERREG Canal du Mozambique et coordination des acteurs.</p>
+</div>
+
+<%# ── BLOC 1 : 2 dernières expériences ───────────────────────────── %>
+<section class="bg-white py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Expériences récentes</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+            <h5 class="fw-bold mb-0">Responsable adjoint — Fonds de Coopération Régionale</h5>
+            <span class="badge onboarding-role-badge">oct. 2021 – juin 2023</span>
+          </div>
+          <p class="text-muted mb-2">GIP l'Europe à Mayotte &middot; Mayotte</p>
+          <p class="mb-0 small">
+            Instruction des dossiers de financement européens, suivi du programme INTERREG Canal du Mozambique et coordination des acteurs impliqués.
+          </p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+            <h5 class="fw-bold mb-0">Concepteur &amp; Développeur web &amp; IA</h5>
+            <span class="badge onboarding-role-badge">janv. – mars 2026</span>
+          </div>
+          <p class="text-muted mb-2">Le Wagon &middot; Bootcamp full-stack &middot; RNCP niveau 6</p>
+          <p class="mb-0 small">
+            Formation intensive : Ruby on Rails, JavaScript, PostgreSQL, Git et intégration d'IA.
+            Projet final : conception de l'application RE-Play pour ENJOUÉ.
+          </p>
+        </div>
       </div>
     </div>
-    <div class="col-12 col-md-6">
-      <div class="detail-card p-4 h-100">
-        <div class="onb-exp-icon onb-icon-mint mb-2"><i class="fa-solid fa-code"></i></div>
-        <div class="onb-exp-date">janv. – mars 2026</div>
-        <h5 class="onb-card-title">Concepteur &amp; Développeur web &amp; IA</h5>
-        <p class="onb-exp-company">Le Wagon · Bootcamp full-stack · RNCP niv. 6</p>
-        <p class="onb-card-text mb-0">Formation intensive : Ruby on Rails, JavaScript, PostgreSQL, Git et IA. Projet final : RE-Play pour ENJOUÉ.</p>
-      </div>
-    </div>
   </div>
+</section>
 
-  <%# ── Compétences ── %>
-  <div class="onb-section-title">
-    <span class="onb-section-bar"></span>
-    <h2><i class="fa-solid fa-star me-2" style="font-size:1rem;"></i>Compétences</h2>
-  </div>
-  <div class="detail-card p-4 mb-4">
+<%# ── BLOC 2 : Compétences ────────────────────────────────────────── %>
+<section class="py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Compétences</h2>
+    </div>
     <div class="d-flex flex-wrap gap-2">
-      <span class="onb-skill-tag"><i class="fa-solid fa-sitemap"></i> Gestion de projets institutionnels</span>
-      <span class="onb-skill-tag"><i class="fa-solid fa-coins"></i> Financement public (INTERREG / ESI)</span>
-      <span class="onb-skill-tag"><i class="fa-solid fa-users"></i> Management d'équipes</span>
-      <span class="onb-skill-tag"><i class="fa-solid fa-handshake"></i> Accompagnement de porteurs</span>
-      <span class="onb-skill-tag"><i class="fa-solid fa-chart-bar"></i> Reporting</span>
-      <span class="onb-skill-tag"><i class="fa-solid fa-link"></i> Synergie</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Gestion des financements Européens (INTERREG / ESI)</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2"> Montage des dossiers de subventions dans le cadre des Appels à Manifestation d’Intérêt
+         ministériels et préfectoraux.</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Apport et soutien aux porteurs de projets au sein de l’écosystème French Tech</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Accompagnement à l’export en collaboration avec Business France.</span>
+      <span class="badge onboarding-role-badge fs-6 px-3 py-2">Synergie</span>
     </div>
   </div>
+</section>
 
-  <%# ── Formation & Engagements ── %>
-  <div class="onb-section-title">
-    <span class="onb-section-bar"></span>
-    <h2><i class="fa-solid fa-graduation-cap me-2" style="font-size:1rem;"></i>Diplômes &amp; engagements</h2>
-  </div>
-  <div class="row g-3 mb-2">
-    <div class="col-12 col-md-6">
-      <div class="detail-card p-4 h-100">
-        <div class="onb-sub-section-title"><i class="fa-solid fa-graduation-cap me-2"></i>Formation</div>
-        <p class="onb-card-title mb-0">ESSEC-Isfogep</p>
-        <p class="onb-exp-company mb-3">Master Responsable en Ressources Humaines</p>
-        <p class="onb-card-title mb-0">Université Lumière Lyon II</p>
-        <p class="onb-exp-company mb-0">Maîtrise Sociologie des Organisations · 2001</p>
+<%# ── BLOC 3 : Diplômes & intérêts ───────────────────────────────── %>
+<section class="bg-white py-5">
+  <div class="container">
+    <div class="d-flex align-items-center gap-2 mb-4">
+      <span class="onboarding-section-bar"></span>
+      <h2 class="mb-0 fw-bold">Diplômes &amp; intérêts</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
+          <h6 class="fw-bold text-uppercase small mb-3" style="color: #E67E22; letter-spacing: .06em;">Formation</h6>
+          <p class="mb-1 fw-semibold">ESSEC-Isfogep</p>
+          <p class="text-muted small mb-3">Master Responsable en Ressources Humaines &middot; 2003</p>
+          <p class="mb-1 fw-semibold">Université Lumière Lyon II</p>
+          <p class="text-muted small mb-0">Maîtrise de Sociologie des Organisations et du travail &middot; 2001</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card border-0 shadow-sm onboarding-step-card p-4 h-100">
+          <h6 class="fw-bold text-uppercase small mb-3" style="color: #E67E22; letter-spacing: .06em;">Engagements &amp; intérêts</h6>
+          <p class="mb-1 fw-semibold">Fondateur</p>
+          <p class="text-muted small mb-3">
+            Observatoire de la Vie des Outremer (Lyon) &amp; MOM de Lyon<br>
+            Lancement du 1er Guide de l’Ultramarin en région AURA<br>
+            Promotion et valorisation des Outremer en AURA
+</p>
+
+          <p class="mb-1 fw-semibold">Loisirs</p>
+          <p class="text-muted small mb-0">Création de meubles (design scandinave &amp; factory) &middot; Ski &middot; VTT</p>
+        </div>
       </div>
     </div>
-    <div class="col-12 col-md-6">
-      <div class="detail-card p-4 h-100">
-        <div class="onb-sub-section-title"><i class="fa-solid fa-heart me-2"></i>Engagements &amp; loisirs</div>
-        <p class="onb-card-title mb-0">Fondateur</p>
-        <p class="onb-exp-company mb-3">Observatoire de la Vie des Outremer · promotion et valorisation des Outremer en AURA</p>
-        <p class="onb-card-title mb-0">Loisirs</p>
-        <p class="onb-exp-company mb-0">Création de meubles (design scandinave &amp; factory) · Ski · VTT</p>
-      </div>
-    </div>
   </div>
+</section>
 
+<div class="container py-4 text-center">
+  <%= link_to "← Retour à l'onboarding", onboarding_path, class: "btn onboarding-team-btn fw-bold" %>
 </div>
