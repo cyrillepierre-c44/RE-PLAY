@@ -101,7 +101,7 @@ class ToysController < ApplicationController
     authorize @toy
     new_status = params[:status]
 
-    if @toy.update(toy_params.merge(status: new_status))
+    if @toy.update(verify_params.merge(status: new_status))
       Action.create!(
         user: current_user,
         actionable: @toy,
@@ -129,6 +129,10 @@ class ToysController < ApplicationController
   end
 
   def toy_params
+    params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :location, :status)
+  end
+
+  def verify_params
     params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :price, :location,
                                 :status)
   end

@@ -1,10 +1,7 @@
 <% content_for :title, "Jouet N°#{@toy.id} · RE-PLAY" %>
 <% if @toy.photo.attached? && @toy.price.nil? %>
-  <% content_for :head do %>
-    <meta http-equiv="refresh" content="5">
-  <% end %>
+  <meta http-equiv="refresh" content="4">
 <% end %>
-
 <div class="container py-4">
   <%= link_to toys_path, class: "btn-back-boxes mb-3 d-inline-block" do %>
     <span style="color:#000;">←</span> <i class="fa-solid fa-puzzle-piece"></i><i class="fa-solid fa-puzzle-piece" style="margin-left:-0.3em; opacity:0.55; transform:rotate(90deg); display:inline-block;"></i>
