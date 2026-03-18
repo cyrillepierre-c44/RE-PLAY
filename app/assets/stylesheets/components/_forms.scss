@@ -14,7 +14,7 @@
 }
 
 .form-card-header {
-  padding: 1.75rem 2rem 1.5rem;
+  padding: 1rem 1.25rem 0.75rem;
   border-bottom: 1px solid #F0EBE3;
 
   .form-card-icon {
@@ -44,7 +44,7 @@
 }
 
 .form-card-body {
-  padding: 1.75rem 2rem 2rem;
+  padding: 1rem 1.25rem 1.25rem;
 }
 
 // Labels
@@ -244,6 +244,59 @@
   }
 }
 
+.filter-count {
+  padding: 0.1em 0.5em;
+  border-radius: 50rem;
+  font-size: 0.8em;
+  font-weight: 700;
+  transition: background 0.2s, color 0.2s;
+}
+
+.form-photo-wrap {
+  position: relative;
+}
+
+.form-photo-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 180px;
+  border: 2px dashed rgba($coral, 0.4);
+  border-radius: $border-radius-xl;
+  background: linear-gradient(135deg, rgba($coral, 0.04), rgba($yellow, 0.04));
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+  padding: 1.5rem;
+
+  &:hover, &:active {
+    border-color: $coral;
+    background: rgba($coral, 0.07);
+  }
+}
+
+.form-photo-change-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.4rem;
+  border-radius: $border-radius-lg;
+  border: 1.5px dashed rgba($coral, 0.5);
+  background: rgba($coral, 0.05);
+  color: $coral;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover { background: rgba($coral, 0.1); }
+}
+
 // Filter tabs
 .filter-tabs {
   display: flex;
@@ -252,12 +305,14 @@
   padding: 0.25rem;
   box-shadow: $box-shadow-sm;
   border: 1px solid #F0EBE3;
-  width: fit-content;
+  width: 100%;
 
   .filter-tab {
-    padding: 0.45rem 1.1rem;
+    flex: 1;
+    justify-content: center;
+    padding: 0.6rem 0.5rem;
     border-radius: $border-radius-pill;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 700;
     color: $gray;
     text-decoration: none;
@@ -271,10 +326,27 @@
       color: $coral;
     }
 
-    &.active {
-      background: $coral;
-      color: $white;
-      box-shadow: 0 2px 8px rgba($coral, 0.35);
+    // Pastilles inactives — couleur du point correspondant
+    &.filter-tab-waiting    .filter-count { background: rgba($yellow, 0.30);      color: darken($yellow, 35%); }
+    &.filter-tab-validated  .filter-count { background: rgba($mint, 0.20);        color: darken($mint, 20%); }
+    &.filter-tab-deleted    .filter-count { background: rgba($danger-red, 0.12);  color: $danger-red; }
+    &.filter-tab-box-active .filter-count { background: rgba($yellow, 0.30);      color: darken($yellow, 35%); }
+    &.filter-tab-box-empty  .filter-count { background: rgba($sky, 0.20);         color: darken($sky, 20%); }
+    &.filter-tab-box-suppr  .filter-count { background: rgba($danger-red, 0.12);  color: $danger-red; }
+
+    // Pastilles actives — chiffre en noir avec cercle noir
+    &.active .filter-count {
+      background: transparent;
+      color: #000;
+      font-weight: 700;
+      border: 2px solid #000;
     }
+
+    &.filter-tab-waiting.active    { background: $yellow;      color: #000; box-shadow: 0 2px 8px rgba($yellow, 0.45); }
+    &.filter-tab-validated.active  { background: $mint;        color: #000; box-shadow: 0 2px 8px rgba($mint, 0.35); }
+    &.filter-tab-deleted.active    { background: $danger-red;  color: #000; box-shadow: 0 2px 8px rgba($danger-red, 0.35); }
+    &.filter-tab-box-active.active { background: $yellow;      color: #000; box-shadow: 0 2px 8px rgba($yellow, 0.45); }
+    &.filter-tab-box-empty.active  { background: $sky;         color: #000; box-shadow: 0 2px 8px rgba($sky, 0.35); }
+    &.filter-tab-box-suppr.active  { background: $danger-red;  color: #000; box-shadow: 0 2px 8px rgba($danger-red, 0.35); }
   }
 }

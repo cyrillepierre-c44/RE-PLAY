@@ -50,6 +50,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    margin-left: auto;
   }
 
   .user-chip {
@@ -88,12 +89,27 @@
     }
   }
 
+  .user-avatar-lg {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.1rem !important;
+    flex-shrink: 0;
+  }
+
+  .dropdown-header-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.75rem 0.5rem;
+  }
+
   .dropdown-menu {
     border: none;
     box-shadow: $box-shadow-lg;
     border-radius: $border-radius-xl;
     padding: 0.5rem;
     margin-top: 0.5rem;
+    min-width: 240px;
 
     .dropdown-item {
       border-radius: $border-radius;
@@ -130,12 +146,66 @@
       border-color: #F0EBE3;
     }
   }
+}
 
-  .navbar-toggler {
-    border: none;
-    padding: 0.4rem;
-    border-radius: $border-radius;
+// ── Bottom tab bar (mobile) ──
+.bottom-tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  background: $white;
+  border-top: 1px solid #F0EBE3;
+  box-shadow: 0 -4px 16px rgba(26, 43, 74, 0.08);
+  display: flex;
+  align-items: stretch;
+  height: 62px;
+  padding-bottom: env(safe-area-inset-bottom); // iPhone notch
+}
 
-    &:focus { box-shadow: none; }
+.bottom-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  color: #9CA3AF;
+  text-decoration: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: color 0.15s;
+  padding: 0.4rem 0.25rem;
+
+  i, span:first-child {
+    font-size: 1.56rem;
+    display: block;
+  }
+
+  &.active {
+    color: $coral;
+  }
+
+  &:hover {
+    color: $coral;
+  }
+}
+
+// Espace sous le contenu pour ne pas être caché par la bottom bar
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 62px;
+  }
+
+  // Réduit les marges verticales des containers sur mobile
+  .container.py-4 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+  }
+
+  .container.py-4 > .mb-3:last-child,
+  .container.py-4 > .mb-4:last-child {
+    margin-bottom: 0 !important;
   }
 }

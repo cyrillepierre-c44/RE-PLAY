@@ -1,0 +1,37 @@
+<% content_for :title, "Comptes utilisateurs · RE-PLAY" %>
+
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="toy-show-title"><i class="fa-solid fa-users me-2"></i>Comptes</h1>
+    <%= link_to new_user_registration_path, class: "toy-action-btn toy-action-primary", title: "Nouveau compte" do %>
+      <i class="fa-solid fa-plus"></i>
+    <% end %>
+  </div>
+
+  <div class="detail-card">
+    <% @users.each_with_index do |u, i| %>
+      <div class="d-flex align-items-center justify-content-between px-4 py-3 <%= 'border-top' if i > 0 %>">
+        <div class="d-flex align-items-center gap-3">
+          <div class="user-avatar" style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#FF6B35,#FFB347); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1rem; flex-shrink:0;">
+            <%= u.email[0].upcase %>
+          </div>
+          <div>
+            <div style="font-weight:700; color:#1A2B4A;"><%= u.email.split('@').first %></div>
+            <div style="font-size:0.78rem; color:#9CA3AF;"><%= u.email %></div>
+          </div>
+          <% if u.admin? %>
+            <span style="font-size:0.7rem; font-weight:700; background:rgba(255,107,53,0.12); color:#FF6B35; padding:0.15em 0.6em; border-radius:50rem;">Admin</span>
+          <% end %>
+        </div>
+        <% if u != current_user %>
+          <%= link_to user_path(u),
+                class: "toy-action-btn toy-action-delete",
+                title: "Supprimer ce compte",
+                data: { turbo_method: :delete, turbo_confirm: "Supprimer le compte #{u.email} ?" } do %>
+            <i class="fa-solid fa-trash"></i>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

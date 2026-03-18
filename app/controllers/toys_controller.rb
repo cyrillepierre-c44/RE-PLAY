@@ -23,12 +23,15 @@ class ToysController < ApplicationController
 
   def show
     authorize @toy
-    @timeline = Action.where(actionable: @toy).includes(:user).order(created_at: :asc)
+    @timeline = Action.where(actionable: @toy).includes(:user).order(created_at: :desc)
   end
 
   def new
-    @toy = Toy.new
+    @toy = Toy.new(box: @box, category: @box.category)
     authorize @toy
+    @toy.save(validate: false)
+    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a débuté la création du jouet #{@toy.id}")
+    redirect_to edit_toy_path(@toy, new: true), status: :see_other
   end
 
   def create
@@ -57,7 +60,11 @@ class ToysController < ApplicationController
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} à updaté le jouet n#{@toy.id}")
-      redirect_to toy_path(@toy), status: :see_other, notice: "modifié avec succès"
+      if params[:from_new] == "1"
+        redirect_to box_path(@toy.box), notice: "Jouet créé avec succès.", status: :see_other
+      else
+        redirect_to toy_path(@toy), status: :see_other, notice: "modifié avec succès"
+      end
     else
       render :edit, status: :unprocessable_entity
     end

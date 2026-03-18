@@ -1,121 +1,155 @@
-<% content_for :title, "Boîte ##{@box.id} · RE-PLAY" %>
+<% content_for :title, "Boîte N°#{@box.id} · RE-PLAY" %>
 
 <div class="container py-4">
-  <%= link_to boxes_path, class: "btn btn-ghost btn-sm mb-3" do %>
-    <i class="fa-solid fa-arrow-left me-1"></i> Retour aux boîtes
+  <%= link_to boxes_path, class: "btn-back-boxes mb-3 d-inline-block" do %>
+    <span style="color:#000;">←</span> <i class="fa-solid fa-boxes-stacked"></i>
   <% end %>
 
   <div class="row g-4">
-    <div class="col-md-5 col-lg-4">
+    <%# ── Colonne info boîte ── %>
+    <div class="col-12 col-md-4 col-lg-3">
       <div class="detail-card p-4">
-        <div style="width:64px; height:64px; border-radius:1rem; background: linear-gradient(135deg, #FFF4EC, #FFD6B8);
-                    display:flex; align-items:center; justify-content:center;
-                    color: #FF6B35; font-size: 1.8rem; margin-bottom: 1.25rem;">
-          <i class="fa-solid fa-<%= @box.electronic? ? 'bolt' : 'box-open' %>"></i>
-        </div>
-        <h1 style="font-size: 2rem; color: #1A2B4A; margin-bottom: 0.25rem;">Boîte #<%= @box.id %></h1>
-        <p style="color: #6B7280; font-size: 0.9rem; margin-bottom: 1.25rem;">
-          Créée le <%= @box.created_at.strftime('%d/%m/%Y') %>
-        </p>
 
-        <div class="d-flex flex-column gap-2 mb-3">
-          <div class="d-flex align-items-center gap-2">
-            <span style="color: #9CA3AF; font-size: 0.8rem; width: 80px;">Catégorie</span>
-            <span class="badge badge-category"><%= @box.category.name %></span>
-          </div>
-          <div class="d-flex align-items-center gap-2">
-            <span style="color: #9CA3AF; font-size: 0.8rem; width: 80px;">Type</span>
-            <% if @box.electronic? %>
-              <span class="badge badge-electronic"><i class="fa-solid fa-bolt me-1"></i>Électronique</span>
+        <div class="d-flex align-items-center justify-content-between mb-3">
+          <h1 class="toy-show-title">
+            <% if @box.suppr? %>
+              <i class="fa-solid fa-dumpster me-2"></i>
+            <% elsif @box.empty? %>
+              <i class="fa-solid fa-box-open me-2"></i>
             <% else %>
-              <span class="badge badge-condition">Non électronique</span>
+              <i class="fa-solid fa-box me-2"></i>
             <% end %>
-          </div>
-          <% if @box.weight.present? %>
-            <div class="d-flex align-items-center gap-2">
-              <span style="color: #9CA3AF; font-size: 0.8rem; width: 80px;">Poids</span>
-              <strong><%= @box.weight %> kg</strong>
-            </div>
+            N°&nbsp;<%= @box.id %>
+          </h1>
+          <% if @box.suppr? %>
+            <span class="status-dot status-dot-deleted" title="Jetée"></span>
+          <% elsif @box.empty? %>
+            <span class="status-dot status-dot-empty" title="Vide"></span>
+          <% else %>
+            <span class="status-dot status-dot-box-active" title="En cours"></span>
           <% end %>
-          <div class="d-flex align-items-center gap-2">
-            <span style="color: #9CA3AF; font-size: 0.8rem; width: 80px;">Jouets</span>
-            <strong><%= @box.toys.count %></strong>
-          </div>
         </div>
 
-        <div class="action-strip">
+        <div class="d-flex align-items-start justify-content-between mb-3 gap-3">
+          <div class="toy-show-info-grid">
+            <div class="toy-show-info-item">
+              <i class="fa-solid fa-tag"></i>
+              <span><%= truncate(@box.category.name, length: 20) %></span>
+            </div>
+            <% if @box.weight.present? %>
+              <div class="toy-show-info-item">
+                <i class="fa-solid fa-weight-hanging"></i>
+                <span><%= @box.weight %> kg</span>
+              </div>
+            <% end %>
+            <div class="toy-show-info-item">
+              <span class="condition-icon <%= @box.electronic? ? 'ok' : 'ko' %>" style="width:28px;height:28px;font-size:0.8rem;">
+                <i class="fa-solid fa-bolt"></i>
+              </span>
+              <span><%= @box.electronic? ? 'Électronique' : 'Non électronique' %></span>
+            </div>
+          </div>
+
+          <% if policy(@box).toggle_empty? && !@box.suppr? %>
+            <%= button_to toggle_empty_box_path(@box), method: :patch, class: "box-toggle-btn" do %>
+              <div class="box-toggle-wrap <%= @box.empty? ? 'is-empty' : 'is-full' %>">
+                <div class="box-toggle-icons">
+                  <i class="fa-solid fa-box icon-full" title="Pleine"></i>
+                  <i class="fa-solid fa-box-open icon-empty" title="Vide"></i>
+                </div>
+                <div class="box-toggle-track">
+                  <div class="box-toggle-thumb"></div>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%# Boutons action %>
+        <div class="toy-show-actions">
           <% if @box.pending? %>
-            <%= link_to new_box_toy_path(@box), class: "btn btn-primary btn-sm" do %>
-              <i class="fa-solid fa-plus me-1"></i>Ajouter un jouet
+            <%= link_to new_box_toy_path(@box), class: "toy-show-btn toy-show-btn-verify", title: "Ajouter un jouet" do %>
+              <i class="fa-solid fa-plus"></i>
             <% end %>
           <% end %>
           <% if policy(@box).edit? %>
-            <%= link_to edit_box_path(@box), class: "btn btn-ghost btn-sm" do %>
-              <i class="fa-solid fa-pen me-1"></i>Modifier
+            <%= link_to edit_box_path(@box), class: "toy-show-btn toy-show-btn-edit", title: "Modifier" do %>
+              <i class="fa-solid fa-pen"></i>
             <% end %>
           <% end %>
           <% if policy(@box).destroy? && !@box.suppr? %>
             <%= link_to box_path(@box),
-                  class: "btn btn-sm",
-                  style: "background: rgba(230,57,70,0.1); color: #E63946; font-weight:700;",
+                  class: "toy-show-btn toy-show-btn-delete",
+                  title: "Supprimer",
                   data: { turbo_method: :delete, turbo_confirm: "Supprimer cette boîte ?" } do %>
-              <i class="fa-solid fa-trash me-1"></i>Supprimer
+              <i class="fa-solid fa-trash"></i>
             <% end %>
-          <% end %>
-          <% if policy(@box).toggle_empty? %>
-          <%= button_to toggle_empty_box_path(@box), method: :patch, class: "btn btn-sm" do %>
-            <% if @box.empty? %>
-              <i class="fa-solid fa-box me-1"></i>Marquer non vide
-            <% else %>
-              <i class="fa-solid fa-box-open me-1"></i>Marquer vide
-            <% end %>
-          <% end %>
           <% end %>
         </div>
+
       </div>
     </div>
 
-    <div class="col-md-7 col-lg-8">
+    <%# ── Colonne jouets ── %>
+    <div class="col-12 col-md-8 col-lg-9">
       <div class="d-flex align-items-center justify-content-between mb-3">
-        <h2 style="font-size: 1.2rem; color: #1A2B4A; margin: 0;">
-          Jouets dans cette boîte (<%= @box.toys.count %>)
+        <h2 class="toy-show-title" style="font-size:1.4rem;">
+          <i class="fa-solid fa-puzzle-piece me-2"></i><%= @box.toys.count %> jouet<%= 's' if @box.toys.count > 1 %>
         </h2>
       </div>
 
       <% if @box.toys.empty? %>
-        <div class="detail-card p-4 text-center" style="color: #9CA3AF;">
-          <i class="fa-solid fa-puzzle-piece" style="font-size: 2.5rem; color: rgba(255,107,53,0.2); margin-bottom: 0.75rem; display:block;"></i>
+        <div class="detail-card p-4 text-center" style="color:#9CA3AF;">
+          <i class="fa-solid fa-puzzle-piece" style="font-size:2.5rem; color:rgba(255,107,53,0.2); margin-bottom:0.75rem; display:block;"></i>
           Aucun jouet dans cette boîte.
           <% if @box.pending? %>
-            <%= link_to "Ajouter le premier jouet", new_box_toy_path(@box), class: "btn btn-primary btn-sm d-block mt-3 mx-auto" , style:"width:fit-content;" %>
+            <%= link_to new_box_toy_path(@box), class: "btn btn-primary btn-sm d-block mt-3 mx-auto", style:"width:fit-content;" do %>
+              <i class="fa-solid fa-plus me-1"></i>Ajouter
+            <% end %>
           <% end %>
         </div>
       <% else %>
         <div class="row g-3">
-          <% @box.toys.each do |toy| %>
-            <div class="col-sm-6 col-xl-4">
+          <% @box.toys.order(created_at: :desc).each do |toy| %>
+            <div class="col-12 col-sm-6 col-xl-4">
               <div class="toy-card">
-                <% if toy.photo.attached? %>
-                  <%= image_tag toy.photo, class: "toy-card-img" %>
-                <% else %>
-                  <div class="toy-card-no-img"><i class="fa-solid fa-image"></i></div>
-                <% end %>
-                <div class="toy-card-body">
-                  <div class="toy-card-title">Jouet #<%= toy.id %></div>
-                  <div class="toy-card-meta">
-                    <i class="fa-solid fa-tag"></i><%= toy.category.name %>
-                  </div>
-                  <div class="toy-card-badges">
-                    <% if toy.location == "En attente de validation" %>
-                      <span class="badge badge-waiting">En attente</span>
-                    <% else %>
-                      <span class="badge badge-validated">Validé</span>
-                    <% end %>
-                  </div>
+                <div class="toy-card-photo-wrap">
+                  <% if toy.photo.attached? %>
+                    <%= image_tag toy.photo, class: "toy-card-img" %>
+                  <% else %>
+                    <div class="toy-card-no-img"><i class="fa-solid fa-image"></i></div>
+                  <% end %>
+                  <% if toy.price.present? %>
+                    <div class="toy-card-price-badge"><%= toy.price.to_i %> €</div>
+                  <% end %>
+                  <% if toy.suppr? %>
+                    <span class="status-dot status-dot-deleted toy-card-status-dot" title="Jeté"></span>
+                  <% elsif toy.market? %>
+                    <span class="status-dot status-dot-validated toy-card-status-dot" title="Validé"></span>
+                  <% else %>
+                    <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente"></span>
+                  <% end %>
                   <div class="toy-card-actions">
-                    <%= link_to toy_path(toy), class: "btn btn-primary btn-sm" do %>
-                      Voir
+                    <%= link_to toy_path(toy), class: "toy-action-btn toy-action-primary", title: "Voir" do %>
+                      <i class="fa-solid fa-eye"></i>
                     <% end %>
+                  </div>
+                </div>
+                <div class="toy-card-body">
+                  <div class="toy-card-title"><i class="fa-solid fa-puzzle-piece me-1"></i>N°&nbsp;<%= toy.id %></div>
+                  <div class="toy-card-meta">
+                    <span class="toy-card-category"><i class="fa-solid fa-tag me-1"></i><%= truncate(toy.category.name, length: 14) %></span>
+                    <div class="toy-card-conditions">
+                      <span class="condition-icon <%= toy.clean? ? 'ok' : 'ko' %>" title="<%= toy.clean? ? 'Propre' : 'Pas propre' %>">
+                        <i class="fa-solid fa-soap"></i>
+                      </span>
+                      <span class="condition-icon <%= toy.complete? ? 'ok' : 'ko' %>" title="<%= toy.complete? ? 'Complet' : 'Incomplet' %>">
+                        <i class="fa-solid fa-list-check"></i>
+                      </span>
+                      <span class="condition-icon <%= toy.playable? ? 'ok' : 'ko' %>" title="<%= toy.playable? ? 'Jouable' : 'Non jouable' %>">
+                        <i class="fa-solid fa-gamepad"></i>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -125,22 +159,39 @@
       <% end %>
     </div>
   </div>
-</div>
 
-<!-- ci-dessous la partie du code pour le  tracage des boites -->
+  <%# ── Polling prix IA ── %>
+  <% if @box.toys.any? { |t| t.photo.attached? && t.price.nil? } %>
+    <script>
+      setTimeout(function() { location.reload(); }, 2000);
+    </script>
+  <% end %>
 
+  <%# ── Timeline ── %>
   <% if @timeline.any? %>
     <div class="row mt-4">
       <div class="col-12">
-        <h3>Historique</h3>
-        <ul>
-          <% @timeline.each do |action| %>
-            <li>
-              <%= action.created_at.in_time_zone('Europe/Paris').strftime('%d/%m/%Y à %H:%M') %> —
-              <%= action.content %>
-            </li>
-          <% end %>
-        </ul>
+        <div class="toy-show-timeline-wrap">
+          <div class="toy-show-timeline-header">
+            <i class="fa-solid fa-clock-rotate-left me-2"></i>Historique
+          </div>
+          <div class="toy-show-timeline-scroll">
+            <div class="toy-show-timeline">
+              <% @timeline.each do |action| %>
+                <div class="toy-show-timeline-item">
+                  <div class="toy-show-timeline-dot"></div>
+                  <div class="toy-show-timeline-content">
+                    <span class="toy-show-timeline-date">
+                      <%= action.created_at.in_time_zone('Europe/Paris').strftime('%d/%m/%Y à %H:%M') %>
+                    </span>
+                    <span class="toy-show-timeline-text"><%= action.content %></span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   <% end %>
+</div>

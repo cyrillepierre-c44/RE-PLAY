@@ -1,21 +1,37 @@
-<% content_for :title, "Modifier le jouet ##{@toy.id} · RE-PLAY" %>
+<% content_for :title, "#{params[:new] ? 'Nouveau' : 'Modifier'} jouet N°#{@toy.id} · RE-PLAY" %>
 
-<div class="form-page">
-  <div class="container">
-    <%= link_to toy_path(@toy), class: "btn btn-ghost btn-sm mb-3" do %>
-      <i class="fa-solid fa-arrow-left me-1"></i>Retour au jouet #<%= @toy.id %>
+<div class="container py-4">
+  <% if params[:new] %>
+    <%= link_to box_path(@toy.box), class: "btn-back-boxes mb-3 d-inline-block" do %>
+      <span style="color:#000;">←</span> <i class="fa-solid fa-box"></i>
     <% end %>
-    <div class="form-card">
-      <div class="form-card-header">
-        <div class="form-card-icon">
-          <i class="fa-solid fa-pen-to-square"></i>
-        </div>
-        <h1 class="form-card-title">Modifier le jouet #<%= @toy.id %></h1>
-        <p class="form-card-subtitle"><%= @toy.category.name %></p>
+  <% else %>
+    <%= link_to toy_path(@toy), class: "btn-back-boxes mb-3 d-inline-block" do %>
+      <span style="color:#000;">←</span> <i class="fa-solid fa-puzzle-piece"></i>
+    <% end %>
+  <% end %>
+
+  <% if params[:new] %>
+    <div class="d-flex align-items-center justify-content-center gap-3 mb-3 p-3" style="background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(255,107,53,0.04)); border-radius:1rem; border:2px dashed rgba(255,107,53,0.35);">
+      <div style="text-align:center;">
+        <div style="font-size:0.8rem; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.2rem;">Écrire sur la photo</div>
+        <div style="font-size:2.8rem; font-weight:900; color:#FF6B35; line-height:1;">N°&nbsp;<%= @toy.id %></div>
       </div>
-      <div class="form-card-body">
-        <%= render "form" %>
-      </div>
+      <i class="fa-solid fa-camera" style="font-size:2rem; color:rgba(255,107,53,0.4);"></i>
     </div>
+  <% end %>
+
+  <div class="detail-card p-4">
+    <div class="d-flex align-items-center gap-3 mb-1">
+      <div class="form-card-icon" style="margin-bottom:0; flex-shrink:0;">
+        <i class="fa-solid fa-<%= params[:new] ? 'plus' : 'pen-to-square' %>"></i>
+      </div>
+      <h1 class="toy-show-title" style="font-size:1.6rem;"><%= params[:new] ? 'Nouveau jouet' : "Modifier le jouet" %> N°<%= @toy.id %></h1>
+    </div>
+    <% if @toy.category %>
+      <p style="font-size:1.15rem; font-weight:700; color:#1A2B4A; margin-bottom:1rem;"><%= @toy.category.name %></p>
+    <% end %>
+
+    <%= render "form" %>
   </div>
 </div>

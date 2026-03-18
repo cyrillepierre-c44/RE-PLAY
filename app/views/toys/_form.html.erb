@@ -1,103 +1,98 @@
 <%= simple_form_for @toy.persisted? ? @toy : [@box, @toy] do |f| %>
+  <% if params[:new] %>
+    <%= hidden_field_tag :from_new, "1" %>
+  <% end %>
 
-  <%# Photo %>
-  <div class="mb-4">
-    <label class="form-label">Photo du jouet</label>
-    <% if @toy.photo.attached? %>
-      <div class="mb-2 text-center">
-        <%= image_tag @toy.photo, class: "current-photo d-block mx-auto" %>
-        <span style="font-size:0.78rem; color:#9CA3AF; margin-top:0.3rem; display:block;">Photo actuelle</span>
+  <%# Zone photo %>
+  <%= f.input :photo, as: :file, label: false,
+      input_html: { id: "toy-photo-input", accept: "image/*", capture: "environment", style: "display:none;" } %>
+
+  <% if @toy.photo.attached? %>
+    <%# Photo existante + bouton changer %>
+    <div class="d-flex align-items-center mb-2">
+      <img id="photo-current" src="<%= url_for(@toy.photo) %>"
+           style="height:173px; width:auto; max-width:calc(100% - 96px); object-fit:contain; border-radius:0.75rem; display:block;">
+      <img id="photo-preview" src="" style="display:none; max-height:173px; width:auto; max-width:calc(100% - 96px); object-fit:contain; border-radius:0.75rem;">
+      <div class="flex-grow-1 d-flex justify-content-center">
+        <label for="toy-photo-input" class="verify-photo-overlay position-static" title="Changer la photo"
+               style="flex-shrink:0; width:72px; height:72px; font-size:2.2rem; border-radius:0.75rem;">
+          <i class="fa-solid fa-camera-rotate"></i>
+        </label>
       </div>
-    <% end %>
-    <div class="photo-upload-zone" id="photo-drop-zone">
-      <div class="upload-icon"><i class="fa-solid fa-camera"></i></div>
-      <%= f.input :photo,
-        as: :file,
-        label: false,
-        input_html: { class: "form-control", id: "toy-photo-input", accept: "image/*",
-                      style: "background:transparent; border:none; padding:0; font-size:0.85rem;" } %>
-      <div id="photo-preview" class="mt-2 text-center"></div>
     </div>
-  </div>
+  <% else %>
+    <%# Grande zone cliquable pour prendre / importer %>
+    <label for="toy-photo-input" class="form-photo-dropzone mb-2" id="photo-dropzone">
+      <div id="photo-dropzone-placeholder">
+        <i class="fa-solid fa-camera" style="font-size:2.8rem; color:rgba(255,107,53,0.5); margin-bottom:0.5rem;"></i>
+        <div style="font-weight:700; color:#FF6B35; font-size:1rem;">Prendre ou importer une photo</div>
+        <div style="font-size:0.8rem; color:#9CA3AF; margin-top:0.2rem;">Appuyez pour ouvrir l'appareil photo</div>
+      </div>
+      <img id="photo-preview" src="" style="display:none; max-height:173px; width:auto; max-width:100%; object-fit:contain; border-radius:0.75rem;">
+    </label>
+  <% end %>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const photoInput = document.getElementById('toy-photo-input');
-      const previewContainer = document.getElementById('photo-preview');
-      if (photoInput) {
-        photoInput.addEventListener('change', function(event) {
-          previewContainer.innerHTML = '';
-          if (event.target.files && event.target.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-              const img = document.createElement('img');
-              img.src = e.target.result;
-              img.style.maxWidth = '160px';
-              img.style.borderRadius = '0.75rem';
-              img.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-              img.alt = 'Aperçu';
-              previewContainer.appendChild(img);
-            };
-            reader.readAsDataURL(event.target.files[0]);
-          }
-        });
+    document.getElementById('toy-photo-input').addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+          const preview = document.getElementById('photo-preview');
+          preview.src = ev.target.result;
+          preview.style.display = 'block';
+          const placeholder = document.getElementById('photo-dropzone-placeholder');
+          if (placeholder) placeholder.style.display = 'none';
+          const current = document.getElementById('photo-current');
+          if (current) current.style.display = 'none';
+        };
+        reader.readAsDataURL(e.target.files[0]);
       }
     });
   </script>
 
   <%# Catégorie %>
-  <div class="mb-3">
-    <%= f.association :category,
-      label: "Catégorie du jouet",
-      selected: @toy.category&.id || @box&.category&.id,
-      input_html: { class: "form-select" },
-      label_html: { class: "form-label" } %>
+  <div class="mb-2">
+    <%= f.association :category, label: false, prompt: "Catégorie…",
+        selected: @toy.category&.id || @box&.category&.id,
+        input_html: { class: "form-select verify-select" } %>
   </div>
 
   <%# Barcode %>
-  <div class="mb-3">
-    <%= f.input :barcode,
-      label: "Code-barres / Référence (facultatif)",
-      input_html: { class: "form-control", placeholder: "Scannez ou saisissez" },
-      label_html: { class: "form-label" } %>
+  <div class="mb-2">
+    <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Facultatif</div>
+    <%= f.input :barcode, label: false,
+        input_html: { class: "form-control verify-input", placeholder: "Code-barres" } %>
   </div>
 
   <%# État %>
-  <div class="mb-2">
-    <label class="form-label">État du jouet</label>
-  </div>
-  <div class="d-flex flex-column gap-2 mb-4">
-    <div class="form-check-custom">
-      <%= f.check_box :clean, class: "form-check-input", id: "toy_clean" %>
-      <%= f.label :clean, class: "form-check-label", for: "toy_clean" do %>
-        <i class="fa-solid fa-soap"></i> Le jouet est propre
-      <% end %>
-    </div>
-    <div class="form-check-custom">
-      <%= f.check_box :complete, class: "form-check-input", id: "toy_complete" %>
-      <%= f.label :complete, class: "form-check-label", for: "toy_complete" do %>
-        <i class="fa-solid fa-puzzle-piece"></i> Le jouet est complet (toutes les pièces présentes)
-      <% end %>
-    </div>
-    <div class="form-check-custom">
-      <%= f.check_box :playable, class: "form-check-input", id: "toy_playable" %>
-      <%= f.label :playable, class: "form-check-label", for: "toy_playable" do %>
-        <i class="fa-solid fa-gamepad"></i> Le jouet est fonctionnel
-      <% end %>
-    </div>
+  <div class="verify-conditions mb-2">
+    <%= f.check_box :clean, class: "condition-toggle-input", id: "toy_clean" %>
+    <%= f.label :clean, class: "condition-toggle-label", for: "toy_clean" do %>
+      <i class="fa-solid fa-soap"></i><span>Propre</span>
+    <% end %>
+    <%= f.check_box :complete, class: "condition-toggle-input", id: "toy_complete" %>
+    <%= f.label :complete, class: "condition-toggle-label", for: "toy_complete" do %>
+      <i class="fa-solid fa-list-check"></i><span>Complet</span>
+    <% end %>
+    <%= f.check_box :playable, class: "condition-toggle-input", id: "toy_playable" %>
+    <%= f.label :playable, class: "condition-toggle-label", for: "toy_playable" do %>
+      <i class="fa-solid fa-gamepad"></i><span>Jouable</span>
+    <% end %>
   </div>
 
-  <%# Prix IA %>
-  <div class="mb-4">
-    <%= f.input :price,
-      label: "Prix suggéré par l'IA (€)",
-      input_html: { class: "form-control", placeholder: "Sera calculé automatiquement" },
-      label_html: { class: "form-label" },
-      hint: "Ce champ est rempli automatiquement par l'IA après soumission." %>
-  </div>
+  <%# Prix — masqué à la création, calculé par IA %>
+  <% unless params[:new] || @toy.new_record? %>
+    <div class="mb-2">
+      <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;"><i class="fa-solid fa-robot" style="font-size:0.7rem;"></i> Suggéré par IA</div>
+      <%= f.input :price, label: false, as: :numeric,
+          input_html: { class: "form-control verify-input", placeholder: "Prix (€)", step: 0.01 } %>
+    </div>
+  <% end %>
 
   <div class="d-grid">
-    <%= f.button :submit, class: "btn btn-primary btn-lg" %>
+    <button type="submit" class="btn btn-primary btn-lg">
+      <i class="fa-solid fa-check" style="font-size:1.5rem;"></i>
+    </button>
   </div>
 
 <% end %>

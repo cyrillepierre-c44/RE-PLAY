@@ -3,67 +3,18 @@
 <div class="home-hero">
   <h1 class="hero-title">
     <% if user_signed_in? %>
-      Bonjour <%= current_user.email.split('@').first.capitalize %> !
+      Bonjour <%= truncate(current_user.email.split('@').first.capitalize, length: 12, omission: '…') %>&nbsp;!
     <% else %>
       Bienvenue sur RE-PLAY
     <% end %>
   </h1>
-  <p class="hero-subtitle">La plateforme de reconditionnement de jouets Enjoué</p>
+
+  <%= image_tag "ENJOUE_RVB_2022.png", class: "home-hero-logo", alt: "Enjoué" %>
 </div>
 
 <% if user_signed_in? %>
-  <div class="container home-stats">
-    <div class="row g-3">
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon stat-icon-yellow">
-            <i class="fa-solid fa-clock"></i>
-          </div>
-          <div>
-            <div class="stat-value"><%= Toy.waiting.count %></div>
-            <div class="stat-label">En attente</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon stat-icon-mint">
-            <i class="fa-solid fa-circle-check"></i>
-          </div>
-          <div>
-            <div class="stat-value"><%= Toy.validated.count %></div>
-            <div class="stat-label">Validés</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon stat-icon-coral">
-            <i class="fa-solid fa-box"></i>
-          </div>
-          <div>
-            <div class="stat-value"><%= Box.count %></div>
-            <div class="stat-label">Boîtes</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-md-3">
-        <div class="stat-card">
-          <div class="stat-icon stat-icon-sky">
-            <i class="fa-solid fa-puzzle-piece"></i>
-          </div>
-          <div>
-            <div class="stat-value"><%= Toy.count %></div>
-            <div class="stat-label">Total jouets</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <div class="container mt-4 mb-5">
-    <h2 class="mb-3" style="font-size:1.3rem; color: #6B7280; font-family: inherit; font-weight: 700;">Actions rapides</h2>
-    <div class="row g-3">
+<div class="row g-3">
       <div class="col-6 col-md-3">
         <%= link_to boxes_path, class: "quick-action-card" do %>
           <div class="quick-action-icon icon-boxes">
@@ -80,7 +31,7 @@
           <span class="quick-action-label">Voir les jouets</span>
         <% end %>
       </div>
-      <div class="col-6 col-md-3">
+      <div class="col-12 col-sm-6 col-md-3">
         <%= link_to new_box_path, class: "quick-action-card" do %>
           <div class="quick-action-icon icon-new">
             <i class="fa-solid fa-plus"></i>
@@ -88,7 +39,7 @@
           <span class="quick-action-label">Nouvelle boîte</span>
         <% end %>
       </div>
-      <div class="col-6 col-md-3">
+      <div class="col-12 col-sm-6 col-md-3">
         <%= link_to toys_path(filter: "waiting"), class: "quick-action-card" do %>
           <div class="quick-action-icon icon-verify">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -100,10 +51,8 @@
   </div>
 <% else %>
   <div class="container mt-4 mb-5 text-center">
-    <p style="color: #6B7280; font-size: 1.05rem; margin-bottom: 1.5rem;">
+    <p style="color: #6B7280; font-size: 1.05rem;">
       Connectez-vous pour accéder à la plateforme.
     </p>
-    <%= link_to "Se connecter", new_user_session_path, class: "btn btn-primary btn-lg me-2" %>
-    <%= link_to "En savoir plus", onboarding_path, class: "btn btn-ghost btn-lg" %>
   </div>
 <% end %>

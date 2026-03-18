@@ -1,81 +1,121 @@
-<nav class="navbar navbar-expand-md navbar-replay">
+<%# ── Top bar ── %>
+<nav class="navbar navbar-replay">
   <div class="container">
 
     <%= link_to root_path, class: "navbar-brand" do %>
       <span class="brand-text">RE-PLAY</span>
     <% end %>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarMain" aria-controls="navbarMain"
-            aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarMain">
-      <% if user_signed_in? %>
-        <ul class="navbar-nav mx-auto gap-1">
-          <li class="nav-item">
-            <%= link_to boxes_path, class: "nav-link #{'active' if controller_name == 'boxes'}" do %>
-              <i class="fa-solid fa-box"></i> Boîtes
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to toys_path, class: "nav-link #{'active' if controller_name == 'toys'}" do %>
-              <i class="fa-solid fa-puzzle-piece"></i> Jouets
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to onboarding_path, class: "nav-link #{'active' if action_name == 'onboarding'}" do %>
-              <i class="fa-solid fa-circle-info"></i> Guide
-            <% end %>
-          </li>
-          <% if current_user.admin %>
-            <li class="nav-item">
-              <%= link_to dashboard_path, class: "nav-link #{'active' if action_name == 'dashboard'}" do %>
-                <i class="fa-solid fa-chart-bar"></i> Tableau de bord
-              <% end %>
-            </li>
+    <%# Nav desktop (md+) %>
+    <% if user_signed_in? %>
+      <ul class="navbar-nav mx-auto gap-1 d-none d-md-flex flex-row">
+        <li class="nav-item">
+          <%= link_to boxes_path, class: "nav-link #{'active' if controller_name == 'boxes'}" do %>
+            <i class="fa-solid fa-box"></i> Boîtes
           <% end %>
-        </ul>
+        </li>
+        <li class="nav-item">
+          <%= link_to toys_path, class: "nav-link #{'active' if controller_name == 'toys'}" do %>
+            <span style="display:inline-block; position:relative; width:1em; height:1em; vertical-align:middle;">
+              <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; top:0; left:0;"></i>
+              <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; bottom:0; right:0; transform:rotate(90deg);"></i>
+            </span>
+            Jouets
+          <% end %>
+        </li>
+        <li class="nav-item">
+          <%= link_to onboarding_path, class: "nav-link #{'active' if action_name == 'onboarding'}" do %>
+            <i class="fa-solid fa-circle-info"></i> Guide
+          <% end %>
+        </li>
+        <% if current_user.admin %>
+          <li class="nav-item">
+            <%= link_to dashboard_path, class: "nav-link #{'active' if action_name == 'dashboard'}" do %>
+              <i class="fa-solid fa-chart-bar"></i> Tableau de bord
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
 
-        <div class="navbar-nav-right">
-          <div class="dropdown">
-            <a href="#" class="user-chip" id="userDropdown"
-               data-bs-toggle="dropdown" aria-expanded="false">
-              <div class="user-avatar">
+    <%# User chip (toujours visible) %>
+    <div class="navbar-nav-right">
+      <% if user_signed_in? %>
+        <div class="dropdown">
+          <a href="#" class="user-chip" id="userDropdown"
+             data-bs-toggle="dropdown" data-bs-auto-close="outside"
+             aria-expanded="false">
+            <div class="user-avatar">
+              <%= current_user.email[0].upcase %>
+            </div>
+            <span class="d-none d-lg-inline"><%= current_user.email.split('@').first %></span>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.65rem; color:#9CA3AF;"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+            <li class="dropdown-header-info">
+              <div class="user-avatar user-avatar-lg">
                 <%= current_user.email[0].upcase %>
               </div>
-              <span class="d-none d-lg-inline"><%= current_user.email.split('@').first %></span>
-              <i class="fa-solid fa-chevron-down" style="font-size:0.65rem; color: #9CA3AF;"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-              <li>
-                <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
-                  <i class="fa-regular fa-user me-2"></i>Mon profil
+              <div>
+                <div style="font-weight:700; color:#1A2B4A; font-size:0.95rem;"><%= current_user.email.split('@').first %></div>
+                <div style="font-size:0.75rem; color:#9CA3AF;"><%= current_user.email %></div>
+                <% if current_user.admin %>
+                  <span style="font-size:0.7rem; font-weight:700; background:rgba(255,107,53,0.12); color:#FF6B35; padding:0.1em 0.5em; border-radius:50rem;">Admin</span>
                 <% end %>
-              </li>
-              <li><hr class="dropdown-divider"></li>
-              <li>
-                <%= link_to destroy_user_session_path,
-                      data: { turbo_method: :delete },
-                      class: "dropdown-item text-danger" do %>
-                  <i class="fa-solid fa-right-from-bracket me-2"></i>Se déconnecter
-                <% end %>
-              </li>
-            </ul>
-          </div>
+              </div>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <%= link_to edit_user_registration_path, class: "dropdown-item" do %>
+                <i class="fa-regular fa-user me-2"></i>Mon profil
+              <% end %>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <%= link_to destroy_user_session_path,
+                    data: { turbo_method: :delete },
+                    class: "dropdown-item text-danger" do %>
+                <i class="fa-solid fa-right-from-bracket me-2"></i>Se déconnecter
+              <% end %>
+            </li>
+          </ul>
         </div>
       <% else %>
-        <ul class="navbar-nav ms-auto gap-1">
-          <li class="nav-item">
-            <%= link_to "Se connecter", new_user_session_path, class: "btn btn-primary btn-sm" %>
-          </li>
-          <li class="nav-item">
-            <%= link_to "Créer un compte", new_user_registration_path, class: "btn btn-ghost btn-sm" %>
-          </li>
-        </ul>
+        <%= link_to "Se connecter", new_user_session_path, class: "btn btn-primary btn-sm" %>
+      <% end %>
+      <% if user_signed_in? && current_user.admin? %>
+        <%= link_to users_path, class: "user-chip ms-1", title: "Gérer les comptes" do %>
+          <i class="fa-solid fa-users" style="font-size:0.9rem;"></i>
+        <% end %>
       <% end %>
     </div>
 
   </div>
 </nav>
+
+<%# ── Bottom tab bar (mobile uniquement) ── %>
+<% if user_signed_in? %>
+  <nav class="bottom-tab-bar d-md-none">
+    <%= link_to boxes_path, class: "bottom-tab #{'active' if controller_name == 'boxes'}" do %>
+      <i class="fa-solid fa-box"></i>
+      <span>Boîtes</span>
+    <% end %>
+    <%= link_to toys_path, class: "bottom-tab #{'active' if controller_name == 'toys'}" do %>
+      <span style="display:inline-block; position:relative; width:1.1em; height:1.1em;">
+        <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; top:0; left:0;"></i>
+        <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; bottom:0; right:0; transform:rotate(90deg);"></i>
+      </span>
+      <span>Jouets</span>
+    <% end %>
+    <%= link_to onboarding_path, class: "bottom-tab #{'active' if action_name == 'onboarding'}" do %>
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Guide</span>
+    <% end %>
+    <% if current_user.admin %>
+      <%= link_to dashboard_path, class: "bottom-tab #{'active' if action_name == 'dashboard'}" do %>
+        <i class="fa-solid fa-chart-bar"></i>
+        <span>Dashboard</span>
+      <% end %>
+    <% end %>
+  </nav>
+<% end %>

@@ -1,23 +1,31 @@
-<% content_for :title, "Nouveau jouet · RE-PLAY" %>
+<% content_for :title, "Nouveau jouet · Boîte N°#{@box.id} · RE-PLAY" %>
 
-<div class="form-page">
-  <div class="container">
-    <%= link_to box_path(@box), class: "btn btn-ghost btn-sm mb-3" do %>
-      <i class="fa-solid fa-arrow-left me-1"></i>Retour à la boîte #<%= @box.id %>
+<div class="container py-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <%= link_to box_path(@box), class: "btn-back-boxes" do %>
+      <span style="color:#000;">←</span>
+      <i class="fa-solid fa-box"></i>
     <% end %>
-    <div class="form-card">
-      <div class="form-card-header">
-        <div class="form-card-icon">
-          <i class="fa-solid fa-puzzle-piece"></i>
-        </div>
-        <h1 class="form-card-title">Nouveau jouet</h1>
-        <p class="form-card-subtitle">
-          Boîte #<%= @box.id %> · <%= @box.category.name %>
-        </p>
+    <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-box me-1"></i>N°&nbsp;<%= @box.id %></span>
+  </div>
+
+  <div class="detail-card p-4">
+    <div class="d-flex align-items-center gap-3 mb-1">
+      <div class="form-card-icon" style="margin-bottom:0; flex-shrink:0;">
+        <i class="fa-solid fa-plus"></i>
       </div>
-      <div class="form-card-body">
-        <%= render "form" %>
-      </div>
+      <h1 class="toy-show-title" style="font-size:1.6rem;">Nouveau jouet</h1>
     </div>
+    <p style="font-size:1.15rem; font-weight:700; color:#1A2B4A; margin-bottom:1rem;"><%= @box.category.name %></p>
+
+    <div class="d-flex align-items-center justify-content-center gap-3 mb-3 p-3" style="background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(255,107,53,0.04)); border-radius:1rem; border:2px dashed rgba(255,107,53,0.35);">
+      <div style="text-align:center;">
+        <div style="font-size:0.8rem; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.2rem;">Écrire sur la photo</div>
+        <div style="font-size:2.8rem; font-weight:900; color:#FF6B35; line-height:1;">N°&nbsp;<%= @next_toy_id %></div>
+      </div>
+      <i class="fa-solid fa-camera" style="font-size:2rem; color:rgba(255,107,53,0.4);"></i>
+    </div>
+
+    <%= render "form" %>
   </div>
 </div>

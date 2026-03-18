@@ -33,6 +33,49 @@
   font-weight: 700;
 }
 
+// ── Status dot (traffic light) ──────────────────────────────
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+
+  &.status-dot-waiting    { background: $yellow;      box-shadow: 0 0 0 3px rgba($yellow, 0.25); }
+  &.status-dot-validated  { background: $mint;        box-shadow: 0 0 0 3px rgba($mint, 0.25); }
+  &.status-dot-deleted    { background: $danger-red;  box-shadow: 0 0 0 3px rgba($danger-red, 0.25); }
+  &.status-dot-box-active { background: $yellow;      box-shadow: 0 0 0 3px rgba($yellow, 0.25); }
+  &.status-dot-empty      { background: $sky;         box-shadow: 0 0 0 3px rgba($sky, 0.25); }
+}
+
+.toy-card-status-dot {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  width: 14px;
+  height: 14px;
+}
+
+// ── Condition icons ──────────────────────────────────────────
+.condition-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: $border-radius-lg;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+
+  &.ok {
+    background: rgba($mint, 0.15);
+    color: darken($mint, 15%);
+  }
+  &.ko {
+    background: rgba($danger-red, 0.08);
+    color: rgba($danger-red, 0.45);
+  }
+}
+
 .condition-pill {
   display: inline-flex;
   align-items: center;
