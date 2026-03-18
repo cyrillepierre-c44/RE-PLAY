@@ -2,9 +2,9 @@
 
 // Hero
 .onboarding-hero {
-  background-color: #1f2937;
-  padding: 80px 20px;
-  min-height: 90vh;
+  background-color: $navy;
+  padding: 72px 20px;
+  min-height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,52 +14,60 @@
   }
 
   .onboarding-hero-sub {
-    color: rgba(255, 255, 255, 0.8);
-    max-width: 560px;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 520px;
     margin-inline: auto;
   }
 }
 
 .onboarding-badge {
-  background-color: $orange;
+  background-color: $coral;
   color: white;
   letter-spacing: 0.05em;
+  font-family: $headers-font;
 }
 
 .onboarding-cta {
-  background-color: $orange;
+  background-color: $coral;
   color: white;
   border: none;
+  font-family: $headers-font;
+  font-size: 1.1rem;
+  padding: 0.65rem 2rem;
 
   &:hover {
-    background-color: darken($orange, 8%);
+    background-color: darken($coral, 8%);
     color: white;
   }
 }
 
 // Intro card
 .onboarding-intro-card {
-  border-left: 4px solid $orange !important;
-  background: white;
+  border-left: 4px solid $coral !important;
+  background: $white;
+  border-radius: $border-radius-xxl;
+  box-shadow: $card-box-shadow;
 }
 
-// Section heading bar (Le Bon Coin-style left accent)
+// Section heading bar (accent gauche)
 .onboarding-section-bar {
   display: inline-block;
   width: 5px;
   height: 28px;
-  background-color: $orange;
+  background-color: $coral;
   border-radius: 3px;
   flex-shrink: 0;
 }
 
 // Mission step cards
 .onboarding-step-card {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  border-radius: $border-radius-xxl;
+  box-shadow: $card-box-shadow;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-4px);
+    box-shadow: $box-shadow-lg;
   }
 }
 
@@ -67,50 +75,76 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  background-color: $orange;
+  background-color: $coral;
   color: white;
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-family: $headers-font;
+  font-size: 1.3rem;
+}
+
+.onboarding-step-icon {
+  font-size: 1.6rem;
+  color: $coral;
+  margin-bottom: 0.25rem;
 }
 
 // Team cards
 .onboarding-team-card {
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  border-radius: $border-radius-xxl;
+  box-shadow: $card-box-shadow;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+    transform: translateY(-4px);
+    box-shadow: $box-shadow-lg;
   }
 }
 
 .onboarding-avatar {
   display: block;
   margin: 0 auto;
-  width: 100px;
-  height: 100px;
+  width: 96px;
+  height: 96px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid $orange;
+  border: 3px solid $coral;
+  box-shadow: 0 2px 12px rgba($coral, 0.25);
 }
 
 .onboarding-role-badge {
-  background-color: $light-gray;
-  color: $gray;
-  font-weight: 600;
+  background-color: rgba($coral, 0.1);
+  color: $coral;
+  font-weight: 700;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
+  border-radius: $border-radius-pill;
+  padding: 0.35em 0.85em;
 }
 
 .onboarding-team-btn {
-  background-color: #1f2937;
-  color: white;
-  border: none;
+  background-color: rgba($navy, 0.08);
+  color: $navy;
+  border: 1.5px solid rgba($navy, 0.15);
+  font-family: $headers-font;
+  font-size: 0.95rem;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: $border-radius-lg;
+  padding: 0 1rem;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  i { color: $coral; }
 
   &:hover {
-    background-color: $orange;
+    background-color: $coral;
+    border-color: $coral;
     color: white;
+
+    i { color: white; }
   }
 }
