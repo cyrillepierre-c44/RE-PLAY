@@ -163,7 +163,12 @@
   <%# ── Polling prix IA ── %>
   <% if @box.toys.any? { |t| t.photo.attached? && t.price.nil? } %>
     <script>
-      setTimeout(function() { location.reload(); }, 2000);
+      var key = "box_reload_<%= @box.id %>";
+      var count = parseInt(sessionStorage.getItem(key) || "0");
+      if (count < 5) {
+        sessionStorage.setItem(key, count + 1);
+        setTimeout(function() { location.reload(); }, 2000);
+      }
     </script>
   <% end %>
 
