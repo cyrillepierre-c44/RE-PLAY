@@ -1,5 +1,9 @@
 class UserPolicy < ApplicationPolicy
-  def destroy?
+  def disable?
+    user.admin? && record != user
+  end
+
+  def enable?
     user.admin? && record != user
   end
 

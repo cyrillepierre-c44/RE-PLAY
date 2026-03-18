@@ -12,7 +12,7 @@
     <% @users.each_with_index do |u, i| %>
       <div class="d-flex align-items-center justify-content-between px-4 py-3 <%= 'border-top' if i > 0 %>">
         <div class="d-flex align-items-center gap-3">
-          <div class="user-avatar" style="width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#FF6B35,#FFB347); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1rem; flex-shrink:0;">
+          <div class="user-avatar" style="width:40px; height:40px; border-radius:50%; background:<%= u.disabled? ? 'linear-gradient(135deg,#9CA3AF,#D1D5DB)' : 'linear-gradient(135deg,#FF6B35,#FFB347)' %>; display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:1rem; flex-shrink:0;">
             <%= u.email[0].upcase %>
           </div>
           <div>
@@ -22,13 +22,25 @@
           <% if u.admin? %>
             <span style="font-size:0.7rem; font-weight:700; background:rgba(255,107,53,0.12); color:#FF6B35; padding:0.15em 0.6em; border-radius:50rem;">Admin</span>
           <% end %>
+          <% if u.disabled? %>
+            <span style="font-size:0.7rem; font-weight:700; background:rgba(156,163,175,0.15); color:#9CA3AF; padding:0.15em 0.6em; border-radius:50rem;">Désactivé</span>
+          <% end %>
         </div>
         <% if u != current_user %>
-          <%= link_to user_path(u),
-                class: "toy-action-btn toy-action-delete",
-                title: "Supprimer ce compte",
-                data: { turbo_method: :delete, turbo_confirm: "Supprimer le compte #{u.email} ?" } do %>
-            <i class="fa-solid fa-trash"></i>
+          <% if u.disabled? %>
+            <%= button_to enable_user_path(u), method: :patch,
+                  class: "toy-action-btn toy-action-restore",
+                  title: "Réactiver ce compte",
+                  form: { data: { turbo_confirm: "Réactiver le compte #{u.email} ?" } } do %>
+              <i class="fa-solid fa-user-check"></i>
+            <% end %>
+          <% else %>
+            <%= button_to disable_user_path(u), method: :patch,
+                  class: "toy-action-btn toy-action-delete",
+                  title: "Désactiver ce compte",
+                  form: { data: { turbo_confirm: "Désactiver le compte #{u.email} ?" } } do %>
+              <i class="fa-solid fa-user-slash"></i>
+            <% end %>
           <% end %>
         <% end %>
       </div>
