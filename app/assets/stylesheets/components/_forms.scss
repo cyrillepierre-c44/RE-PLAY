@@ -304,7 +304,8 @@
   gap: 0.4rem;
   width: 100%;
 
-  &.filter-tabs-toys {
+  &.filter-tabs-toys,
+  &.filter-tabs-boxes {
     flex-direction: column;
 
     .filter-tab-full {
