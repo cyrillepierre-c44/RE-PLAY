@@ -30,7 +30,7 @@ class ToysController < ApplicationController
     @toy = Toy.new(box: @box, category: @box.category)
     authorize @toy
     @toy.save(validate: false)
-    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à débuté la création du jouet #{@toy.id}")
+    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a débuté la création du jouet #{@toy.id}")
     redirect_to edit_toy_path(@toy, new: true), status: :see_other
   end
 
@@ -42,7 +42,7 @@ class ToysController < ApplicationController
 
     if @toy.save
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
-      Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à créé le jouet #{@toy.id}")
+      Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a créé le jouet #{@toy.id}")
       redirect_to box_path(@box), notice: "Jouet créé avec succès.", status: :see_other
     else
       render :new, status: :unprocessable_entity
@@ -59,7 +59,7 @@ class ToysController < ApplicationController
     if @toy.update(toy_params.merge(price: nil))
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} à updaté le jouet n#{@toy.id}")
+                     content: "#{current_user.email} a updaté le jouet n#{@toy.id}")
       if params[:from_new] == "1"
         redirect_to box_path(@toy.box), notice: "Jouet créé avec succès.", status: :see_other
       else
@@ -74,8 +74,8 @@ class ToysController < ApplicationController
     authorize @toy
     if @toy.update(status: :suppr)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} à supprimé le  jouet #{@toy.id}")
-      redirect_to toys_path, notice: "Jouet supprimée avec succès."
+                     content: "#{current_user.email} a supprimé le  jouet #{@toy.id}")
+      redirect_to toys_path, notice: "Jouet supprimé avec succès."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
@@ -85,7 +85,7 @@ class ToysController < ApplicationController
     authorize @toy
     if @toy.update(status: :pending)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} à réintégré le jouet n°#{@toy.id} en attente")
+                     content: "#{current_user.email} a réintégré le jouet n°#{@toy.id} en attente")
       redirect_to toy_path(@toy), notice: "Jouet réintégré en attente."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
@@ -105,10 +105,10 @@ class ToysController < ApplicationController
       Action.create!(
         user: current_user,
         actionable: @toy,
-        content: "#{current_user.email} à passé le jouet n#{@toy.id} en statut: #{new_status}"
+        content: "#{current_user.email} a passé le jouet n#{@toy.id} en statut: #{new_status}"
       )
       if new_status == "market"
-        redirect_to toys_path, notice: "Mis en vente de l'objet"
+        redirect_to toys_path, notice: "Mise en vente de l'objet"
       else
         redirect_to toys_path, status: :see_other, notice: "Statut mis à jour : #{new_status}"
       end
