@@ -84,22 +84,16 @@
   form { margin: 0; }
 }
 
+.box-toggle-icon-left,
+.box-toggle-icon-right {
+  font-size: 1.2rem;
+  transition: color 0.3s;
+
+  &.active { color: $navy; }
+  &.dimmed { color: rgba($navy, 0.25); }
+}
+
 .box-toggle-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-
-  .box-toggle-icons {
-    display: flex;
-    justify-content: space-between;
-    width: 64px;
-    font-size: 1.1rem;
-
-    .icon-full  { color: $navy; transition: color 0.3s; }
-    .icon-empty { color: rgba($navy, 0.25); transition: color 0.3s; }
-  }
-
   .box-toggle-track {
     width: 64px;
     height: 32px;
@@ -122,11 +116,6 @@
   }
 
   &.is-empty {
-    .box-toggle-icons {
-      .icon-full  { color: rgba($navy, 0.25); }
-      .icon-empty { color: $sky; }
-    }
-
     .box-toggle-track {
       background: rgba($sky, 0.25);
 

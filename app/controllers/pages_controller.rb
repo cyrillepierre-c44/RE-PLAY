@@ -42,7 +42,7 @@ class PagesController < ApplicationController
       csv << ["Date", "Utilisateur", "Rôle", "Type", "Action", "Objet"]
       actions.each do |action|
         action_label = if action.content&.include?("créé") then "Création"
-                       elsif action.content&.include?("updaté") then "Mise à jour"
+                       elsif action.content&.include?("modifié") || action.content&.include?("updaté") then "Mise à jour"
                        elsif action.content&.include?("passé") then "Validation"
                        elsif action.content&.include?("supprimé") then "Suppression"
                        else "Autre"
@@ -163,7 +163,7 @@ class PagesController < ApplicationController
 
   def build_rework_stats
     # "Mises à jour" dans Types d'actions — toute modification d'un jouet/boîte
-    @rework_total    = @actions.where("content LIKE ?", "%updaté%").count
+    @rework_total    = @actions.where("content LIKE ? OR content LIKE ?", "%modifié%", "%updaté%").count
 
     # Retouches = jouets renvoyés via "Revaloriser" (statut review) — Analyse des retouches
     review_scope     = @actions.where("content LIKE ?", "%en statut: review%")

@@ -22,16 +22,22 @@
             <% end %>
             N°&nbsp;<%= @box.id %>
           </h1>
-          <% if @box.suppr? %>
-            <span class="status-dot status-dot-deleted" title="Jetée"></span>
-          <% elsif @box.empty? %>
-            <span class="status-dot status-dot-empty" title="Vide"></span>
-          <% else %>
-            <span class="status-dot status-dot-box-active" title="En cours"></span>
+          <% if policy(@box).toggle_empty? && !@box.suppr? %>
+            <%= button_to toggle_empty_box_path(@box), method: :patch, class: "box-toggle-btn" do %>
+              <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-box box-toggle-icon-left <%= @box.empty? ? 'dimmed' : 'active' %>" title="Pleine"></i>
+                <div class="box-toggle-wrap <%= @box.empty? ? 'is-empty' : 'is-full' %>">
+                  <div class="box-toggle-track">
+                    <div class="box-toggle-thumb"></div>
+                  </div>
+                </div>
+                <i class="fa-solid fa-box-open box-toggle-icon-right <%= @box.empty? ? 'active' : 'dimmed' %>" title="Vide"></i>
+              </div>
+            <% end %>
           <% end %>
         </div>
 
-        <div class="d-flex align-items-start justify-content-between mb-3 gap-3">
+        <div class="mb-3">
           <div class="toy-show-info-grid">
             <div class="toy-show-info-item">
               <i class="fa-solid fa-tag"></i>
@@ -50,20 +56,6 @@
               <span><%= @box.electronic? ? 'Électronique' : 'Non électronique' %></span>
             </div>
           </div>
-
-          <% if policy(@box).toggle_empty? && !@box.suppr? %>
-            <%= button_to toggle_empty_box_path(@box), method: :patch, class: "box-toggle-btn" do %>
-              <div class="box-toggle-wrap <%= @box.empty? ? 'is-empty' : 'is-full' %>">
-                <div class="box-toggle-icons">
-                  <i class="fa-solid fa-box icon-full" title="Pleine"></i>
-                  <i class="fa-solid fa-box-open icon-empty" title="Vide"></i>
-                </div>
-                <div class="box-toggle-track">
-                  <div class="box-toggle-thumb"></div>
-                </div>
-              </div>
-            <% end %>
-          <% end %>
         </div>
 
         <%# Boutons action %>
@@ -99,17 +91,7 @@
         </h2>
       </div>
 
-      <% if @box.toys.empty? %>
-        <div class="detail-card p-4 text-center" style="color:#9CA3AF;">
-          <i class="fa-solid fa-puzzle-piece" style="font-size:2.5rem; color:rgba(255,107,53,0.2); margin-bottom:0.75rem; display:block;"></i>
-          Aucun jouet dans cette boîte.
-          <% if @box.pending? %>
-            <%= link_to new_box_toy_path(@box), class: "btn btn-primary btn-sm d-block mt-3 mx-auto", style:"width:fit-content;" do %>
-              <i class="fa-solid fa-plus me-1"></i>Ajouter
-            <% end %>
-          <% end %>
-        </div>
-      <% else %>
+      <% unless @box.toys.empty? %>
         <div class="row g-3">
           <% @box.toys.order(created_at: :desc).each do |toy| %>
             <div class="col-12 col-sm-6 col-xl-4">

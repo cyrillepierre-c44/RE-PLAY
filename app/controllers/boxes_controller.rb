@@ -4,11 +4,11 @@ class BoxesController < ApplicationController
   def index
     base_scope = policy_scope(Box)
     if params[:filter] == "suppr"
-      @boxes = base_scope.suppr
+      @boxes = base_scope.suppr.order(created_at: :desc)
     elsif params[:filter] == "empty"
-      @boxes = base_scope.empty
+      @boxes = base_scope.empty.order(created_at: :desc)
     else
-      @boxes = base_scope.active
+      @boxes = base_scope.active.order(created_at: :desc)
     end
   end
 
@@ -48,7 +48,7 @@ class BoxesController < ApplicationController
   def update
     authorize @box
     @box.update(box_params)
-    Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} a updaté la boite n#{@box.id}")
+    Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} a modifié la boite n#{@box.id}")
     redirect_to box_path(@box), status: :see_other
   end
 

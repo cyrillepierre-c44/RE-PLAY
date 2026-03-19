@@ -4,7 +4,7 @@
 
   <%# ── Titre ── %>
   <div class="onb-section-title" style="justify-content:flex-start;" mb-4">
-    <h1 style="font-size:2rem;"><i class="fa-solid fa-chart-bar me-2"></i>Tableau de bord</h1>
+    <h1 style="font-size:2rem;">Tableau de bord</h1>
   </div>
 
   <%# ── Filtres ── %>
@@ -28,9 +28,6 @@
       <% end %>
     </div>
 
-    <%# Feedback période %>
-    <div data-date-range-target="feedback" class="dash-period-feedback"></div>
-
     <%# Panneau dates libres %>
     <div data-date-range-target="customPanel"
          class="custom-date-panel mb-3 <%= 'd-none' unless @period == 'custom' %>">
@@ -47,27 +44,29 @@
     </div>
 
     <%# Filtres secondaires — type / catégorie / utilisateur %>
-    <div id="filtres-secondaires" class="d-flex flex-wrap gap-2 mb-3">
-      <div>
-        <label class="filter-label"><i class="fa-solid fa-filter me-1"></i>Type</label>
-        <%= f.select :type,
-          [["Tous", ""], ["Jouets", "toys"], ["Boîtes", "boxes"]],
-          { selected: @type_filter.to_s },
-          class: "form-select form-select-sm filter-select" %>
+    <div id="filtres-secondaires" class="d-flex flex-column gap-2 mb-3">
+      <div class="d-flex gap-2">
+        <div class="flex-fill">
+          <label class="filter-label"><i class="fa-solid fa-filter me-1"></i>Type</label>
+          <%= f.select :type,
+            [["Tous", ""], ["Jouets", "toys"], ["Boîtes", "boxes"]],
+            { selected: @type_filter.to_s },
+            class: "form-select form-select-sm filter-select w-100" %>
+        </div>
+        <div class="flex-fill">
+          <label class="filter-label"><i class="fa-regular fa-user me-1"></i>Utilisateur</label>
+          <%= f.select :user_id,
+            [["Tous", ""]] + @users.map { |u| ["#{u.email.split('@').first}#{u.admin ? ' (admin)' : ''}", u.id] },
+            { selected: @user_id.to_s },
+            class: "form-select form-select-sm filter-select w-100" %>
+        </div>
       </div>
       <div>
         <label class="filter-label"><i class="fa-solid fa-tag me-1"></i>Catégorie</label>
         <%= f.select :category_id,
           [["Toutes", ""]] + @categories.map { |c| [c.name, c.id] },
           { selected: @category_id.to_s },
-          class: "form-select form-select-sm filter-select" %>
-      </div>
-      <div>
-        <label class="filter-label"><i class="fa-regular fa-user me-1"></i>Utilisateur</label>
-        <%= f.select :user_id,
-          [["Tous", ""]] + @users.map { |u| ["#{u.email.split('@').first}#{u.admin ? ' (admin)' : ''}", u.id] },
-          { selected: @user_id.to_s },
-          class: "form-select form-select-sm filter-select" %>
+          class: "form-select form-select-sm filter-select w-100" %>
       </div>
     </div>
 
@@ -86,68 +85,84 @@
   <div id="resultats" class="row g-3 mb-4">
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-total">
-        <div class="kpi-icon"><i class="fa-solid fa-bolt"></i></div>
-        <div class="kpi-value"><%= @total_actions %></div>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="kpi-value"><%= @total_actions %></div>
+        </div>
         <div class="kpi-label">Actions totales</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-admin">
-        <div class="kpi-icon"><i class="fa-solid fa-shield-halved"></i></div>
-        <div class="kpi-value"><%= @actions_by_admin %></div>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="kpi-value"><%= @actions_by_admin %></div>
+        </div>
         <div class="kpi-label">Actions admin</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-user">
-        <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
-        <div class="kpi-value"><%= @actions_by_user %></div>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
+          <div class="kpi-value"><%= @actions_by_user %></div>
+        </div>
         <div class="kpi-label">Actions utilisateurs</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-rework">
-        <div class="kpi-icon"><i class="fa-solid fa-rotate"></i></div>
-        <div class="kpi-value"><%= @rework_total %></div>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-rotate"></i></div>
+          <div class="kpi-value"><%= @rework_total %></div>
+        </div>
         <div class="kpi-label">Retouches / mises à jour</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-weight">
-        <div class="kpi-icon"><i class="fa-solid fa-plug"></i></div>
-        <div class="kpi-value">
-          <%= number_with_precision(@boxes_weight_electronic, precision: 1, delimiter: " ") %>
-          <span class="kpi-unit">kg</span>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-plug"></i></div>
+          <div class="kpi-value">
+            <%= number_with_precision(@boxes_weight_electronic, precision: 1, delimiter: " ") %>
+            <span class="kpi-unit">kg</span>
+          </div>
         </div>
         <div class="kpi-label">Poids jouets électroniques</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-weight">
-        <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
-        <div class="kpi-value">
-          <%= number_with_precision(@boxes_weight_non_electronic, precision: 1, delimiter: " ") %>
-          <span class="kpi-unit">kg</span>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
+          <div class="kpi-value">
+            <%= number_with_precision(@boxes_weight_non_electronic, precision: 1, delimiter: " ") %>
+            <span class="kpi-unit">kg</span>
+          </div>
         </div>
         <div class="kpi-label">Poids jouets non électroniques</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-rework">
-        <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
-        <div class="kpi-value">
-          <%= number_with_precision(@toys_price_pending, precision: 0, delimiter: " ") %>
-          <span class="kpi-unit">€</span>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+          <div class="kpi-value">
+            <%= number_with_precision(@toys_price_pending, precision: 0, delimiter: " ") %>
+            <span class="kpi-unit">€</span>
+          </div>
         </div>
         <div class="kpi-label">Valeurs des jouets en attente</div>
       </div>
     </div>
     <div class="col-6 col-md-3">
       <div class="kpi-card kpi-price">
-        <div class="kpi-icon"><i class="fa-solid fa-robot"></i></div>
-        <div class="kpi-value">
-          <%= number_with_precision(@toys_price_total, precision: 0, delimiter: " ") %>
-          <span class="kpi-unit">€</span>
+        <div class="kpi-main">
+          <div class="kpi-icon"><i class="fa-solid fa-robot"></i></div>
+          <div class="kpi-value">
+            <%= number_with_precision(@toys_price_total, precision: 0, delimiter: " ") %>
+            <span class="kpi-unit">€</span>
+          </div>
         </div>
         <div class="kpi-label">Valeurs des jouets contrôlés</div>
       </div>
@@ -336,10 +351,9 @@
         <h2>
           <i class="fa-solid fa-clock-rotate-left me-2 text-coral"></i>
           Journal des actions
-          <span class="badge bg-light text-muted ms-2" style="font-size: 0.75rem; font-weight: 600;"><%= @recent_actions.size %></span>
         </h2>
       </div>
-      <div class="d-flex justify-content-center justify-content-sm-end mt-2 mt-sm-0">
+      <div class="d-none d-sm-flex justify-content-sm-end mt-sm-0">
         <%= link_to dashboard_export_csv_path(
               period: @period, type: @type_filter, category_id: @category_id,
               user_id: @user_id, start_date: @start_date, end_date: @end_date),
@@ -356,51 +370,16 @@
         <p>Aucune action sur cette période.</p>
       </div>
     <% else %>
-      <div class="toy-show-timeline-scroll dash-journal-scroll">
+      <div class="toy-show-timeline-scroll dash-journal-scroll dash-journal-indent">
         <div class="toy-show-timeline">
           <% @recent_actions.each do |action| %>
-            <% action_type = if action.content&.include?("créé") then :create
-                             elsif action.content&.include?("updaté") then :update
-                             elsif action.content&.include?("passé") then :verify
-                             elsif action.content&.include?("supprimé") then :delete
-                             else :other
-                             end %>
             <div class="toy-show-timeline-item">
               <div class="toy-show-timeline-dot"></div>
               <div class="toy-show-timeline-content">
-                <div class="toy-show-timeline-date">
-                  <%= action.created_at.strftime("%d/%m %H:%M") %>
-                  &nbsp;·&nbsp;
-                  <span class="user-badge"><%= action.user&.email&.split('@')&.first %></span>
-                  <% if action.user&.admin %>
-                    <span class="role-pill role-pill-admin ms-1">Admin</span>
-                  <% end %>
-                </div>
-                <div class="toy-show-timeline-text d-flex flex-wrap align-items-center gap-1">
-                  <span class="action-badge action-badge-<%= action_type %>">
-                    <%= case action_type
-                        when :create  then "Création"
-                        when :update  then "Mise à jour"
-                        when :verify  then "Validation"
-                        when :delete  then "Suppression"
-                        else               "Autre"
-                        end %>
-                  </span>
-                  <% if action.actionable_type == "Toy" %>
-                    <span class="type-pill type-pill-toy"><i class="fa-solid fa-puzzle-piece me-1"></i>Jouet</span>
-                  <% else %>
-                    <span class="type-pill type-pill-box"><i class="fa-solid fa-box me-1"></i>Boîte</span>
-                  <% end %>
-                  <% if action.actionable.present? %>
-                    <% if action.actionable_type == "Toy" %>
-                      <%= link_to "##{action.actionable_id}", toy_path(action.actionable_id), class: "text-decoration-none text-muted", style: "font-size: 0.82rem;" %>
-                    <% else %>
-                      <%= link_to "##{action.actionable_id}", box_path(action.actionable_id), class: "text-decoration-none text-muted", style: "font-size: 0.82rem;" %>
-                    <% end %>
-                  <% else %>
-                    <span class="text-muted" style="font-size: 0.82rem;">#<%= action.actionable_id %> (supprimé)</span>
-                  <% end %>
-                </div>
+                <span class="toy-show-timeline-date">
+                  <%= action.created_at.in_time_zone('Europe/Paris').strftime('%d/%m/%Y à %H:%M') %>
+                </span>
+                <span class="toy-show-timeline-text"><%= action.content %></span>
               </div>
             </div>
           <% end %>

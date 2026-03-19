@@ -3,9 +3,10 @@
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <% if params[:new] %>
-      <%= link_to boxes_path, class: "btn-back-boxes" do %>
+      <%= link_to boxes_path, class: "btn-back-boxes d-flex align-items-center gap-2" do %>
         <i class="fa-solid fa-circle-arrow-left" style="font-size:1.8rem;"></i>
         <i class="fa-solid fa-boxes-stacked btn-back-context-icon" style="font-size:1.8rem;"></i>
+        <span class="toy-show-title" style="font-size:1.4rem; margin:0;">Nouvelle boîte</span>
       <% end %>
     <% else %>
       <%= link_to box_path(@box), class: "btn-back-boxes" do %>
@@ -13,7 +14,9 @@
         <i class="fa-solid fa-box btn-back-context-icon" style="font-size:1.8rem;"></i>
       <% end %>
     <% end %>
-    <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-box me-1"></i>N°&nbsp;<%= @box.id %></span>
+    <% unless params[:new] %>
+      <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-box me-1"></i>N°&nbsp;<%= @box.id %></span>
+    <% end %>
   </div>
 
   <% if params[:new] %>
@@ -27,9 +30,11 @@
   <% end %>
 
   <div class="detail-card p-4">
-    <div class="d-flex align-items-center gap-3 mb-1">
-      <h1 class="toy-show-title" style="font-size:1.6rem;"><%= params[:new] ? 'Nouvelle boîte' : 'Modifier la boîte' %> N°<%= @box.id %></h1>
-    </div>
+    <% unless params[:new] %>
+      <div class="d-flex align-items-center gap-3 mb-1">
+        <h1 class="toy-show-title" style="font-size:1.6rem;">Modifier la boîte N°<%= @box.id %></h1>
+      </div>
+    <% end %>
     <p style="font-size:1.15rem; font-weight:700; color:#1A2B4A; margin-bottom:1rem;"><%= @box.category.name %></p>
 
     <%= simple_form_for @box do |f| %>
@@ -55,14 +60,13 @@
 
       <%# Poids %>
       <div class="mb-3">
-        <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Facultatif</div>
         <%= f.input :weight, label: false, as: :numeric,
             input_html: { class: "form-control verify-input", step: 0.1, placeholder: "Poids (kg)" } %>
       </div>
 
       <div class="d-grid">
         <button type="submit" class="btn btn-primary btn-lg">
-          <i class="fa-solid fa-check" style="font-size:1.5rem;"></i>
+          <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;"></i>
         </button>
       </div>
 
