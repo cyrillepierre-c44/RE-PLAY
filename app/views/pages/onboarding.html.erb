@@ -3,19 +3,17 @@
 <div class="container py-4">
 <%# ── HERO ──────────────────────────────────────────────────────────── %>
 <div class="onboarding-hero">
-  <div class="container py-5 text-center text-white">
+  <div class="container py-3 text-center text-white">
     <span class="badge onboarding-badge mb-3 px-3 py-2 fs-6">RE-PLAY × ENJOUÉ</span>
-    <h1 class="display-4 fw-bold mb-3">Bienvenue sur RE-PLAY</h1>
-    <p class="lead mb-4 onboarding-hero-sub">
-      La plateforme de gestion des jouets reconditionnés par ENJOUÉ
-    </p>
-    <%= link_to "Découvrir Enjoué", enjoue_path, class: "btn onboarding-cta btn-lg fw-bold" %>
+    <h1 class="display-4 fw-bold mb-3">Bienvenue sur <span class="text-coral text-nowrap">RE-PLAY</span></h1>
   </div>
 </div>
 
   <%# ── En-tête ── %>
   <div class="text-center mb-4">
-    <%= image_tag "ENJOUE_RVB_2022.png", class: "onb-logo mb-3", alt: "Enjoué" %>
+    <%= link_to enjoue_path do %>
+      <%= image_tag "ENJOUE_RVB_2022.png", class: "onb-logo mb-3", alt: "Enjoué" %>
+    <% end %>
     <p class="onb-intro-text">
       ENJOUÉ donne une seconde vie aux jouets pour rendre le jeu plus responsable et accessible à tous.
       En choisissant des jouets reconditionnés, particuliers, professionnels de l'enfance et entreprises
@@ -37,7 +35,7 @@
         </div>
         <h5 class="onb-card-title">Traçabilité digitale</h5>
         <p class="onb-card-text">
-          Fini les tableurs et la saisie papier. RE-PLAY centralise les stocks et suit chaque jouet par scan de code-barres.
+          Fini les tableurs et la saisie papier. RE-PLAY centralise les stocks et suit chaque jouet par création d'une photo horodatée.
         </p>
       </div>
     </div>

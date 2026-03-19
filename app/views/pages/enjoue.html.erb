@@ -1,54 +1,76 @@
 <% content_for :title, "L'association Enjoué · RE-PLAY" %>
 
-<div style="background: linear-gradient(135deg, #1A2B4A, #2D4373); padding: 4rem 1.5rem; text-align: center; color: white;">
-  <h1 style="font-size: 2.5rem; color: white; margin-bottom: 0.5rem;">
-    ENJOUÉ
-  </h1>
-  <p style="color: rgba(255,255,255,0.8); font-size: 1.2rem; margin-bottom: 0;">
-    Le jouet bon pour la planète et bon pour l'emploi.
-  </p>
-</div>
-
-<div class="container py-5" style="max-width: 1000px;">
-
-  <h2 style="text-align:center; font-size:1.5rem; color:#6B7280; font-family: inherit; font-weight:600; margin-bottom: 2rem;">
-    Les jeux adaptés à chacun
-  </h2>
-
-  <div class="row g-3 mb-5">
-    <% [
-      { icon: "👶", title: "Particuliers", color: "#FF6B35", bg: "#FFF4EC",
-        text: "Jouer n'a jamais été aussi responsable grâce à nos jouets de seconde main, écologiques et solidaires !" },
-      { icon: "🧸", title: "Professionnels de l'enfance", color: "#4CC9F0", bg: "#EBF9FF",
-        text: "Équipez votre structure avec des jouets rigoureusement contrôlés et sélectionnés pour répondre à vos besoins." },
-      { icon: "💼", title: "Entreprises", color: "#9B5DE5", bg: "#F5EEFF",
-        text: "Faites vivre votre RSE grâce à nos actions à impact, ludiques et fédératrices !" }
-    ].each do |card| %>
-      <div class="col-md-4">
-        <div style="background: white; border-radius: 1.25rem; box-shadow: 0 4px 24px rgba(26,43,74,0.08);
-                    padding: 2rem; text-align: center; height: 100%;
-                    border-top: 4px solid <%= card[:color] %>;">
-          <div style="font-size: 2.5rem; margin-bottom: 0.75rem;"><%= card[:icon] %></div>
-          <h3 style="font-size: 1.1rem; font-weight: 700; color: #1A2B4A; margin-bottom: 0.75rem;"><%= card[:title] %></h3>
-          <p style="font-size: 0.95rem; line-height: 1.7; color: #4B5563; margin: 0;"><%= card[:text] %></p>
-        </div>
-      </div>
-    <% end %>
+<div class="container py-4">
+  <%# ── HERO ── %>
+  <div class="onboarding-hero">
+    <div class="container py-3 text-center text-white">
+      <span class="badge onboarding-badge mb-3 px-3 py-2 fs-6">RE-PLAY × ENJOUÉ</span>
+      <h1 class="display-4 fw-bold mb-3">ENJOUÉ</h1>
+      <p class="lead mb-0">Le jouet bon pour la planète et bon pour l'emploi.</p>
+    </div>
   </div>
 
-  <div style="background: linear-gradient(135deg, #FFF4EC, #FFFBF4); border-radius: 1.5rem;
-              padding: 2.5rem; text-align: center; border: 1px solid rgba(255,107,53,0.15);">
-    <p style="font-size: 1.05rem; line-height: 1.9; color: #1A2B4A; max-width: 800px; margin: 0 auto;">
+  <%# ── Les jeux adaptés à chacun ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Les jeux adaptés à chacun</h2>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-icon-wrap onb-icon-coral mb-3">
+          <i class="fa-solid fa-house-chimney"></i>
+        </div>
+        <h5 class="onb-card-title">Particuliers</h5>
+        <p class="onb-card-text">
+          Jouer n'a jamais été aussi responsable grâce à nos jouets de seconde main, écologiques et solidaires !
+        </p>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-icon-wrap onb-icon-sky mb-3">
+          <i class="fa-solid fa-child-reaching"></i>
+        </div>
+        <h5 class="onb-card-title">Professionnels de l'enfance</h5>
+        <p class="onb-card-text">
+          Équipez votre structure avec des jouets rigoureusement contrôlés et sélectionnés pour répondre à vos besoins.
+        </p>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="detail-card p-4 h-100">
+        <div class="onb-icon-wrap onb-icon-mint mb-3">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <h5 class="onb-card-title">Entreprises</h5>
+        <p class="onb-card-text">
+          Faites vivre votre RSE grâce à nos actions à impact, ludiques et fédératrices !
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Notre engagement ── %>
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Notre engagement</h2>
+  </div>
+
+  <div class="detail-card p-4 mb-4">
+    <p class="onb-card-text mb-0" style="line-height: 1.9;">
       Avec un jouet de seconde main, vous limitez la surproduction de nouveaux jouets et la pollution qu'elle génère.
       Vous permettez aussi l'emploi en CDI de chômeurs de longue durée ! Enjoué a mis au point des actions clés en main
       pour les entreprises qui souhaitent accompagner leurs collaborateurs dans la transition écologique et renforcer
       la cohésion de leurs équipes.
     </p>
-    <div class="mt-4">
-      <%= link_to onboarding_path, class: "btn btn-primary" do %>
-        <i class="fa-solid fa-arrow-left me-2"></i>Retour au guide
-      <% end %>
-    </div>
+  </div>
+
+  <div class="text-center mb-4">
+    <%= link_to onboarding_path, class: "btn onboarding-cta btn-lg fw-bold" do %>
+      <i class="fa-solid fa-arrow-left me-2"></i>Retour au guide
+    <% end %>
   </div>
 
 </div>
