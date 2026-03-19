@@ -58,11 +58,14 @@
   </div>
 
   <%# Barcode %>
-  <div class="mb-2">
-    <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Facultatif</div>
+  <details class="barcode-details mb-2" <%= 'open' if @toy.barcode.present? %>>
+    <summary class="barcode-summary">
+      <i class="fa-solid fa-barcode"></i>
+      <span>Code-barres</span>
+    </summary>
     <%= f.input :barcode, label: false,
-        input_html: { class: "form-control verify-input", placeholder: "Code-barres" } %>
-  </div>
+        input_html: { class: "form-control verify-input mt-2", placeholder: "Code-barres" } %>
+  </details>
 
   <%# État %>
   <div class="verify-conditions mb-2">
@@ -83,7 +86,7 @@
 
   <div class="d-grid">
     <button type="submit" class="btn btn-primary btn-lg">
-      <i class="fa-solid fa-check" style="font-size:1.5rem;"></i>
+      <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;"></i>
     </button>
   </div>
 

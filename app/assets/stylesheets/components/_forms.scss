@@ -376,3 +376,36 @@
     &.filter-tab-period.active     { background: $coral;       border-color: $coral;       color: $white; box-shadow: 0 2px 8px rgba($coral, 0.35); }
   }
 }
+
+// ── Barcode optional zone ─────────────────────────────────────
+.barcode-details {
+  .barcode-summary {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.75rem;
+    border: 2px dashed rgba($navy, 0.2);
+    color: $gray;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+    transition: border-color 0.2s, color 0.2s;
+
+    &::-webkit-details-marker { display: none; }
+
+    i { font-size: 1.1rem; }
+
+    &:hover {
+      border-color: rgba($navy, 0.4);
+      color: $navy;
+    }
+  }
+
+  &[open] .barcode-summary {
+    border-color: rgba($navy, 0.35);
+    color: $navy;
+    margin-bottom: 0;
+  }
+}

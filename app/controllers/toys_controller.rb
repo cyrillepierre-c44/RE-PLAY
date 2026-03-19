@@ -13,11 +13,11 @@ class ToysController < ApplicationController
   def index
     base_scope = policy_scope(Toy)
     if params[:filter] == "validated"
-      @toys = base_scope.validated
+      @toys = base_scope.validated.order(created_at: :desc)
     elsif params[:filter] == "deleted"
-      @toys = base_scope.deleted
+      @toys = base_scope.deleted.order(created_at: :desc)
     else
-      @toys = base_scope.waiting
+      @toys = base_scope.waiting.order(created_at: :desc)
     end
   end
 
@@ -59,7 +59,7 @@ class ToysController < ApplicationController
     if @toy.update(toy_params.merge(price: nil))
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} a updaté le jouet n#{@toy.id}")
+                     content: "#{current_user.email} a modifié le jouet n#{@toy.id}")
       if params[:from_new] == "1"
         redirect_to box_path(@toy.box), notice: "Jouet créé avec succès.", status: :see_other
       else

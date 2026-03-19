@@ -23,7 +23,7 @@
   <div class="mb-4">
     <div class="filter-tabs filter-tabs-toys">
       <%= link_to toys_path,
-            class: "filter-tab filter-tab-waiting filter-tab-full #{'active' if params[:filter].blank?}" do %>
+            class: "filter-tab filter-tab-waiting filter-tab-full #{'active' if params[:filter].blank? || params[:filter] == 'waiting'}" do %>
         <i class="fa-solid fa-hourglass-half"></i>
         Attente
         <span class="filter-count"><%= Toy.waiting.count %></span>
