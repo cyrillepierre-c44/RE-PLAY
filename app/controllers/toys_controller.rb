@@ -74,8 +74,8 @@ class ToysController < ApplicationController
     authorize @toy
     if @toy.update(status: :suppr)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} à supprimé le  jouet #{@toy.id}")
-      redirect_to toys_path, notice: "Jouet supprimée avec succès."
+                     content: "#{current_user.email} a supprimé le  jouet #{@toy.id}")
+      redirect_to toys_path, notice: "Jouet supprimé avec succès."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
@@ -108,7 +108,7 @@ class ToysController < ApplicationController
         content: "#{current_user.email} a passé le jouet n#{@toy.id} en statut: #{new_status}"
       )
       if new_status == "market"
-        redirect_to toys_path, notice: "Mis en vente de l'objet"
+        redirect_to toys_path, notice: "Mise en vente de l'objet"
       else
         redirect_to toys_path, status: :see_other, notice: "Statut mis à jour : #{new_status}"
       end
