@@ -30,7 +30,7 @@ class ToysController < ApplicationController
     @toy = Toy.new(box: @box, category: @box.category)
     authorize @toy
     @toy.save(validate: false)
-    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a débuté la création du jouet #{@toy.id}")
+    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à débuté la création du jouet #{@toy.id}")
     redirect_to edit_toy_path(@toy, new: true), status: :see_other
   end
 
@@ -85,7 +85,7 @@ class ToysController < ApplicationController
     authorize @toy
     if @toy.update(status: :pending)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} a réintégré le jouet n°#{@toy.id} en attente")
+                     content: "#{current_user.email} à réintégré le jouet n°#{@toy.id} en attente")
       redirect_to toy_path(@toy), notice: "Jouet réintégré en attente."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
@@ -105,7 +105,7 @@ class ToysController < ApplicationController
       Action.create!(
         user: current_user,
         actionable: @toy,
-        content: "#{current_user.email} a passé le jouet n#{@toy.id} en statut: #{new_status}"
+        content: "#{current_user.email} à passé le jouet n#{@toy.id} en statut: #{new_status}"
       )
       if new_status == "market"
         redirect_to toys_path, notice: "Mis en vente de l'objet"

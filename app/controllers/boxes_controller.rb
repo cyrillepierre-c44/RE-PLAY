@@ -58,7 +58,7 @@ class BoxesController < ApplicationController
       Action.create!(
         user: current_user,
         actionable: @box,
-        content: "#{current_user.email} a supprimé la boite n°#{@box.id}"
+        content: "#{current_user.email} à supprimé la boite n°#{@box.id}"
       )
       redirect_to boxes_path, notice: "Boîte supprimée."
     else
