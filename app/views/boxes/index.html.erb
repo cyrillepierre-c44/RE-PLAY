@@ -20,25 +20,27 @@
   </div>
 
   <div class="mb-4">
-    <div class="filter-tabs">
+    <div class="filter-tabs filter-tabs-boxes">
       <%= link_to boxes_path,
-            class: "filter-tab filter-tab-box-active #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
+            class: "filter-tab filter-tab-box-active filter-tab-full #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
         <i class="fa-solid fa-box"></i>
         En cours
         <span class="filter-count"><%= Box.active.count %></span>
       <% end %>
-      <%= link_to boxes_path(filter: "empty"),
-            class: "filter-tab filter-tab-box-empty #{'active' if params[:filter] == 'empty'}" do %>
-        <i class="fa-solid fa-box-open"></i>
-        Vides
-        <span class="filter-count"><%= Box.empty.count %></span>
-      <% end %>
-      <%= link_to boxes_path(filter: "suppr"),
-            class: "filter-tab filter-tab-box-suppr #{'active' if params[:filter] == 'suppr'}" do %>
-        <i class="fa-solid fa-dumpster"></i>
-        Jetées
-        <span class="filter-count"><%= Box.suppr.count %></span>
-      <% end %>
+      <div class="filter-tabs-sub-row">
+        <%= link_to boxes_path(filter: "empty"),
+              class: "filter-tab filter-tab-box-empty #{'active' if params[:filter] == 'empty'}" do %>
+          <i class="fa-solid fa-box-open"></i>
+          Vides
+          <span class="filter-count"><%= Box.empty.count %></span>
+        <% end %>
+        <%= link_to boxes_path(filter: "suppr"),
+              class: "filter-tab filter-tab-box-suppr #{'active' if params[:filter] == 'suppr'}" do %>
+          <i class="fa-solid fa-dumpster"></i>
+          Jetées
+          <span class="filter-count"><%= Box.suppr.count %></span>
+        <% end %>
+      </div>
     </div>
   </div>
 
