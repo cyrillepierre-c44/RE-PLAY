@@ -84,7 +84,7 @@
         <%= link_to "Se connecter", new_user_session_path, class: "btn btn-primary btn-sm" %>
       <% end %>
       <% if user_signed_in? && current_user.admin? %>
-        <%= link_to users_path, class: "user-chip ms-1", title: "Gérer les comptes" do %>
+        <%= link_to users_path, class: "user-chip ms-1", title: "Gérer les comptes", style: "padding: 0.35rem 0.75rem; min-height: calc(28px + 0.7rem);" do %>
           <i class="fa-solid fa-users" style="font-size:0.9rem;"></i>
         <% end %>
       <% end %>
