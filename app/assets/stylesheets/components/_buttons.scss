@@ -191,22 +191,33 @@
 
 .btn-back-boxes {
   font-family: $headers-font;
-  font-size: 2.1rem;
   color: $coral;
   background: transparent;
   border: none;
   text-decoration: none;
   padding: 0;
-  line-height: 1;
   display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.5rem;
 
-  i { color: $coral; }
+  .fa-circle-arrow-left {
+    font-size: 1.8rem;
+    transition: transform 0.2s ease;
+  }
+
+  .btn-back-context-icon {
+    font-size: 1.8rem;
+    opacity: 0.6;
+    transform: translateY(3px);
+  }
 
   &:hover {
     color: darken($coral, 10%);
     text-decoration: none;
+
+    .fa-circle-arrow-left {
+      transform: translateX(-3px);
+    }
   }
 }
 
