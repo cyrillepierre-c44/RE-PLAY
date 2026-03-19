@@ -113,7 +113,7 @@
         <div class="row g-3">
           <% @box.toys.order(created_at: :desc).each do |toy| %>
             <div class="col-12 col-sm-6 col-xl-4">
-              <div class="toy-card">
+              <%= link_to toy_path(toy), class: "toy-card d-block text-decoration-none" do %>
                 <div class="toy-card-photo-wrap">
                   <% if toy.photo.attached? %>
                     <%= image_tag toy.photo, class: "toy-card-img" %>
@@ -130,11 +130,6 @@
                   <% else %>
                     <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente"></span>
                   <% end %>
-                  <div class="toy-card-actions">
-                    <%= link_to toy_path(toy), class: "toy-action-btn toy-action-primary", title: "Voir" do %>
-                      <i class="fa-solid fa-eye"></i>
-                    <% end %>
-                  </div>
                 </div>
                 <div class="toy-card-body">
                   <div class="toy-card-title"><i class="fa-solid fa-puzzle-piece me-1"></i>N°&nbsp;<%= toy.id %></div>
@@ -153,7 +148,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              <% end %>
             </div>
           <% end %>
         </div>
