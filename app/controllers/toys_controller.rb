@@ -42,7 +42,7 @@ class ToysController < ApplicationController
 
     if @toy.save
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
-      Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} à créé le jouet #{@toy.id}")
+      Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a créé le jouet #{@toy.id}")
       redirect_to box_path(@box), notice: "Jouet créé avec succès.", status: :see_other
     else
       render :new, status: :unprocessable_entity
@@ -59,7 +59,7 @@ class ToysController < ApplicationController
     if @toy.update(toy_params.merge(price: nil))
       PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} à updaté le jouet n#{@toy.id}")
+                     content: "#{current_user.email} a updaté le jouet n#{@toy.id}")
       if params[:from_new] == "1"
         redirect_to box_path(@toy.box), notice: "Jouet créé avec succès.", status: :see_other
       else

@@ -10,3 +10,9 @@
 // Your CSS partials
 @import "components/index";
 @import "pages/index";
+
+// Prevent lateral scroll on mobile
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}

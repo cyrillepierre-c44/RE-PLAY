@@ -1,8 +1,12 @@
 <% content_for :title, "Jouets · RE-PLAY" %>
 
 <div class="container py-4">
-  <div class="page-header">
-    <div>
+  <div class="page-header mb-4">
+    <%= link_to boxes_path, class: "btn-back-boxes", title: "Retour aux boîtes" do %>
+      <i class="fa-solid fa-circle-arrow-left"></i>
+      <i class="fa-solid fa-boxes-stacked btn-back-context-icon"></i>
+    <% end %>
+    <div style="text-align: right;">
       <h1 class="page-title"><span style="display:inline-block; position:relative; width:1.4em; height:1em; vertical-align:middle;" class="me-2"><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; top:0; left:0; color:#FF6B35;"></i><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; bottom:0; right:0; transform:rotate(90deg); color:#FF6B35;"></i></span>Jouets</h1>
       <p class="page-subtitle">
         <% if params[:filter] == "validated" %>
@@ -14,9 +18,6 @@
         <% end %>
       </p>
     </div>
-    <%= link_to boxes_path, class: "btn-back-boxes", title: "Retour aux boîtes" do %>
-      <span style="color:#000;">←</span> <i class="fa-solid fa-boxes-stacked"></i>
-    <% end %>
   </div>
 
   <div class="mb-4">
@@ -60,7 +61,7 @@
     <div class="row g-3">
       <% @toys.each do |toy| %>
         <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-          <div class="toy-card">
+          <%= link_to toy_path(toy), class: "toy-card" do %>
             <div class="toy-card-photo-wrap">
               <% if toy.photo.attached? %>
                 <%= image_tag toy.photo, class: "toy-card-img" %>
@@ -77,34 +78,6 @@
               <% else %>
                 <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente de validation"></span>
               <% end %>
-              <div class="toy-card-actions">
-                <%= link_to toy_path(toy), class: "toy-action-btn toy-action-primary", title: "Voir" do %>
-                  <i class="fa-solid fa-eye"></i>
-                <% end %>
-                <% if policy(toy).verify? %>
-                  <%= link_to verify_toy_path(toy), class: "toy-action-btn toy-action-verify", title: "Contrôle qualité" do %>
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                  <% end %>
-                <% end %>
-                <% if policy(toy).edit? %>
-                  <%= link_to edit_toy_path(toy), class: "toy-action-btn toy-action-edit", title: "Modifier" do %>
-                    <i class="fa-solid fa-pen"></i>
-                  <% end %>
-                <% end %>
-                <% if policy(toy).restore? && toy.suppr? %>
-                  <%= button_to restore_toy_path(toy), method: :patch, class: "toy-action-btn toy-action-restore", title: "Réintégrer" do %>
-                    <i class="fa-solid fa-rotate-left"></i>
-                  <% end %>
-                <% end %>
-                <% if policy(toy).destroy? && !toy.suppr? %>
-                  <%= link_to toy_path(toy),
-                        class: "toy-action-btn toy-action-delete",
-                        title: "Supprimer",
-                        data: { turbo_method: :delete, turbo_confirm: "Supprimer ce jouet ?" } do %>
-                    <i class="fa-solid fa-trash"></i>
-                  <% end %>
-                <% end %>
-              </div>
             </div>
             <div class="toy-card-body">
               <div class="toy-card-title">
@@ -132,7 +105,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          <% end %>
         </div>
       <% end %>
     </div>
