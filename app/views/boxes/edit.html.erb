@@ -4,13 +4,13 @@
   <div class="d-flex align-items-center justify-content-between mb-3">
     <% if params[:new] %>
       <%= link_to boxes_path, class: "btn-back-boxes" do %>
-        <span style="color:#000;">←</span>
-        <i class="fa-solid fa-boxes-stacked"></i>
+        <i class="fa-solid fa-circle-arrow-left" style="font-size:1.8rem;"></i>
+        <i class="fa-solid fa-boxes-stacked btn-back-context-icon" style="font-size:1.8rem;"></i>
       <% end %>
     <% else %>
       <%= link_to box_path(@box), class: "btn-back-boxes" do %>
-        <span style="color:#000;">←</span>
-        <i class="fa-solid fa-box"></i>
+        <i class="fa-solid fa-circle-arrow-left" style="font-size:1.8rem;"></i>
+        <i class="fa-solid fa-box btn-back-context-icon" style="font-size:1.8rem;"></i>
       <% end %>
     <% end %>
     <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-box me-1"></i>N°&nbsp;<%= @box.id %></span>
@@ -28,9 +28,6 @@
 
   <div class="detail-card p-4">
     <div class="d-flex align-items-center gap-3 mb-1">
-      <div class="form-card-icon" style="margin-bottom:0; flex-shrink:0;">
-        <i class="fa-solid fa-<%= params[:new] ? 'plus' : 'pen-to-square' %>"></i>
-      </div>
       <h1 class="toy-show-title" style="font-size:1.6rem;"><%= params[:new] ? 'Nouvelle boîte' : 'Modifier la boîte' %> N°<%= @box.id %></h1>
     </div>
     <p style="font-size:1.15rem; font-weight:700; color:#1A2B4A; margin-bottom:1rem;"><%= @box.category.name %></p>

@@ -30,7 +30,7 @@ class BoxesController < ApplicationController
     @box = Box.new(box_params)
     authorize @box
     if @box.save
-      Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} à créé la boite n#{@box.id}")
+      Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} a créé la boite n#{@box.id}")
       if params[:new_flow]
         redirect_to edit_box_path(@box, new: true), status: :see_other
       else
@@ -48,7 +48,7 @@ class BoxesController < ApplicationController
   def update
     authorize @box
     @box.update(box_params)
-    Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} à updaté la boite n#{@box.id}")
+    Action.create!(user: current_user, actionable: @box, content: "#{current_user.email} a updaté la boite n#{@box.id}")
     redirect_to box_path(@box), status: :see_other
   end
 

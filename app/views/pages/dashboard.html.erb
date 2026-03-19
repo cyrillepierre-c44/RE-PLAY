@@ -3,9 +3,8 @@
 <div class="container py-4">
 
   <%# ── Titre ── %>
-  <div class="onb-section-title mb-4">
-    <span class="onb-section-bar"></span>
-    <h2><i class="fa-solid fa-chart-bar me-2"></i>Tableau de bord</h2>
+  <div class="onb-section-title" style="justify-content:flex-start;" mb-4">
+    <h1 style="font-size:2rem;"><i class="fa-solid fa-chart-bar me-2"></i>Tableau de bord</h1>
   </div>
 
   <%# ── Filtres ── %>
@@ -24,7 +23,7 @@
                 data-date-range-target="periodBtn"
                 data-action="click->date-range#select">
           <i class="fa-solid <%= icon %>"></i>
-          <span class="d-none d-sm-inline"><%= label %></span>
+          <span><%= label %></span>
         </button>
       <% end %>
     </div>
@@ -159,9 +158,8 @@
   <div class="row g-3 mb-4">
     <div class="col-md-6">
       <div class="detail-card p-4 h-100">
-        <div class="onb-section-title mb-3">
-          <span class="onb-section-bar"></span>
-          <h2><i class="fa-solid fa-puzzle-piece me-2 text-sky"></i>Jouets vs Boîtes</h2>
+        <div class="onb-section-title" style="justify-content:flex-start;" mb-3">
+                <h2><i class="fa-solid fa-puzzle-piece me-2 text-coral"></i>Jouets vs Boîtes</h2>
         </div>
         <div class="split-stats">
           <div class="split-item">
@@ -189,9 +187,8 @@
 
     <div class="col-md-6">
       <div class="detail-card p-4 h-100">
-        <div class="onb-section-title mb-3">
-          <span class="onb-section-bar"></span>
-          <h2><i class="fa-solid fa-user-shield me-2 text-purple"></i>Admin vs Utilisateurs</h2>
+        <div class="onb-section-title" style="justify-content:flex-start;" mb-3">
+                <h2><i class="fa-solid fa-user-shield me-2 text-coral"></i>Admin vs Utilisateurs</h2>
         </div>
         <div class="split-stats">
           <div class="split-item">
@@ -220,9 +217,8 @@
 
   <%# ── Types d'actions ── %>
   <div class="detail-card p-4 mb-4">
-    <div class="onb-section-title mb-3">
-      <span class="onb-section-bar"></span>
-      <h2><i class="fa-solid fa-list-check me-2 text-yellow"></i>Types d'actions</h2>
+    <div class="onb-section-title" style="justify-content:flex-start;" mb-3">
+        <h2><i class="fa-solid fa-list-check me-2 text-coral"></i>Types d'actions</h2>
     </div>
     <div class="action-types-grid">
       <div class="action-type-item action-type-create">
@@ -250,9 +246,8 @@
 
   <%# ── Top 10 retouches par créateur ── %>
   <div class="detail-card p-4 mb-4">
-    <div class="onb-section-title mb-3">
-      <span class="onb-section-bar"></span>
-      <h2><i class="fa-solid fa-triangle-exclamation me-2 text-coral"></i>Top 10 retouches par créateur</h2>
+    <div class="onb-section-title" style="justify-content:flex-start;" mb-3">
+        <h2><i class="fa-solid fa-triangle-exclamation me-2 text-coral"></i>Top 10 retouches par créateur</h2>
     </div>
 
     <% if @rework_by_creator.empty? %>
@@ -284,9 +279,8 @@
 
   <%# ── Pareto des catégories ── %>
   <div class="detail-card p-4 mb-4">
-    <div class="onb-section-title mb-3">
-      <span class="onb-section-bar"></span>
-      <h2>
+    <div class="onb-section-title" style="justify-content:flex-start;" mb-3">
+        <h2>
         <i class="fa-solid fa-ranking-star me-2 text-coral"></i>Catégories les plus rentables
       </h2>
     </div>
@@ -337,22 +331,23 @@
 
   <%# ── Journal des actions ── %>
   <div class="detail-card p-4 mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-      <div class="onb-section-title mb-0">
-        <span class="onb-section-bar"></span>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center mb-3">
+      <div class="onb-section-title" style="justify-content:flex-start;">
         <h2>
-          <i class="fa-solid fa-clock-rotate-left me-2 text-navy"></i>
+          <i class="fa-solid fa-clock-rotate-left me-2 text-coral"></i>
           Journal des actions
           <span class="badge bg-light text-muted ms-2" style="font-size: 0.75rem; font-weight: 600;"><%= @recent_actions.size %></span>
         </h2>
       </div>
-      <%= link_to dashboard_export_csv_path(
-            period: @period, type: @type_filter, category_id: @category_id,
-            user_id: @user_id, start_date: @start_date, end_date: @end_date),
-            class: "btn-ghost-coral btn-sm d-flex align-items-center gap-1" do %>
-        <i class="fa-solid fa-arrow-down-to-line"></i>
-        <span class="d-none d-sm-inline">Exporter CSV</span>
-      <% end %>
+      <div class="d-flex justify-content-center justify-content-sm-end mt-2 mt-sm-0">
+        <%= link_to dashboard_export_csv_path(
+              period: @period, type: @type_filter, category_id: @category_id,
+              user_id: @user_id, start_date: @start_date, end_date: @end_date),
+              class: "btn-ghost-coral btn-sm d-flex align-items-center gap-1" do %>
+          <i class="fa-solid fa-arrow-down-to-line"></i>
+          <span>Exporter CSV</span>
+        <% end %>
+      </div>
     </div>
 
     <% if @recent_actions.empty? %>
