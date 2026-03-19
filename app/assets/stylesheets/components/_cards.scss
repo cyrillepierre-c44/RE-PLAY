@@ -1,4 +1,10 @@
 // ── Toy Cards ──────────────────────────────────────────────
+a.toy-card {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
 .toy-card {
   background: $white;
   border-radius: $border-radius-xl;

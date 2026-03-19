@@ -61,7 +61,7 @@
     <div class="row g-3">
       <% @toys.each do |toy| %>
         <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-          <div class="toy-card">
+          <%= link_to toy_path(toy), class: "toy-card" do %>
             <div class="toy-card-photo-wrap">
               <% if toy.photo.attached? %>
                 <%= image_tag toy.photo, class: "toy-card-img" %>
@@ -78,34 +78,6 @@
               <% else %>
                 <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente de validation"></span>
               <% end %>
-              <div class="toy-card-actions">
-                <%= link_to toy_path(toy), class: "toy-action-btn toy-action-primary", title: "Voir" do %>
-                  <i class="fa-solid fa-eye"></i>
-                <% end %>
-                <% if policy(toy).verify? %>
-                  <%= link_to verify_toy_path(toy), class: "toy-action-btn toy-action-verify", title: "Contrôle qualité" do %>
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                  <% end %>
-                <% end %>
-                <% if policy(toy).edit? %>
-                  <%= link_to edit_toy_path(toy), class: "toy-action-btn toy-action-edit", title: "Modifier" do %>
-                    <i class="fa-solid fa-pen"></i>
-                  <% end %>
-                <% end %>
-                <% if policy(toy).restore? && toy.suppr? %>
-                  <%= button_to restore_toy_path(toy), method: :patch, class: "toy-action-btn toy-action-restore", title: "Réintégrer" do %>
-                    <i class="fa-solid fa-rotate-left"></i>
-                  <% end %>
-                <% end %>
-                <% if policy(toy).destroy? && !toy.suppr? %>
-                  <%= link_to toy_path(toy),
-                        class: "toy-action-btn toy-action-delete",
-                        title: "Supprimer",
-                        data: { turbo_method: :delete, turbo_confirm: "Supprimer ce jouet ?" } do %>
-                    <i class="fa-solid fa-trash"></i>
-                  <% end %>
-                <% end %>
-              </div>
             </div>
             <div class="toy-card-body">
               <div class="toy-card-title">
@@ -133,7 +105,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          <% end %>
         </div>
       <% end %>
     </div>
