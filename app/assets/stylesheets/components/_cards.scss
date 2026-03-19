@@ -464,6 +464,18 @@ a.toy-card {
   flex-wrap: wrap;
 }
 
+.toy-show-actions-pending {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.toy-show-actions-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .toy-show-btn {
   flex: 1;
   height: 44px;
@@ -489,6 +501,7 @@ a.toy-card {
 
   form { margin: 0; }
 
+  &.toy-show-btn-full    { width: 100%; }
   &.toy-show-btn-verify  { background: rgba($navy, 0.88);        color: $white; }
   &.toy-show-btn-edit    { background: rgba($navy, 0.08);        color: $navy; border: 1.5px solid rgba($navy, 0.15); }
   &.toy-show-btn-restore { background: rgba($mint, 0.18);        color: darken($mint, 20%); border: 1.5px solid rgba($mint, 0.3); }
