@@ -81,15 +81,6 @@
                   N°&nbsp;<%= box.id %>
                 </span>
               </div>
-              <div class="box-card-icon">
-                <% if box.suppr? %>
-                  <i class="fa-solid fa-dumpster"></i>
-                <% elsif box.empty? %>
-                  <i class="fa-solid fa-box-open"></i>
-                <% else %>
-                  <i class="fa-solid fa-box"></i>
-                <% end %>
-              </div>
             </div>
             <div class="box-card-category"><%= truncate(box.category.name, length: 20) %></div>
             <div class="box-card-details">
