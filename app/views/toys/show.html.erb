@@ -1,6 +1,13 @@
 <% content_for :title, "Jouet N°#{@toy.id} · RE-PLAY" %>
 <% if @toy.photo.attached? && @toy.price.nil? %>
-  <meta http-equiv="refresh" content="4">
+  <script>
+    var key = "toy_reload_<%= @toy.id %>_<%= @toy.updated_at.to_i %>";
+    var count = parseInt(sessionStorage.getItem(key) || "0");
+    if (count < 5) {
+      sessionStorage.setItem(key, count + 1);
+      setTimeout(function() { location.reload(); }, 4000);
+    }
+  </script>
 <% end %>
 <div class="container py-4">
   <%= link_to toys_path, class: "btn-back-boxes mb-3 d-inline-block" do %>
