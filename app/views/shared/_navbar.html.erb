@@ -23,11 +23,6 @@
             Jouets
           <% end %>
         </li>
-        <li class="nav-item">
-          <%= link_to onboarding_path, class: "nav-link #{'active' if action_name == 'onboarding'}" do %>
-            <i class="fa-solid fa-circle-info"></i> Guide
-          <% end %>
-        </li>
         <% if current_user.admin %>
           <li class="nav-item">
             <%= link_to dashboard_path, class: "nav-link #{'active' if action_name == 'dashboard'}" do %>
@@ -70,6 +65,11 @@
                 <i class="fa-regular fa-user me-2"></i>Mon profil
               <% end %>
             </li>
+            <li>
+              <%= link_to onboarding_path, class: "dropdown-item #{'active' if action_name == 'onboarding'}" do %>
+                <i class="fa-solid fa-circle-info me-2"></i>Guide
+              <% end %>
+            </li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <%= link_to destroy_user_session_path,
@@ -106,10 +106,6 @@
         <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; bottom:0; right:0; transform:rotate(90deg);"></i>
       </span>
       <span>Jouets</span>
-    <% end %>
-    <%= link_to onboarding_path, class: "bottom-tab #{'active' if action_name == 'onboarding'}" do %>
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Guide</span>
     <% end %>
     <% if current_user.admin %>
       <%= link_to dashboard_path, class: "bottom-tab #{'active' if action_name == 'dashboard'}" do %>

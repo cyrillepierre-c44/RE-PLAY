@@ -82,7 +82,7 @@
                 </span>
               </div>
             </div>
-            <div class="box-card-category"><%= truncate(box.category.name, length: 20) %></div>
+            <div class="box-card-category"><%= box.category.name %></div>
             <div class="box-card-details">
               <div class="box-card-details-left">
                 <% if box.weight.present? %>
@@ -90,9 +90,11 @@
                     <i class="fa-solid fa-weight-hanging"></i><%= box.weight %> kg
                   </span>
                 <% end %>
-                <span class="condition-icon <%= box.electronic? ? 'ok' : 'ko' %>" title="<%= box.electronic? ? 'Électronique' : 'Non électronique' %>">
-                  <i class="fa-solid fa-bolt"></i>
-                </span>
+                <% if box.electronic? %>
+                  <span class="box-detail-item" title="Électronique">
+                    <i class="fa-solid fa-microchip" style="color:#FF6B35; font-size:1.5em;"></i>
+                  </span>
+                <% end %>
               </div>
               <span class="box-toy-count" title="<%= box.toys.count %> jouet<%= 's' if box.toys.count > 1 %>">
                 <i class="fa-solid fa-puzzle-piece"></i>

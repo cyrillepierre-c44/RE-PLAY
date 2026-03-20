@@ -5,6 +5,8 @@ module DashboardPareto
     weight_by_cat, price_by_cat = pareto_category_metrics
     @pareto_data = pareto_rows(weight_by_cat, price_by_cat)
     add_pareto_cumulative
+    vital = @pareto_data.select { |r| r[:cumulative] <= 80 }
+    @pareto_data = vital.presence || @pareto_data.first(1)
   end
 
   def pareto_category_metrics
@@ -17,7 +19,7 @@ module DashboardPareto
   def pareto_rows(weight_by_cat, price_by_cat)
     @pareto_total_weight = weight_by_cat.values.sum.to_f
     @pareto_total_price  = price_by_cat.values.sum.to_f
-    cat_ids = (weight_by_cat.keys + price_by_cat.keys).uniq
+    cat_ids = (weight_by_cat.keys + price_by_cat.keys).uniq.compact
     cats    = Category.where(id: cat_ids).index_by(&:id)
     cat_ids.map { |id| pareto_row(id, cats, weight_by_cat, price_by_cat) }
            .sort_by { |r| -r[:score] }

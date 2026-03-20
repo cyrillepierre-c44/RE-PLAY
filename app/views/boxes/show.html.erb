@@ -49,12 +49,12 @@
                 <span><%= @box.weight %> kg</span>
               </div>
             <% end %>
-            <div class="toy-show-info-item">
-              <span class="condition-icon <%= @box.electronic? ? 'ok' : 'ko' %>" style="width:28px;height:28px;font-size:0.8rem;">
-                <i class="fa-solid fa-bolt"></i>
-              </span>
-              <span><%= @box.electronic? ? 'Électronique' : 'Non électronique' %></span>
-            </div>
+            <% if @box.electronic? %>
+              <div class="toy-show-info-item">
+                <i class="fa-solid fa-microchip" style="color:#FF6B35;"></i>
+                <span>Électronique</span>
+              </div>
+            <% end %>
           </div>
         </div>
 
