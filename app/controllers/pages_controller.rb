@@ -162,10 +162,7 @@ class PagesController < ApplicationController
   end
 
   def build_rework_stats
-    # "Mises à jour" dans Types d'actions — toute modification d'un jouet/boîte
-    @rework_total    = @actions.where("content LIKE ? OR content LIKE ?", "%modifié%", "%updaté%").count
-
-    # Retouches = jouets renvoyés via "Revaloriser" (statut review) — Analyse des retouches
+    # Retouches = jouets renvoyés via "Revaloriser" (statut review), par les admins uniquement
     review_scope     = @actions.where("content LIKE ?", "%en statut: review%")
     @review_total    = review_scope.count
     @review_by_admin = review_scope.joins(:user).where(users: { admin: true }).count
