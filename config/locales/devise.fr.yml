@@ -32,8 +32,8 @@ fr:
       no_token: "Vous ne pouvez pas accéder à cette page sans venir d'un e-mail de réinitialisation. Si vous venez bien d'un tel e-mail, assurez-vous d'avoir utilisé l'URL complète."
       send_instructions: "Vous allez recevoir un e-mail avec les instructions de réinitialisation dans quelques minutes."
       send_paranoid_instructions: "Si votre adresse e-mail existe dans notre base, vous recevrez un lien de récupération dans quelques minutes."
-      updated: "Votre mot de passe a été modifié avec succès. Vous êtes maintenant connecté(e)."
-      updated_not_active: "Votre mot de passe a été modifié avec succès."
+      updated: "Votre mot de passe a bien été créé. Bienvenue sur RE-PLAY !"
+      updated_not_active: "Votre mot de passe a bien été créé."
     registrations:
       destroyed: "Au revoir ! Votre compte a été supprimé avec succès."
       signed_up: "Bienvenue ! Votre inscription a été effectuée avec succès."

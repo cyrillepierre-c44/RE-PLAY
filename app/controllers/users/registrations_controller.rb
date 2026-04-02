@@ -6,13 +6,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
     build_resource(sign_up_params.merge(password: generated_password, password_confirmation: generated_password))
     resource.save
     if resource.persisted?
-      token = resource.send_reset_password_instructions
-      WelcomeMailer.welcome_email(resource).deliver_later
+      raw_token, hashed_token = Devise.token_generator.generate(User, :reset_password_token)
+      resource.update_columns(reset_password_token: hashed_token, reset_password_sent_at: Time.now.utc)
+      WelcomeMailer.welcome_email(resource, raw_token).deliver_now
       redirect_to users_path, notice: "Compte créé pour #{resource.email}."
     else
       clean_up_passwords resource
       render :new, status: :unprocessable_entity
     end
+  end
+
+  def after_update_path_for(resource)
+    root_path
   end
 
   private
