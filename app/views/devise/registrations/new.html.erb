@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+    <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { data: { controller: "password-toggle" } }) do |f| %>
       <%= f.error_notification message: f.object.errors.full_messages.to_sentence,
             wrapper_html: { class: "alert", style: "background:rgba(230,57,70,0.08);color:#E63946;border-radius:0.75rem;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.875rem;font-weight:600;" } %>
 
@@ -29,21 +29,6 @@
           required: true,
           autofocus: true,
           input_html: { autocomplete: "email", class: "form-control verify-input", placeholder: "employe@enjoue.fr" },
-          label_html: { class: "form-label" } %>
-      </div>
-      <div class="mb-3">
-        <%= f.input :password,
-          label: "Mot de passe",
-          required: true,
-          hint: ("#{@minimum_password_length} caractères minimum" if @minimum_password_length),
-          input_html: { autocomplete: "new-password", class: "form-control verify-input", placeholder: "••••••••" },
-          label_html: { class: "form-label" } %>
-      </div>
-      <div class="mb-4">
-        <%= f.input :password_confirmation,
-          label: "Confirmer le mot de passe",
-          required: true,
-          input_html: { autocomplete: "new-password", class: "form-control verify-input", placeholder: "••••••••" },
           label_html: { class: "form-label" } %>
       </div>
       <div class="d-grid">

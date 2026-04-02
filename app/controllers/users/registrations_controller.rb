@@ -3,9 +3,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :require_admin!, only: [:new, :create]
 
   def create
-    build_resource(sign_up_params)
+    build_resource(sign_up_params.merge(password: generated_password, password_confirmation: generated_password))
     resource.save
     if resource.persisted?
+      token = resource.send_reset_password_instructions
+      WelcomeMailer.welcome_email(resource).deliver_later
       redirect_to users_path, notice: "Compte créé pour #{resource.email}."
     else
       clean_up_passwords resource
@@ -14,6 +16,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   private
+
+  def generated_password
+    @generated_password ||= SecureRandom.hex(16)
+  end
 
   def require_admin!
     unless current_user&.admin?
