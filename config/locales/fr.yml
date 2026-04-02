@@ -10,6 +10,10 @@ fr:
         create: "Ajouter le jouet"
         update: "Modifier le jouet"
 
+  errors:
+    messages:
+      taken: "est déjà utilisé"
+
   activerecord:
     models:
       box: "Boîte"

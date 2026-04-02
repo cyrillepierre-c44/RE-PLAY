@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  before_action :require_admin!
+
   def index
     @users = policy_scope(User).order(
       Arel.sql("CASE WHEN disabled = true THEN 2 WHEN admin = true THEN 0 ELSE 1 END"),
@@ -18,5 +20,11 @@ class UsersController < ApplicationController
     authorize @user
     @user.update!(disabled: false)
     redirect_to users_path, notice: "Compte réactivé.", status: :see_other
+  end
+
+  private
+
+  def require_admin!
+    redirect_to root_path, alert: "Accès réservé aux administrateurs." unless current_user&.admin?
   end
 end
