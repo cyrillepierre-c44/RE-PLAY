@@ -1,5 +1,11 @@
-<p>Welcome <%= @email %>!</p>
+<p>Bonjour et bienvenue sur RE-PLAY !</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>Nous sommes ravis de vous accueillir sur notre plateforme de jouets reconditionnés.</p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %></p>
+<p>Pour activer votre compte, cliquez sur le lien ci-dessous :</p>
+
+<p><%= link_to 'Confirmer mon compte', confirmation_url(@resource, confirmation_token: @token) %></p>
+
+<p>Retrouvez-nous sur notre site : <a href="https://www.re-play.team">www.re-play.team</a></p>
+
+<p>À bientôt,<br>L'équipe RE-PLAY</p>
