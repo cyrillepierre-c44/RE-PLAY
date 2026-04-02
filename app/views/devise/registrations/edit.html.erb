@@ -32,12 +32,12 @@
           <hr style="border-color: #F0EBE3; margin: 1.25rem 0;">
           <h3 style="font-size: 1rem; color: #6B7280; font-weight: 700; margin-bottom: 1rem;">Changer le mot de passe</h3>
 
-          <div class="mb-3">
+          <div class="mb-3" data-controller="current-password">
             <%= f.input :password,
               label: "Nouveau mot de passe",
               hint: "Laisser vide pour ne pas changer",
               required: false,
-              input_html: { autocomplete: "new-password", class: "form-control", placeholder: "Laisser vide pour ne pas modifier" },
+              input_html: { autocomplete: "new-password", class: "form-control", placeholder: "Laisser vide pour ne pas modifier", data: { "current-password-target": "newPassword", action: "input->current-password#toggle" } },
               label_html: { class: "form-label" } %>
           </div>
           <div class="mb-3">
@@ -47,11 +47,11 @@
               input_html: { autocomplete: "new-password", class: "form-control" },
               label_html: { class: "form-label" } %>
           </div>
-          <div class="mb-4">
+          <div class="mb-4" id="current-password-field" style="display:none;">
             <%= f.input :current_password,
               label: "Mot de passe actuel",
-              hint: "Obligatoire pour confirmer les modifications",
-              required: true,
+              hint: "Obligatoire pour changer le mot de passe",
+              required: false,
               input_html: { autocomplete: "current-password", class: "form-control" },
               label_html: { class: "form-label" } %>
           </div>
@@ -61,21 +61,23 @@
           </div>
         <% end %>
 
-        <hr style="border-color: #F0EBE3; margin: 1.5rem 0;">
-        <div style="background: rgba(230,57,70,0.05); border-radius: 0.75rem; padding: 1rem;">
-          <h3 style="font-size:0.95rem; color: #E63946; font-weight: 700; margin-bottom: 0.5rem;">
-            <i class="fa-solid fa-triangle-exclamation me-1"></i>Zone dangereuse
-          </h3>
-          <p style="font-size: 0.85rem; color: #6B7280; margin-bottom: 0.75rem;">
-            La suppression de votre compte est irréversible.
-          </p>
-          <%= button_to "Supprimer mon compte",
-                registration_path(resource_name),
-                data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?" },
-                method: :delete,
-                class: "btn btn-sm",
-                style: "background: rgba(230,57,70,0.1); color: #E63946; font-weight: 700;" %>
-        </div>
+        <% if current_user.admin? %>
+          <hr style="border-color: #F0EBE3; margin: 1.5rem 0;">
+          <div style="background: rgba(230,57,70,0.05); border-radius: 0.75rem; padding: 1rem;">
+            <h3 style="font-size:0.95rem; color: #E63946; font-weight: 700; margin-bottom: 0.5rem;">
+              <i class="fa-solid fa-triangle-exclamation me-1"></i>Zone dangereuse
+            </h3>
+            <p style="font-size: 0.85rem; color: #6B7280; margin-bottom: 0.75rem;">
+              La suppression de votre compte est irréversible.
+            </p>
+            <%= button_to "Supprimer mon compte",
+                  registration_path(resource_name),
+                  data: { turbo_confirm: "Êtes-vous sûr de vouloir supprimer votre compte ?" },
+                  method: :delete,
+                  class: "btn btn-sm",
+                  style: "background: rgba(230,57,70,0.1); color: #E63946; font-weight: 700;" %>
+          </div>
+        <% end %>
 
         <div class="auth-links mt-3">
           <%= link_to "← Retour", :back %>

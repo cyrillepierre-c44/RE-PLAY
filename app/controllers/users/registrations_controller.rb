@@ -1,6 +1,6 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   skip_before_action :require_no_authentication, only: [:new, :create]
-  before_action :require_admin!, only: [:new, :create]
+  before_action :require_admin!, only: [:new, :create, :destroy]
 
   def create
     build_resource(sign_up_params.merge(password: generated_password, password_confirmation: generated_password))
@@ -18,6 +18,19 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def after_update_path_for(resource)
     root_path
+  end
+
+  protected
+
+  def update_resource(resource, params)
+    if params[:password].blank?
+      params.delete(:current_password)
+      params.delete(:password)
+      params.delete(:password_confirmation)
+      resource.update_without_password(params)
+    else
+      resource.update_with_password(params)
+    end
   end
 
   private
