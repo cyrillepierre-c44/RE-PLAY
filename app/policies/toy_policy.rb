@@ -50,4 +50,8 @@ class ToyPolicy < ApplicationPolicy
   def confirm_verify?
     verify?
   end
+
+  def purge_deleted?
+    user.admin?
+  end
 end

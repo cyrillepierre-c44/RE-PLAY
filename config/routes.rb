@@ -22,6 +22,9 @@ Rails.application.routes.draw do
       patch :confirm_verify
       patch :restore
     end
+    collection do
+      delete :purge_deleted
+    end
   end
 
   get "about_us", to: "pages#about_us"

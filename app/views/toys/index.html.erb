@@ -45,6 +45,17 @@
     </div>
   </div>
 
+  <% if params[:filter] == "deleted" && current_user.admin? && @toys.any? %>
+    <div class="mb-3 text-end">
+      <%= button_to "Vider définitivement la corbeille",
+            purge_deleted_toys_path,
+            method: :delete,
+            data: { turbo_confirm: "Supprimer définitivement #{@toys.count} jouet(s) ? Cette action est irréversible." },
+            class: "btn btn-sm",
+            style: "background:rgba(230,57,70,0.1);color:#E63946;font-weight:700;" %>
+    </div>
+  <% end %>
+
   <% if @toys.empty? %>
     <div class="text-center py-5">
       <div style="font-size: 4rem; color: rgba(255,107,53,0.2); margin-bottom: 1rem;">

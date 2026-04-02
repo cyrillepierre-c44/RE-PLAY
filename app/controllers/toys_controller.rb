@@ -92,6 +92,14 @@ class ToysController < ApplicationController
     end
   end
 
+  def purge_deleted
+    authorize Toy, :purge_deleted?
+    toys = Toy.deleted
+    toys.each { |toy| Action.where(actionable: toy).destroy_all }
+    toys.destroy_all
+    redirect_to toys_path(filter: "deleted"), notice: "Tous les jouets supprimés ont été définitivement effacés."
+  end
+
   def verify
     @box = @toy.box
     authorize @toy
