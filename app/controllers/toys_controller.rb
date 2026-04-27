@@ -12,6 +12,7 @@ class ToysController < ApplicationController
 
   def index
     base_scope = policy_scope(Toy)
+    base_scope = base_scope.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:filter] == "validated"
       @toys = base_scope.validated.order(created_at: :desc)
     elsif params[:filter] == "deleted"
@@ -19,6 +20,7 @@ class ToysController < ApplicationController
     else
       @toys = base_scope.waiting.order(created_at: :desc)
     end
+    @categories = Category.all.order(:name)
   end
 
   def show
@@ -75,7 +77,7 @@ class ToysController < ApplicationController
     if @toy.update(status: :suppr)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} a supprimé le  jouet #{@toy.id}")
-      redirect_to toys_path, notice: "Jouet supprimé avec succès."
+      redirect_to box_path(@toy.box), notice: "Jouet supprimé avec succès."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
@@ -115,6 +117,7 @@ class ToysController < ApplicationController
         actionable: @toy,
         content: "#{current_user.email} a passé le jouet n#{@toy.id} en statut: #{new_status}"
       )
+      log_nonconformities
       if new_status == "market"
         redirect_to toys_path, notice: "Mise en vente de l'objet"
       else
@@ -128,6 +131,20 @@ class ToysController < ApplicationController
 
   private
 
+  def log_nonconformities
+    nc_map = {
+      clean:       "NC:propre",
+      complete:    "NC:complet",
+      playable:    "NC:jouable",
+      category_id: "NC:catégorie"
+    }
+    nc_map.each do |attr, nc_key|
+      next unless @toy.saved_change_to_attribute?(attr)
+      Action.create!(user: current_user, actionable: @toy,
+                     content: "[#{nc_key}] #{current_user.email} a corrigé #{nc_key.sub('NC:', '')} du jouet #{@toy.id}")
+    end
+  end
+
   def box_find
     @box = Box.find(params[:box_id])
   end
@@ -137,11 +154,12 @@ class ToysController < ApplicationController
   end
 
   def toy_params
-    params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :location, :status)
+    permitted = params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :location, :status, :operator_note)
+    current_user.admin? ? permitted.except(:operator_note) : permitted
   end
 
   def verify_params
     params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :price, :location,
-                                :status)
+                                :status, :admin_comment)
   end
 end

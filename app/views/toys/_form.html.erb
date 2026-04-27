@@ -84,6 +84,42 @@
   </div>
 
 
+  <%# Note vocale — opérateurs non-admin uniquement %>
+  <% unless current_user.admin? %>
+    <div class="vocal-section mb-3" data-controller="voice-recorder">
+      <div class="vocal-header">
+        <span class="vocal-label">
+          <i class="fa-solid fa-microphone me-1" style="color:#FF6B35;"></i>Note vocale
+        </span>
+        <div class="vocal-controls">
+          <button type="button"
+                  class="vocal-btn vocal-btn-record"
+                  data-voice-recorder-target="button"
+                  data-action="click->voice-recorder#toggle"
+                  title="Enregistrer">
+            <i class="fa-solid fa-microphone" data-voice-recorder-target="icon"></i>
+          </button>
+          <button type="button"
+                  class="vocal-btn vocal-btn-clear"
+                  data-action="click->voice-recorder#clear"
+                  title="Effacer">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+      <span class="vocal-status" data-voice-recorder-target="status"></span>
+      <%= f.input :operator_note,
+          label: false,
+          as: :text,
+          placeholder: "Appuyez sur le micro pour dicter, ou écrivez directement…",
+          input_html: {
+            class: "form-control verify-input vocal-textarea",
+            rows: 4,
+            data: { "voice-recorder-target": "textarea" }
+          } %>
+    </div>
+  <% end %>
+
   <div class="d-grid">
     <button type="submit" class="btn btn-primary btn-lg">
       <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;"></i>

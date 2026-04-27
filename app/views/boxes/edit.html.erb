@@ -58,10 +58,10 @@
         <% end %>
       </div>
 
-      <%# Poids %>
+      <%# Nombre de jouets %>
       <div class="mb-3">
-        <%= f.input :weight, label: false, as: :numeric,
-            input_html: { class: "form-control verify-input", step: 0.1, placeholder: "Poids (kg)" } %>
+        <%= f.input :nb_toys, label: false, as: :integer,
+            input_html: { class: "form-control verify-input", placeholder: "Nombre de jouets" } %>
       </div>
 
       <div class="d-grid">

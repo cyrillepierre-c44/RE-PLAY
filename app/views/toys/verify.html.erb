@@ -96,6 +96,38 @@
               input_html: { class: "form-control verify-input", value: (@toy.location unless @toy.location == "En attente de validation") } %>
         </div>
 
+        <%# Note vocale opérateur — lecture seule %>
+        <% if @toy.operator_note.present? %>
+          <div class="mb-3">
+            <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">
+              <i class="fa-solid fa-microphone me-1" style="color:#FF6B35;"></i>Note de l'opérateur
+            </div>
+            <div class="vocal-readonly-box"><%= @toy.operator_note %></div>
+          </div>
+        <% end %>
+
+        <%# Commentaire admin %>
+        <div class="mb-3">
+          <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">
+            <i class="fa-solid fa-shield-halved me-1" style="color:#FF6B35;"></i>Commentaire admin (facultatif)
+          </div>
+          <%= f.input :admin_comment,
+              label: false,
+              as: :text,
+              placeholder: "Observation, motif de correction…",
+              input_html: {
+                class: "form-control verify-input",
+                rows: 3,
+                maxlength: 255,
+                style: "resize:none;",
+                id: "admin_comment_field",
+                oninput: "document.getElementById('admin-comment-remaining').textContent = 255 - this.value.length"
+              } %>
+          <div style="font-size:0.7rem; color:#9CA3AF; text-align:right; margin-top:0.2rem;">
+            <span id="admin-comment-remaining">255</span> caractères restants
+          </div>
+        </div>
+
         <%# Boutons décision %>
         <div class="verify-decisions">
           <%= button_tag name: :status, value: "market", class: "verify-btn verify-btn-market" do %>

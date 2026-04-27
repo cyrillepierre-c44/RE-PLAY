@@ -19,29 +19,40 @@
     <% end %>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-3">
+    <% cat_scope = params[:category_id].present? ? Box.where(category_id: params[:category_id]) : Box %>
     <div class="filter-tabs filter-tabs-boxes">
-      <%= link_to boxes_path,
+      <%= link_to boxes_path(category_id: params[:category_id]),
             class: "filter-tab filter-tab-box-active filter-tab-full #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
         <i class="fa-solid fa-box"></i>
         En cours
-        <span class="filter-count"><%= Box.active.count %></span>
+        <span class="filter-count"><%= cat_scope.active.count %></span>
       <% end %>
       <div class="filter-tabs-sub-row">
-        <%= link_to boxes_path(filter: "empty"),
+        <%= link_to boxes_path(filter: "empty", category_id: params[:category_id]),
               class: "filter-tab filter-tab-box-empty #{'active' if params[:filter] == 'empty'}" do %>
           <i class="fa-solid fa-box-open"></i>
           Vides
-          <span class="filter-count"><%= Box.empty.count %></span>
+          <span class="filter-count"><%= cat_scope.empty.count %></span>
         <% end %>
-        <%= link_to boxes_path(filter: "suppr"),
+        <%= link_to boxes_path(filter: "suppr", category_id: params[:category_id]),
               class: "filter-tab filter-tab-box-suppr #{'active' if params[:filter] == 'suppr'}" do %>
           <i class="fa-solid fa-dumpster"></i>
           Jetées
-          <span class="filter-count"><%= Box.suppr.count %></span>
+          <span class="filter-count"><%= cat_scope.suppr.count %></span>
         <% end %>
       </div>
     </div>
+  </div>
+
+  <div class="mb-4">
+    <%= form_with url: boxes_path, method: :get, local: true do |f| %>
+      <%= hidden_field_tag :filter, params[:filter] %>
+      <%= f.select :category_id,
+            options_from_collection_for_select(@categories, :id, :name, params[:category_id]),
+            { include_blank: "Toutes les catégories" },
+            { class: "form-select category-filter-select", onchange: "this.form.requestSubmit()" } %>
+    <% end %>
   </div>
 
   <% if @boxes.empty? %>
@@ -85,21 +96,18 @@
             <div class="box-card-category"><%= box.category.name %></div>
             <div class="box-card-details">
               <div class="box-card-details-left">
-                <% if box.weight.present? %>
-                  <span class="box-detail-item">
-                    <i class="fa-solid fa-weight-hanging"></i><%= box.weight %> kg
-                  </span>
-                <% end %>
                 <% if box.electronic? %>
                   <span class="box-detail-item" title="Électronique">
                     <i class="fa-solid fa-microchip" style="color:#FF6B35; font-size:1.5em;"></i>
                   </span>
                 <% end %>
               </div>
-              <span class="box-toy-count" title="<%= box.toys.count %> jouet<%= 's' if box.toys.count > 1 %>">
-                <i class="fa-solid fa-puzzle-piece"></i>
-                <%= box.toys.count %>
-              </span>
+              <% if box.nb_toys.present? %>
+                <span class="box-toy-count" title="<%= box.nb_toys %> jouet<%= 's' if box.nb_toys > 1 %>">
+                  <i class="fa-solid fa-puzzle-piece"></i>
+                  <%= box.nb_toys %>
+                </span>
+              <% end %>
             </div>
           <% end %>
         </div>

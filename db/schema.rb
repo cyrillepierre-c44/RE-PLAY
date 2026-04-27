@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_19_170749) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_27_163320) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -57,9 +57,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_170749) do
     t.bigint "category_id", null: false
     t.datetime "created_at", null: false
     t.boolean "electronic"
+    t.integer "nb_toys"
     t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
-    t.decimal "weight"
     t.index ["category_id"], name: "index_boxes_on_category_id"
   end
 
@@ -221,6 +221,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_170749) do
   end
 
   create_table "toys", force: :cascade do |t|
+    t.string "admin_comment", limit: 255
     t.string "barcode"
     t.bigint "box_id", null: false
     t.bigint "category_id", null: false
@@ -228,6 +229,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_19_170749) do
     t.boolean "complete"
     t.datetime "created_at", null: false
     t.string "location", default: "En attente de validation"
+    t.text "operator_note"
     t.boolean "playable"
     t.decimal "price"
     t.string "status", default: "pending", null: false
