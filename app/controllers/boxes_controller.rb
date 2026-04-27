@@ -3,6 +3,7 @@ class BoxesController < ApplicationController
 
   def index
     base_scope = policy_scope(Box)
+    base_scope = base_scope.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:filter] == "suppr"
       @boxes = base_scope.suppr.order(created_at: :desc)
     elsif params[:filter] == "empty"
@@ -10,6 +11,7 @@ class BoxesController < ApplicationController
     else
       @boxes = base_scope.active.order(created_at: :desc)
     end
+    @categories = Category.all.order(:name)
   end
 
   def show
@@ -82,6 +84,6 @@ class BoxesController < ApplicationController
   end
 
   def box_params
-    params.require(:box).permit(:weight, :category_id, :electronic, :status)
+    params.require(:box).permit(:category_id, :electronic, :status, :nb_toys)
   end
 end

@@ -78,91 +78,139 @@
   <% end %>
 
   <%# ── KPIs principaux ── %>
-  <div id="resultats" class="row g-3 mb-4">
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-total">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-bolt"></i></div>
-          <div class="kpi-value"><%= @total_actions %></div>
-        </div>
-        <div class="kpi-label">Actions totales</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-admin">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-shield-halved"></i></div>
-          <div class="kpi-value"><%= @actions_by_admin %></div>
-        </div>
-        <div class="kpi-label">Actions admin</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-user">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-users"></i></div>
-          <div class="kpi-value"><%= @actions_by_user %></div>
-        </div>
-        <div class="kpi-label">Actions utilisateurs</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-rework">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-rotate"></i></div>
-          <div class="kpi-value"><%= @review_by_admin %></div>
-        </div>
-        <div class="kpi-label">Retouches</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-weight">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-microchip"></i></div>
-          <div class="kpi-value">
-            <%= number_with_precision(@boxes_weight_electronic, precision: 1, delimiter: " ") %>
-            <span class="kpi-unit">kg</span>
+  <div id="resultats" class="row g-2 mb-4">
+
+    <%# Dans les boites %>
+    <div class="col-12 col-md kpi-group kpi-group-boxes">
+      <p class="kpi-group-label"><i class="fa-solid fa-box me-2"></i>Dans les boîtes</p>
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="kpi-card kpi-boxes kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="kpi-value"><%= @boxes_toys_electronic %></div>
+            </div>
+            <div class="kpi-label">Élec.</div>
           </div>
         </div>
-        <div class="kpi-label">Poids jouets électroniques</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-weight">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
-          <div class="kpi-value">
-            <%= number_with_precision(@boxes_weight_non_electronic, precision: 1, delimiter: " ") %>
-            <span class="kpi-unit">kg</span>
+        <div class="col-6">
+          <div class="kpi-card kpi-boxes kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
+              <div class="kpi-value"><%= @boxes_toys_non_electronic %></div>
+            </div>
+            <div class="kpi-label">Non élec.</div>
           </div>
         </div>
-        <div class="kpi-label">Poids jouets non électroniques</div>
       </div>
     </div>
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-rework">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
-          <div class="kpi-value">
-            <%= number_with_precision(@toys_price_pending, precision: 0, delimiter: " ") %>
-            <span class="kpi-unit">€</span>
+
+    <%# En attente %>
+    <div class="col-12 col-md kpi-group kpi-group-waiting">
+      <p class="kpi-group-label"><i class="fa-solid fa-hourglass-half me-2"></i>En attente</p>
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="kpi-card kpi-waiting kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="kpi-value"><%= @elec_waiting %></div>
+            </div>
+            <div class="kpi-label">Élec.</div>
           </div>
         </div>
-        <div class="kpi-label">Valeurs des jouets en attente</div>
-      </div>
-    </div>
-    <div class="col-6 col-md-3">
-      <div class="kpi-card kpi-price">
-        <div class="kpi-main">
-          <div class="kpi-icon"><i class="fa-solid fa-robot"></i></div>
-          <div class="kpi-value">
-            <%= number_with_precision(@toys_price_total, precision: 0, delimiter: " ") %>
-            <span class="kpi-unit">€</span>
+        <div class="col-6">
+          <div class="kpi-card kpi-waiting kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
+              <div class="kpi-value"><%= @non_elec_waiting %></div>
+            </div>
+            <div class="kpi-label">Non élec.</div>
           </div>
         </div>
-        <div class="kpi-label">Valeurs des jouets contrôlés</div>
       </div>
     </div>
+
+    <%# Validés %>
+    <div class="col-12 col-md kpi-group kpi-group-validated">
+      <p class="kpi-group-label"><i class="fa-solid fa-store me-2"></i>Validés</p>
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="kpi-card kpi-validated kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="kpi-value"><%= @elec_validated %></div>
+            </div>
+            <div class="kpi-label">Élec.</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="kpi-card kpi-validated kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
+              <div class="kpi-value"><%= @non_elec_validated %></div>
+            </div>
+            <div class="kpi-label">Non élec.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Jetés %>
+    <div class="col-12 col-md kpi-group kpi-group-deleted">
+      <p class="kpi-group-label"><i class="fa-solid fa-trash-can me-2"></i>Jetés</p>
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="kpi-card kpi-deleted kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-microchip"></i></div>
+              <div class="kpi-value"><%= @elec_deleted %></div>
+            </div>
+            <div class="kpi-label">Élec.</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="kpi-card kpi-deleted kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-shapes"></i></div>
+              <div class="kpi-value"><%= @non_elec_deleted %></div>
+            </div>
+            <div class="kpi-label">Non élec.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%# Valeur IA %>
+    <div class="col-12 col-md kpi-group kpi-group-ia">
+      <p class="kpi-group-label"><i class="fa-solid fa-robot me-2"></i>Valeur IA</p>
+      <div class="row g-2">
+        <div class="col-6">
+          <div class="kpi-card kpi-ia kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-clock"></i></div>
+              <div class="kpi-value">
+                <%= number_with_precision(@toys_price_pending, precision: 0, delimiter: " ") %>
+                <span class="kpi-unit">€</span>
+              </div>
+            </div>
+            <div class="kpi-label">En attente</div>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="kpi-card kpi-ia kpi-count">
+            <div class="kpi-main">
+              <div class="kpi-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+              <div class="kpi-value">
+                <%= number_with_precision(@toys_price_total, precision: 0, delimiter: " ") %>
+                <span class="kpi-unit">€</span>
+              </div>
+            </div>
+            <div class="kpi-label">Contrôlés</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <%# ── Répartition objets ── %>
@@ -251,37 +299,75 @@
     </div>
   </div>
 
-  <%# ── Top 10 retouches par créateur ── %>
+  <%# ── Top 10 non-conformités ── %>
   <div class="detail-card p-4 mb-4">
     <div class="onb-section-title" style="justify-content:flex-start;" mb-3">
-        <h2><i class="fa-solid fa-triangle-exclamation me-2 text-coral"></i>Top 10 retouches par créateur</h2>
+      <h2><i class="fa-solid fa-triangle-exclamation me-2 text-coral"></i>Non-conformités</h2>
     </div>
 
-    <% if @rework_by_creator.empty? %>
+    <% if @nc_total == 0 %>
       <div class="empty-state">
         <i class="fa-solid fa-inbox"></i>
-        <p>Aucune revalorisation sur cette période.</p>
+        <p>Aucune non-conformité sur cette période.</p>
       </div>
     <% else %>
-      <% max_count = @rework_by_creator.first[:count].to_f %>
-      <div class="rework-chart">
-        <% @rework_by_creator.each do |item| %>
-          <% pct = (item[:count] / max_count * 100).round %>
-          <div class="rework-chart-col">
-            <div class="rework-chart-value"><%= item[:count] %></div>
-            <div class="rework-chart-bar" style="height: <%= pct %>%"></div>
-            <div class="rework-chart-label" title="<%= item[:user]&.email %>">
-              <%= item[:user]&.email&.split('@')&.first || "?" %>
+      <div class="row g-4">
+
+        <%# Graphique 1 — par créateur %>
+        <div class="col-12 col-md-6">
+          <p class="kpi-group-label mb-2"><i class="fa-regular fa-user me-1"></i>Par créateur du jouet</p>
+          <% if @nc_by_creator.empty? %>
+            <p style="color:#9CA3AF; font-size:0.85rem;">Aucun créateur identifié.</p>
+          <% else %>
+            <% max_c = @nc_by_creator.first[:count].to_f %>
+            <div class="rework-chart">
+              <% @nc_by_creator.each do |item| %>
+                <% pct = (item[:count] / max_c * 100).round %>
+                <div class="rework-chart-col">
+                  <div class="rework-chart-value"><%= item[:count] %></div>
+                  <div class="rework-chart-bar" style="height: <%= pct %>%"></div>
+                  <div class="rework-chart-label" title="<%= item[:user]&.email %>">
+                    <%= item[:user]&.email&.split('@')&.first || "?" %>
+                  </div>
+                </div>
+              <% end %>
             </div>
+          <% end %>
+        </div>
+
+        <%# Graphique 2 — par type %>
+        <div class="col-12 col-md-6">
+          <p class="kpi-group-label mb-2"><i class="fa-solid fa-sliders me-1"></i>Par type de correction</p>
+          <% max_t = @nc_by_type.map { |t| t[:count] }.max.to_f %>
+          <% max_t = 1 if max_t == 0 %>
+          <div class="rework-chart">
+            <% @nc_by_type.each do |type| %>
+              <% pct = (type[:count] / max_t * 100).round %>
+              <div class="rework-chart-col">
+                <div class="rework-chart-value"><%= type[:count] %></div>
+                <div class="rework-chart-bar nc-bar-type" style="height: <%= pct %>%"></div>
+                <div class="rework-chart-label">
+                  <i class="fa-solid <%= type[:icon] %>"></i>
+                </div>
+              </div>
+            <% end %>
           </div>
-        <% end %>
+          <div class="nc-type-legend mt-2">
+            <% @nc_by_type.each do |type| %>
+              <span class="nc-type-legend-item">
+                <i class="fa-solid <%= type[:icon] %>"></i> <%= type[:label] %>
+              </span>
+            <% end %>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="rework-chart-footer mt-3">
+        <span class="rework-number"><%= @nc_total %></span>
+        <span class="rework-chart-footer-label">non-conformité<%= @nc_total > 1 ? 's' : '' %> au total sur la période</span>
       </div>
     <% end %>
-
-    <div class="rework-chart-footer mt-3">
-      <span class="rework-number"><%= @review_by_admin %></span>
-      <span class="rework-chart-footer-label">retouche<%= @review_by_admin > 1 ? 's' : '' %> au total sur la période</span>
-    </div>
   </div>
 
   <%# ── Pareto des catégories ── %>
@@ -307,14 +393,14 @@
             <div class="pareto-category">
               <span class="pareto-cat-name"><%= row[:category]&.name || "Catégorie ##{row[:category]&.id}" %></span>
               <div class="pareto-bars">
-                <% w_pct = @pareto_total_weight.positive? ? (row[:weight] / @pareto_total_weight * 100).round : 0 %>
-                <% p_pct = @pareto_total_price.positive?  ? (row[:price]  / @pareto_total_price  * 100).round : 0 %>
+                <% t_pct = @pareto_total_toys.positive?  ? (row[:toys_count] / @pareto_total_toys  * 100).round : 0 %>
+                <% p_pct = @pareto_total_price.positive? ? (row[:price]      / @pareto_total_price * 100).round : 0 %>
                 <div class="mini-bar-row">
-                  <span class="mini-bar-label"><i class="fa-solid fa-weight-hanging"></i></span>
+                  <span class="mini-bar-label"><i class="fa-solid fa-puzzle-piece"></i></span>
                   <div class="mini-bar-wrap">
-                    <div class="mini-bar mini-bar-weight" style="width: <%= w_pct %>%"></div>
+                    <div class="mini-bar mini-bar-weight" style="width: <%= t_pct %>%"></div>
                   </div>
-                  <span class="mini-bar-value"><%= number_with_precision(row[:weight], precision: 1) %> kg · <%= w_pct %>%</span>
+                  <span class="mini-bar-value"><%= row[:toys_count].to_i %> jouets · <%= t_pct %>%</span>
                 </div>
                 <div class="mini-bar-row">
                   <span class="mini-bar-label"><i class="fa-solid fa-robot"></i></span>

@@ -20,29 +20,40 @@
     </div>
   </div>
 
-  <div class="mb-4">
+  <div class="mb-3">
+    <% cat_scope = params[:category_id].present? ? Toy.where(category_id: params[:category_id]) : Toy %>
     <div class="filter-tabs filter-tabs-toys">
-      <%= link_to toys_path,
+      <%= link_to toys_path(category_id: params[:category_id]),
             class: "filter-tab filter-tab-waiting filter-tab-full #{'active' if params[:filter].blank? || params[:filter] == 'waiting'}" do %>
         <i class="fa-solid fa-hourglass-half"></i>
         Attente
-        <span class="filter-count"><%= Toy.waiting.count %></span>
+        <span class="filter-count"><%= cat_scope.waiting.count %></span>
       <% end %>
       <div class="filter-tabs-sub-row">
-        <%= link_to toys_path(filter: "validated"),
+        <%= link_to toys_path(filter: "validated", category_id: params[:category_id]),
               class: "filter-tab filter-tab-validated #{'active' if params[:filter] == 'validated'}" do %>
           <i class="fa-solid fa-store"></i>
           Prêts
-          <span class="filter-count"><%= Toy.validated.count %></span>
+          <span class="filter-count"><%= cat_scope.validated.count %></span>
         <% end %>
-        <%= link_to toys_path(filter: "deleted"),
+        <%= link_to toys_path(filter: "deleted", category_id: params[:category_id]),
               class: "filter-tab filter-tab-deleted #{'active' if params[:filter] == 'deleted'}" do %>
           <i class="fa-solid fa-trash-can"></i>
           Jetés
-          <span class="filter-count"><%= Toy.deleted.count %></span>
+          <span class="filter-count"><%= cat_scope.deleted.count %></span>
         <% end %>
       </div>
     </div>
+  </div>
+
+  <div class="mb-4">
+    <%= form_with url: toys_path, method: :get, local: true do |f| %>
+      <%= hidden_field_tag :filter, params[:filter] %>
+      <%= f.select :category_id,
+            options_from_collection_for_select(@categories, :id, :name, params[:category_id]),
+            { include_blank: "Toutes les catégories" },
+            { class: "form-select category-filter-select", onchange: "this.form.requestSubmit()" } %>
+    <% end %>
   </div>
 
   <% if params[:filter] == "deleted" && current_user.admin? && @toys.any? %>

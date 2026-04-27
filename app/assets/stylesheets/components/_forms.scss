@@ -409,3 +409,109 @@
     margin-bottom: 0;
   }
 }
+
+.category-filter-select {
+  border: 2px solid rgba($coral, 0.3);
+  border-radius: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $navy;
+  background-color: white;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+
+  &:focus {
+    border-color: $coral;
+    box-shadow: 0 0 0 3px rgba($coral, 0.15);
+    outline: none;
+  }
+}
+
+// ── Vocal note ────────────────────────────────────────────────────
+
+.vocal-section {
+  background: rgba($coral, 0.04);
+  border: 1.5px solid rgba($coral, 0.2);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+}
+
+.vocal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.4rem;
+}
+
+.vocal-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: $navy;
+}
+
+.vocal-controls {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.vocal-btn {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s, transform 0.1s;
+
+  &.vocal-btn-record {
+    background: rgba($coral, 0.12);
+    color: $coral;
+
+    &:hover { background: rgba($coral, 0.22); }
+
+    &.recording {
+      background: $coral;
+      color: white;
+      animation: pulse-record 1s ease-in-out infinite;
+    }
+  }
+
+  &.vocal-btn-clear {
+    background: rgba($navy, 0.07);
+    color: $navy;
+    &:hover { background: rgba($navy, 0.14); }
+  }
+}
+
+@keyframes pulse-record {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba($coral, 0.4); }
+  50%       { transform: scale(1.08); box-shadow: 0 0 0 6px rgba($coral, 0); }
+}
+
+.vocal-status {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: $coral;
+  min-height: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.vocal-textarea {
+  resize: vertical;
+  font-size: 0.9rem;
+}
+
+.vocal-readonly-box {
+  background: rgba($navy, 0.04);
+  border: 1.5px solid rgba($navy, 0.1);
+  border-radius: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  font-size: 0.9rem;
+  color: $navy;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}

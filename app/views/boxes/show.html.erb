@@ -43,10 +43,10 @@
               <i class="fa-solid fa-tag"></i>
               <span><%= truncate(@box.category.name, length: 20) %></span>
             </div>
-            <% if @box.weight.present? %>
+            <% if @box.nb_toys.present? %>
               <div class="toy-show-info-item">
-                <i class="fa-solid fa-weight-hanging"></i>
-                <span><%= @box.weight %> kg</span>
+                <i class="fa-solid fa-puzzle-piece"></i>
+                <span><%= @box.nb_toys %> jouet<%= 's' if @box.nb_toys > 1 %></span>
               </div>
             <% end %>
             <% if @box.electronic? %>

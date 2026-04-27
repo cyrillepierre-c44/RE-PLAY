@@ -64,6 +64,21 @@
   }
 }
 
+// ── KPI row — 14px entre les 5 familles sur tablette/PC ───────────
+
+#resultats {
+  @media (min-width: 768px) {
+    gap: 14px;
+    margin-left: 0;
+    margin-right: 0;
+
+    > [class*="col-"] {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+}
+
 // ── KPI Cards ──────────────────────────────────────────────────────
 
 .kpi-card {
@@ -104,18 +119,66 @@
     letter-spacing: 0.04em;
   }
 
-  &.kpi-total   { border-color: $sky;    .kpi-icon, .kpi-value { color: $sky; } }
-  &.kpi-admin   { border-color: $purple; .kpi-icon, .kpi-value { color: $purple; } }
-  &.kpi-user    { border-color: $mint;   .kpi-icon, .kpi-value { color: $mint; } }
-  &.kpi-rework  { border-color: $coral;  .kpi-icon, .kpi-value { color: $coral; } }
-  &.kpi-weight  { border-color: $yellow; .kpi-icon, .kpi-value { color: darken($yellow, 20%); } }
-  &.kpi-price   { border-color: $mint;   .kpi-icon, .kpi-value { color: darken($mint, 15%); } }
+  &.kpi-total     { border-color: $sky;        .kpi-icon, .kpi-value { color: $sky; } }
+  &.kpi-admin     { border-color: $purple;     .kpi-icon, .kpi-value { color: $purple; } }
+  &.kpi-user      { border-color: $mint;       .kpi-icon, .kpi-value { color: $mint; } }
+  &.kpi-rework    { border-color: $coral;      .kpi-icon, .kpi-value { color: $coral; } }
+  &.kpi-weight    { border-color: $yellow;     .kpi-icon, .kpi-value { color: darken($yellow, 20%); } }
+  &.kpi-price     { border-color: $mint;       .kpi-icon, .kpi-value { color: darken($mint, 15%); } }
+  &.kpi-waiting   { border-color: $yellow;     .kpi-icon, .kpi-value { color: darken($yellow, 25%); } }
+  &.kpi-validated { border-color: $mint;       .kpi-icon, .kpi-value { color: darken($mint, 15%); } }
+  &.kpi-deleted   { border-color: $danger-red; .kpi-icon, .kpi-value { color: $danger-red; } }
+  &.kpi-boxes     { border-color: $sky;        .kpi-icon, .kpi-value { color: darken($sky, 15%); } }
+  &.kpi-ia        { border-color: $purple;     .kpi-icon, .kpi-value { color: $purple; } }
+
+  &.kpi-count {
+    .kpi-main {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.1rem;
+    }
+    .kpi-icon { font-size: 1rem; opacity: 0.7; }
+    .kpi-value {
+      font-size: 2rem;
+      min-width: 3ch;
+      font-variant-numeric: tabular-nums;
+    }
+  }
 
   .kpi-unit {
     font-size: 1rem;
     font-weight: 600;
     opacity: 0.7;
   }
+}
+
+.kpi-group {
+  display: flex;
+  flex-direction: column;
+  border-radius: $border-radius-xl;
+  padding: 0.75rem;
+  overflow: hidden;
+
+  .row { flex: 1; margin: 0; }
+
+  .kpi-card { height: 100%; }
+
+  &.kpi-group-boxes    { background: rgba($sky, 0.08);         border-top: 3px solid $sky; }
+  &.kpi-group-waiting  { background: rgba($yellow, 0.12);      border-top: 3px solid $yellow; }
+  &.kpi-group-validated{ background: rgba($mint, 0.10);        border-top: 3px solid $mint; }
+  &.kpi-group-deleted  { background: rgba($danger-red, 0.07);  border-top: 3px solid $danger-red; }
+  &.kpi-group-ia       { background: rgba($purple, 0.07);      border-top: 3px solid $purple; }
+}
+
+.kpi-group-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: $navy;
+  margin-bottom: 0.6rem;
+  padding-left: 0.625rem;
+
+  i { color: $coral; }
 }
 
 // ── Split stats ───────────────────────────────────────────────────
@@ -292,6 +355,27 @@
   max-width: 100%;
   width: 100%;
   margin-top: 0.25rem;
+}
+
+.nc-bar-type {
+  background: linear-gradient(to top, $purple, lighten($purple, 20%));
+}
+
+.nc-type-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nc-type-legend-item {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: $gray;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+
+  i { color: $purple; }
 }
 
 // ── Rework analysis ───────────────────────────────────────────────
