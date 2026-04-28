@@ -1,6 +1,6 @@
 class ToysController < ApplicationController
   before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore]
-  before_action :box_find, only: %i[new create]
+  before_action :box_find, only: %i[new create quick_discard]
 
   # SYSTEM_PROMPT = "Tu es un expert en vente de jouet d'occasion reconditionnés issus de dons.
   #   Je travaille pour une entreprise Française, dans la zone euros, qui vend des jouets d'occasion et je souhaiterais
@@ -26,6 +26,16 @@ class ToysController < ApplicationController
   def show
     authorize @toy
     @timeline = Action.where(actionable: @toy).includes(:user).order(created_at: :desc)
+  end
+
+  def quick_discard
+    @toy = Toy.new(box: @box, category: @box.category, status: :suppr,
+                   clean: false, complete: false, playable: false)
+    authorize @toy
+    @toy.save(validate: false)
+    Action.create!(user: current_user, actionable: @toy,
+                   content: "#{current_user.email} a jeté directement le jouet #{@toy.id}")
+    redirect_to box_path(@box), notice: "Jouet jeté.", status: :see_other
   end
 
   def new

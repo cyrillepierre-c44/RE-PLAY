@@ -64,6 +64,14 @@
             <%= link_to new_box_toy_path(@box), class: "toy-show-btn toy-show-btn-verify", title: "Ajouter un jouet" do %>
               <i class="fa-solid fa-plus"></i>
             <% end %>
+            <% unless current_user.admin? %>
+              <%= button_to quick_discard_box_toys_path(@box), method: :post,
+                    class: "toy-show-btn toy-show-btn-delete",
+                    title: "Jouet à jeter directement",
+                    form: { style: "display:inline;" } do %>
+                <i class="fa-solid fa-minus"></i>
+              <% end %>
+            <% end %>
           <% end %>
           <% if policy(@box).edit? %>
             <%= link_to edit_box_path(@box), class: "toy-show-btn toy-show-btn-edit", title: "Modifier" do %>

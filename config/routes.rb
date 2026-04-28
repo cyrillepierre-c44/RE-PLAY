@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   root to: "pages#home"
   
   resources :boxes, only: [:index, :show, :new, :create, :edit, :update] do
-    resources :toys, only: [:new, :create]
+    resources :toys, only: [:new, :create] do
+      collection do
+        post :quick_discard
+      end
+    end
     member do
       patch :toggle_empty
     end

@@ -120,6 +120,15 @@
     </div>
   <% end %>
 
+  <% if @toy.admin_comment.present? %>
+    <div class="mb-3" style="background:#f9f5f0; padding:0.75rem; border-radius:0.375rem; border-left:3px solid #FF6B35;">
+      <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.3rem;">
+        <i class="fa-solid fa-shield-halved me-1" style="color:#FF6B35;"></i>Commentaire admin
+      </div>
+      <div style="font-size:0.9rem; color:#1A2B4A;"><%= @toy.admin_comment %></div>
+    </div>
+  <% end %>
+
   <div class="d-grid">
     <button type="submit" class="btn btn-primary btn-lg">
       <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;"></i>
