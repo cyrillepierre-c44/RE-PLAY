@@ -51,6 +51,10 @@ class ToyPolicy < ApplicationPolicy
     verify?
   end
 
+  def quick_discard?
+    user.present? && !user.admin?
+  end
+
   def purge_deleted?
     user.admin?
   end
