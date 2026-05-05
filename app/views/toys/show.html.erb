@@ -66,9 +66,17 @@
 
         <%# Conditions %>
         <div class="toy-show-conditions mb-2">
-          <div class="toy-show-condition-item <%= @toy.clean? ? 'ok' : 'ko' %>">
-            <i class="fa-solid fa-soap"></i>
-            <span><%= @toy.clean? ? 'Propre' : 'À nettoyer' %></span>
+          <div class="toy-show-condition-item <%= @toy.french? ? 'ok' : 'ko' %>">
+            <i class="fa-solid fa-flag"></i>
+            <span><%= @toy.french? ? 'Français' : 'Pas en français' %></span>
+          </div>
+          <div class="toy-show-condition-item <%= @toy.ce_mark? ? 'ok' : 'ko' %>">
+            <i class="fa-solid fa-certificate"></i>
+            <span><%= @toy.ce_mark? ? 'CE / Marque' : 'Sans CE ni marque' %></span>
+          </div>
+          <div class="toy-show-condition-item <%= @toy.safe? ? 'ok' : 'ko' %>">
+            <i class="fa-solid fa-lock"></i>
+            <span><%= @toy.safe? ? 'Sécurité OK' : 'Sécurité ?' %></span>
           </div>
           <div class="toy-show-condition-item <%= @toy.complete? ? 'ok' : 'ko' %>">
             <i class="fa-solid fa-list-check"></i>
@@ -77,6 +85,10 @@
           <div class="toy-show-condition-item <%= @toy.playable? ? 'ok' : 'ko' %>">
             <i class="fa-solid fa-gamepad"></i>
             <span><%= @toy.playable? ? 'Jouable' : 'Non jouable' %></span>
+          </div>
+          <div class="toy-show-condition-item <%= @toy.clean? ? 'ok' : 'ko' %>">
+            <i class="fa-solid fa-soap"></i>
+            <span><%= @toy.clean? ? 'Propre' : 'À nettoyer' %></span>
           </div>
         </div>
 

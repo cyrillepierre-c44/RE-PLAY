@@ -1,17 +1,17 @@
 class PriceiaJob < ApplicationJob
   queue_as :default
 
-  def perform(toy_id, clean:, complete:, playable:)
+  def perform(toy_id, french:, ce_mark:, safe:, clean:, complete:, playable:)
     toy = Toy.find(toy_id)
 
     chat = RubyLLM.chat(model: "gpt-4o")
-    response = chat.ask(system_prompt(clean, complete, playable, toy.operator_note), with: { image: toy.photo.url })
+    response = chat.ask(system_prompt(french, ce_mark, safe, clean, complete, playable, toy.operator_note), with: { image: toy.photo.url })
     toy.update(price: response.content.to_i)
   end
 
   private
 
-  def system_prompt(clean, complete, playable, operator_note = nil)
+  def system_prompt(french, ce_mark, safe, clean, complete, playable, operator_note = nil)
     note_part = operator_note.present? ? "\n    L'opérateur a également laissé cette observation : \"#{operator_note}\"." : ""
 
     "Tu es un expert en vente de jouet d'occasion reconditionnés par des ateliers francais.
@@ -20,9 +20,12 @@ class PriceiaJob < ApplicationJob
     pour le même jouet ou des jouets similaires qui lui ressemble.
     Peux-tu m'aider à trouver le prix de vente de ce jouet d'occasion en te basant aussi sur
     l'état decrit ci-apres: Le jouet est
+    #{french ? 'en français' : 'pas en français'},
+    #{ce_mark ? 'avec marquage CE ou marque connue' : 'sans marquage CE ni marque connue'},
+    #{safe ? 'sécurité OK' : 'sécurité non vérifiée'},
     #{clean ? 'propre' : 'sale'},
     #{complete ? 'complet' : 'incomplet'} et
-    #{playable ? 'fonctionnel' : 'non fonctionnel'}.#{note_part}
+    #{playable ? 'jouable même incomplet' : 'non jouable'}.#{note_part}
     Merci de me faire une réponse en chiffres uniquement et sans lettres ni unité d'argent avec la valeur
     moyenne seulement. Par exemple : 10"
   end

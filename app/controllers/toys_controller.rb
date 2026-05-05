@@ -30,6 +30,7 @@ class ToysController < ApplicationController
 
   def quick_discard
     @toy = Toy.new(box: @box, category: @box.category, status: :suppr,
+                   french: false, ce_mark: false, safe: false,
                    clean: false, complete: false, playable: false)
     authorize @toy
     @toy.save(validate: false)
@@ -53,7 +54,7 @@ class ToysController < ApplicationController
     @toy.box = @box
 
     if @toy.save
-      PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
+      PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a créé le jouet #{@toy.id}")
       redirect_to box_path(@box), notice: "Jouet créé avec succès.", status: :see_other
     else
@@ -69,7 +70,7 @@ class ToysController < ApplicationController
   def update
     authorize @toy
     if @toy.update(toy_params.merge(price: nil))
-      PriceiaJob.perform_later(@toy.id, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
+      PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} a modifié le jouet n#{@toy.id}")
       if params[:from_new] == "1"
@@ -143,7 +144,10 @@ class ToysController < ApplicationController
 
   def log_nonconformities
     nc_map = {
-      clean:       "NC:propre",
+      french:      "NC:français",
+      ce_mark:     "NC:CE/marque",
+      safe:        "NC:sécurité",
+      clean:       "NC:propreté",
       complete:    "NC:complet",
       playable:    "NC:jouable",
       category_id: "NC:catégorie"
@@ -164,12 +168,12 @@ class ToysController < ApplicationController
   end
 
   def toy_params
-    permitted = params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :location, :status, :operator_note)
+    permitted = params.require(:toy).permit(:category_id, :french, :ce_mark, :safe, :clean, :barcode, :complete, :playable, :photo, :location, :status, :operator_note)
     current_user.admin? ? permitted.except(:operator_note) : permitted
   end
 
   def verify_params
-    params.require(:toy).permit(:category_id, :clean, :barcode, :complete, :playable, :photo, :price, :location,
+    params.require(:toy).permit(:category_id, :french, :ce_mark, :safe, :clean, :barcode, :complete, :playable, :photo, :price, :location,
                                 :status, :admin_comment)
   end
 end
