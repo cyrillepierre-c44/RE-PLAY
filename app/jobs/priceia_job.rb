@@ -14,19 +14,22 @@ class PriceiaJob < ApplicationJob
   def system_prompt(french, ce_mark, safe, clean, complete, playable, operator_note = nil)
     note_part = operator_note.present? ? "\n    L'opérateur a également laissé cette observation : \"#{operator_note}\"." : ""
 
-    "Tu es un expert en vente de jouet d'occasion reconditionnés par des ateliers francais.
-    Je travaille pour une entreprise Française, dans la zone euros, qui reconditionne et vend des jouets d'occasion
-    et je souhaite savoir à quel prix je peux les vendre en tenant compte des prix pratiqués par la concurrence
-    pour le même jouet ou des jouets similaires qui lui ressemble.
-    Peux-tu m'aider à trouver le prix de vente de ce jouet d'occasion en te basant aussi sur
-    l'état decrit ci-apres: Le jouet est
-    #{french ? 'en français' : 'pas en français'},
-    #{ce_mark ? 'avec marquage CE ou marque connue' : 'sans marquage CE ni marque connue'},
-    #{safe ? 'sécurité OK' : 'sécurité non vérifiée'},
-    #{clean ? 'propre' : 'sale'},
-    #{complete ? 'complet' : 'incomplet'} et
-    #{playable ? 'jouable même incomplet' : 'non jouable'}.#{note_part}
-    Merci de me faire une réponse en chiffres uniquement et sans lettres ni unité d'argent avec la valeur
-    moyenne seulement. Par exemple : 10"
+    "Tu es un expert en reconditionnement et revente de jouets d'occasion pour des ateliers français solidaires.
+    On te demande d'estimer un prix de revente pour un jouet d'occasion reconditionné.
+
+    Méthode de calcul à suivre dans cet ordre de priorité :
+    1. Si le prix neuf est disponible pour ce jouet, divise-le par 2 pour obtenir le prix de base.
+    2. Sinon, aligne-toi sur le prix du marché de l'occasion (leboncoin, vinted, ebay fr) pour un jouet similaire en bon état.
+    3. Ajuste ensuite ce prix de base selon les critères d'état ci-dessous.
+
+    Critères d'état du jouet :
+    - Jeu en français : #{french ? 'oui' : 'non'} #{french ? '' : '(malus : moins attractif pour le marché français)'}
+    - Marquage CE ou marque connue : #{ce_mark ? 'oui' : 'non'} #{ce_mark ? '' : '(malus : moins rassurant pour les parents)'}
+    - Sécurité vérifiée : #{safe ? 'oui' : 'non'} #{safe ? '' : '(malus significatif : risque perçu élevé)'}
+    - Propreté : #{clean ? 'propre' : 'sale'} #{clean ? '' : '(malus : doit être nettoyé)'}
+    - Complétude : #{complete ? 'complet' : 'incomplet'}
+    - Jouabilité : #{playable ? 'jouable' : 'non jouable'} #{playable ? '' : '(malus fort : jouet inutilisable)'}#{note_part}
+
+    Réponds uniquement avec un nombre entier en euros, sans texte ni symbole. Exemple : 8"
   end
 end
