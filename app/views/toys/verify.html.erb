@@ -37,11 +37,25 @@
 
         <%# Conditions toggle %>
         <div class="verify-conditions mb-3">
-          <input type="hidden" name="toy[clean]" value="0">
-          <input type="checkbox" name="toy[clean]" value="1" id="toggle-clean" class="condition-toggle-input" <%= 'checked' if @toy.clean? %>>
-          <label for="toggle-clean" class="condition-toggle-label">
-            <i class="fa-solid fa-soap"></i>
-            <span>Propre</span>
+          <input type="hidden" name="toy[french]" value="0">
+          <input type="checkbox" name="toy[french]" value="1" id="toggle-french" class="condition-toggle-input" <%= 'checked' if @toy.french? %>>
+          <label for="toggle-french" class="condition-toggle-label">
+            <i class="fa-solid fa-flag"></i>
+            <span>Français</span>
+          </label>
+
+          <input type="hidden" name="toy[ce_mark]" value="0">
+          <input type="checkbox" name="toy[ce_mark]" value="1" id="toggle-ce-mark" class="condition-toggle-input" <%= 'checked' if @toy.ce_mark? %>>
+          <label for="toggle-ce-mark" class="condition-toggle-label">
+            <i class="fa-solid fa-certificate"></i>
+            <span>CE / Marque</span>
+          </label>
+
+          <input type="hidden" name="toy[safe]" value="0">
+          <input type="checkbox" name="toy[safe]" value="1" id="toggle-safe" class="condition-toggle-input" <%= 'checked' if @toy.safe? %>>
+          <label for="toggle-safe" class="condition-toggle-label">
+            <i class="fa-solid fa-lock"></i>
+            <span>Sécurité</span>
           </label>
 
           <input type="hidden" name="toy[complete]" value="0">
@@ -56,6 +70,13 @@
           <label for="toggle-playable" class="condition-toggle-label">
             <i class="fa-solid fa-gamepad"></i>
             <span>Jouable</span>
+          </label>
+
+          <input type="hidden" name="toy[clean]" value="0">
+          <input type="checkbox" name="toy[clean]" value="1" id="toggle-clean" class="condition-toggle-input" <%= 'checked' if @toy.clean? %>>
+          <label for="toggle-clean" class="condition-toggle-label">
+            <i class="fa-solid fa-soap"></i>
+            <span>Propre</span>
           </label>
         </div>
 

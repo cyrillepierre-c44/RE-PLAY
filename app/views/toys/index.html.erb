@@ -117,14 +117,23 @@
               <div class="toy-card-meta">
                 <span class="toy-card-category"><i class="fa-solid fa-layer-group me-1"></i><%= truncate(toy.category.name, length: 20) %></span>
                 <div class="toy-card-conditions">
-                  <span class="condition-icon <%= toy.clean? ? 'ok' : 'ko' %>" title="<%= toy.clean? ? 'Propre' : 'Pas propre' %>">
-                    <i class="fa-solid fa-soap"></i>
+                  <span class="condition-icon <%= toy.french? ? 'ok' : 'ko' %>" title="<%= toy.french? ? 'Français' : 'Pas en français' %>">
+                    <i class="fa-solid fa-flag"></i>
+                  </span>
+                  <span class="condition-icon <%= toy.ce_mark? ? 'ok' : 'ko' %>" title="<%= toy.ce_mark? ? 'CE / Marque connue' : 'Sans CE ni marque' %>">
+                    <i class="fa-solid fa-certificate"></i>
+                  </span>
+                  <span class="condition-icon <%= toy.safe? ? 'ok' : 'ko' %>" title="<%= toy.safe? ? 'Sécurité OK' : 'Sécurité non vérifiée' %>">
+                    <i class="fa-solid fa-lock"></i>
                   </span>
                   <span class="condition-icon <%= toy.complete? ? 'ok' : 'ko' %>" title="<%= toy.complete? ? 'Complet' : 'Incomplet' %>">
                     <i class="fa-solid fa-list-check"></i>
                   </span>
                   <span class="condition-icon <%= toy.playable? ? 'ok' : 'ko' %>" title="<%= toy.playable? ? 'Jouable' : 'Non jouable' %>">
                     <i class="fa-solid fa-gamepad"></i>
+                  </span>
+                  <span class="condition-icon <%= toy.clean? ? 'ok' : 'ko' %>" title="<%= toy.clean? ? 'Propre' : 'Pas propre' %>">
+                    <i class="fa-solid fa-soap"></i>
                   </span>
                 </div>
               </div>

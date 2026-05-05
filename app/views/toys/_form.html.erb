@@ -69,9 +69,17 @@
 
   <%# État %>
   <div class="verify-conditions mb-2">
-    <%= f.check_box :clean, class: "condition-toggle-input", id: "toy_clean" %>
-    <%= f.label :clean, class: "condition-toggle-label", for: "toy_clean" do %>
-      <i class="fa-solid fa-soap"></i><span>Propre</span>
+    <%= f.check_box :french, class: "condition-toggle-input", id: "toy_french" %>
+    <%= f.label :french, class: "condition-toggle-label", for: "toy_french" do %>
+      <i class="fa-solid fa-flag"></i><span>Français</span>
+    <% end %>
+    <%= f.check_box :ce_mark, class: "condition-toggle-input", id: "toy_ce_mark" %>
+    <%= f.label :ce_mark, class: "condition-toggle-label", for: "toy_ce_mark" do %>
+      <i class="fa-solid fa-certificate"></i><span>CE / Marque</span>
+    <% end %>
+    <%= f.check_box :safe, class: "condition-toggle-input", id: "toy_safe" %>
+    <%= f.label :safe, class: "condition-toggle-label", for: "toy_safe" do %>
+      <i class="fa-solid fa-lock"></i><span>Sécurité</span>
     <% end %>
     <%= f.check_box :complete, class: "condition-toggle-input", id: "toy_complete" %>
     <%= f.label :complete, class: "condition-toggle-label", for: "toy_complete" do %>
@@ -80,6 +88,10 @@
     <%= f.check_box :playable, class: "condition-toggle-input", id: "toy_playable" %>
     <%= f.label :playable, class: "condition-toggle-label", for: "toy_playable" do %>
       <i class="fa-solid fa-gamepad"></i><span>Jouable</span>
+    <% end %>
+    <%= f.check_box :clean, class: "condition-toggle-input", id: "toy_clean" %>
+    <%= f.label :clean, class: "condition-toggle-label", for: "toy_clean" do %>
+      <i class="fa-solid fa-soap"></i><span>Propre</span>
     <% end %>
   </div>
 
