@@ -79,10 +79,11 @@
             <% end %>
           <% end %>
           <% if policy(@box).destroy? && !@box.suppr? %>
-            <%= link_to box_path(@box),
+            <%= button_to box_path(@box),
+                  method: :delete,
                   class: "toy-show-btn toy-show-btn-delete",
                   title: "Supprimer",
-                  data: { turbo_method: :delete, turbo_confirm: "Supprimer cette boîte ?" } do %>
+                  form: { style: "display:inline;", data: { turbo_confirm: "Supprimer cette boîte ? Cette action est irréversible." } } do %>
               <i class="fa-solid fa-trash"></i>
             <% end %>
           <% end %>
@@ -101,7 +102,7 @@
 
       <% unless @box.toys.empty? %>
         <div class="row g-3">
-          <% @box.toys.order(created_at: :desc).each do |toy| %>
+          <% @box.toys.where.not(status: :suppr).order(created_at: :desc).each do |toy| %>
             <div class="col-12 col-sm-6 col-xl-4">
               <%= link_to toy_path(toy), class: "toy-card d-block text-decoration-none" do %>
                 <div class="toy-card-photo-wrap">

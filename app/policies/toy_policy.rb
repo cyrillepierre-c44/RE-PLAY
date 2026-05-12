@@ -7,7 +7,11 @@ class ToyPolicy < ApplicationPolicy
 
   class Scope < ApplicationPolicy::Scope
     def resolve
-      scope.all
+      if user.admin?
+        scope.all
+      else
+        scope.where(id: Action.where(actionable_type: "Toy", user: user).select(:actionable_id))
+      end
     end
   end
 
@@ -16,7 +20,7 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    user.admin? || record.actions.where(user: user).any?
   end
 
   def new?
@@ -32,11 +36,11 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || record.actions.where(user: user).any?
+    record.actions.where(user: user).any?
   end
 
   def destroy?
-    user.admin? || record.actions.where(user: user).any?
+    record.actions.where(user: user).any?
   end
 
   def restore?

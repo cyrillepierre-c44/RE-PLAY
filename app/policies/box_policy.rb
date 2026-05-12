@@ -36,7 +36,7 @@ class BoxPolicy < ApplicationPolicy
   end
 
   def destroy?
-    user.admin?
+    user.admin? || record.actions.where(user: user).any?
   end
 
   def toggle_empty?

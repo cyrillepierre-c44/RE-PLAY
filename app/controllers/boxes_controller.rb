@@ -56,6 +56,10 @@ class BoxesController < ApplicationController
 
   def destroy
     authorize @box
+    if @box.toys.where.not(status: :suppr).any?
+      redirect_to box_path(@box), alert: "Impossible de supprimer une boîte qui contient encore des jouets."
+      return
+    end
     if @box.update(status: :suppr)
       Action.create!(
         user: current_user,
