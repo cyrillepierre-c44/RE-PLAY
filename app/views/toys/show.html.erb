@@ -127,10 +127,11 @@
               <% end %>
             <% end %>
             <% if policy(@toy).destroy? %>
-              <%= link_to toy_path(@toy),
+              <%= button_to toy_path(@toy),
+                    method: :delete,
                     class: "toy-show-btn toy-show-btn-delete",
                     title: "Supprimer",
-                    data: { turbo_method: :delete, turbo_confirm: "Supprimer ce jouet ?" } do %>
+                    form: { style: "display:inline;", data: { turbo_confirm: "Supprimer ce jouet ? Cette action est irréversible." } } do %>
                 <i class="fa-solid fa-trash"></i>
               <% end %>
             <% end %>
