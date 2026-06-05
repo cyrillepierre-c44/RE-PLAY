@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static values = { id: Number, actif: Boolean }
+  static values = { id: Number, actif: Boolean, module: String, numero: Number }
   static targets = ["switchLabel", "bar", "pctInput"]
 
   toggle(event) {
@@ -11,6 +11,9 @@ export default class extends Controller {
       this.switchLabelTarget.textContent = this.actifValue ? "Inclus" : "Exclu"
     }
     this._save({ actif: this.actifValue })
+    window.dispatchEvent(new CustomEvent("levier:toggled", {
+      detail: { module: this.moduleValue, numero: this.numeroValue, actif: this.actifValue }
+    }))
   }
 
   setProgression(event) {
