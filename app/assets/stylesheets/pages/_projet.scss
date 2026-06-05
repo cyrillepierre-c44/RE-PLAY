@@ -273,6 +273,111 @@
         line-height: 1.5;
         &::before { content: "→"; position: absolute; left: 0; color: #c9a84c; font-size: 9px; }
       }
+
+      // ── Tracking row (toggle + progress bar + %)
+      .levier-track {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 8px;
+        padding-top: 7px;
+        border-top: 1px solid #e0e0e0;
+      }
+
+      // Toggle switch
+      .levier-switch {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+        flex-shrink: 0;
+
+        input[type="checkbox"] { display: none; }
+
+        .levier-switch-track {
+          width: 34px;
+          height: 18px;
+          background: #ccc;
+          border-radius: 9px;
+          position: relative;
+          transition: background 0.2s;
+
+          .levier-switch-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            transition: left 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+          }
+        }
+
+        input:checked ~ .levier-switch-track {
+          background: #c9a84c;
+          .levier-switch-thumb { left: 18px; }
+        }
+
+        .levier-switch-text {
+          font-size: 9px;
+          font-weight: 600;
+          color: #777;
+          min-width: 32px;
+        }
+
+        input:checked ~ .levier-switch-text { color: #c9a84c; }
+      }
+
+      // Progress bar
+      .levier-bar-outer {
+        flex: 1;
+        height: 8px;
+        background: #e0e0e0;
+        border-radius: 4px;
+        overflow: hidden;
+
+        .levier-bar-inner {
+          height: 100%;
+          background: linear-gradient(90deg, #c9a84c, #e8c96c);
+          border-radius: 4px;
+          transition: width 0.3s ease;
+          min-width: 0;
+        }
+      }
+
+      // Percentage input
+      .levier-pct {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        flex-shrink: 0;
+
+        .levier-pct-input {
+          width: 38px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-size: 9px;
+          padding: 2px 4px;
+          text-align: right;
+          outline: none;
+          &:focus { border-color: #c9a84c; }
+        }
+
+        span { font-size: 9px; color: #777; }
+      }
+    }
+
+    // Inactive levier
+    .levier--off {
+      opacity: 0.4;
+      border-left-color: #bbb;
+
+      .levier-num { background: #aaa; }
+      .levier-tag { background: #aaa; }
+      .levier-sub { color: #aaa; }
     }
   }
 
@@ -465,6 +570,7 @@ body.paper-mode .projet-devis-wrapper {
   .levier-tag { background: #444; color: #ccc; }
   .levier-sub { color: #444; }
   .levier ul li::before { color: #444; }
+  .levier-track { display: none; }
 
   .recap-table th { background: #333; }
   .recap-table .total-row td { background: #555; color: white; }
@@ -511,6 +617,10 @@ body.paper-mode .projet-devis-wrapper {
     page-break-after: auto;
     break-after: auto;
   }
+
+  // Masquer les contrôles de suivi et les leviers exclus à l'impression
+  .levier-track { display: none !important; }
+  .levier--off  { display: none !important; }
 
   // ── Compactage print — récupère ~40 px sur les pages denses (p.2 et p.3)
   // sans toucher au contenu ni aux tailles de texte visibles.

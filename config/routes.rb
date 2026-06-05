@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   get "dashboard/export_csv", to: "pages#export_csv", as: :dashboard_export_csv
   get "dashboard", to: "pages#dashboard"
   get "projet", to: "pages#projet"
+  resources :projet_leviers, only: [:update]
 
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker

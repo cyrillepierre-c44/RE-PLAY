@@ -50,7 +50,7 @@
       <div class="header-right">
         <div class="devis-num">Devis N° 2026-RPV2-01</div>
         <div>Client : Enjoué</div>
-        <div>Date : 2026</div>
+        <div>Date : Juin 2026</div>
       </div>
     </div>
 
@@ -154,7 +154,11 @@
     <p style="font-size:9px; color:#555; margin-bottom:10px;">Maîtriser les flux entrants, sécuriser la réception et structurer le tri — étape la plus critique et complexe de l'atelier.</p>
 
     <div class="leviers">
-      <div class="levier">
+      <% lev = @leviers[['A', 1]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">1</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -168,9 +172,14 @@
             <li>Identification des gaspillages et points de blocage</li>
             <li>Chronométrage et mesure de la charge de travail réelle</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 2]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">2</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -183,9 +192,14 @@
             <li>Standardisation des postes de tri</li>
             <li>Réduction de la pénibilité physique</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 3]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">3</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -198,9 +212,14 @@
             <li>Intégration de l'IA de reconnaissance visuelle des jouets</li>
             <li>Zéro saisie manuelle sur les flux entrants</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 4]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">4</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -213,9 +232,14 @@
             <li>Procédures de réception et contrôle qualité</li>
             <li>Fiches réflexe pour les salariés en insertion</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 5]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">5</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -228,6 +252,7 @@
             <li>Transfert de compétences aux encadrants (12h)</li>
             <li>Prise en main des outils IoT et IA (10h)</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
     </div>
@@ -279,7 +304,11 @@
     <p style="font-size:9px; color:#555; margin-bottom:10px;">Structurer et piloter la performance de la valorisation, implémenter le vrac et développer l'autonomie des équipes via la donnée et les indicateurs.</p>
 
     <div class="leviers">
-      <div class="levier">
+      <% lev = @leviers[['B', 1]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">1</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -292,9 +321,14 @@
             <li>Diagnostic de la productivité par poste</li>
             <li>Identification des gaspillages et opportunités d'amélioration</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 2]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">2</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -307,9 +341,14 @@
             <li>Structuration des zones de valorisation</li>
             <li>Définition des standards de performance par poste</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 3]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">3</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -322,9 +361,14 @@
             <li>Mise en place de tableaux de bord de pilotage de la performance</li>
             <li>Indicateurs temps réel du tri à la valorisation finale</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 4]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">4</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -337,9 +381,14 @@
             <li>Procédures vrac et gestion des flux associés</li>
             <li>Standards de management visuel et de performance</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 5]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">5</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -352,6 +401,7 @@
             <li>Formation aux outils digitaux et tableaux de bord (12h)</li>
             <li>Analyse d'indicateurs et posture de résolution de problèmes (8h)</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
     </div>
@@ -403,7 +453,11 @@
     <p style="font-size:9px; color:#555; margin-bottom:10px;">Fiabiliser la gestion des stocks de produits finis, remplacer GDR par une solution adaptée et connecter l'atelier aux outils et logiciels de ses partenaires clients.</p>
 
     <div class="leviers">
-      <div class="levier">
+      <% lev = @leviers[['C', 1]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">1</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -416,9 +470,14 @@
             <li>Audit de l'existant GDR : données, usages, points de douleur</li>
             <li>Analyse des besoins de connexion avec les partenaires clients</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 2]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">2</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -431,9 +490,14 @@
             <li>Organisation des zones de picking et d'expédition</li>
             <li>Procédures d'inventaire tournant</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 3]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">3</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -446,9 +510,14 @@
             <li>Connexion aux API et logiciels clients pour synchronisation automatique</li>
             <li>Exploration de l'IA pour la prévision des stocks</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 4]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">4</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -461,9 +530,14 @@
             <li>Guide d'utilisation du nouveau système d'information</li>
             <li>Procédures de synchronisation et échanges de données clients</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 5]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>">
         <div class="levier-num">5</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -476,6 +550,7 @@
             <li>Formation aux connexions API et interfaces clients (6h)</li>
             <li>Préparation à la sortie &amp; Passeport Compétences salariés (6h)</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
     </div>

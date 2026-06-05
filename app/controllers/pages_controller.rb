@@ -70,6 +70,15 @@ class PagesController < ApplicationController
 
   def projet
     authorize :page, :projet?
+    @leviers = ProjetLevier.all.index_by { |l| [l.module_code, l.numero] }
+    %w[A B C].each do |mod|
+      (1..5).each do |num|
+        unless @leviers[[mod, num]]
+          lev = ProjetLevier.create!(module_code: mod, numero: num)
+          @leviers[[mod, num]] = lev
+        end
+      end
+    end
   end
 
   def dashboard

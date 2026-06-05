@@ -1,0 +1,24 @@
+<div class="levier-track">
+  <label class="levier-switch">
+    <input type="checkbox" <%= 'checked' if lev&.actif %>
+           data-action="change->levier-tracker#toggle">
+    <span class="levier-switch-track">
+      <span class="levier-switch-thumb"></span>
+    </span>
+    <span class="levier-switch-text" data-levier-tracker-target="switchLabel">
+      <%= lev&.actif ? 'Inclus' : 'Exclu' %>
+    </span>
+  </label>
+  <div class="levier-bar-outer">
+    <div class="levier-bar-inner"
+         data-levier-tracker-target="bar"
+         style="width:<%= lev&.progression || 0 %>%"></div>
+  </div>
+  <label class="levier-pct">
+    <input type="number" min="0" max="100" value="<%= lev&.progression || 0 %>"
+           class="levier-pct-input"
+           data-levier-tracker-target="pctInput"
+           data-action="input->levier-tracker#setProgression">
+    <span>%</span>
+  </label>
+</div>
