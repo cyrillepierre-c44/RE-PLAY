@@ -50,7 +50,7 @@
       <div class="header-right">
         <div class="devis-num">Devis N° 2026-RPV2-01</div>
         <div>Client : Enjoué</div>
-        <div>Date : 2026</div>
+        <div>Date : Juin 2026</div>
       </div>
     </div>
 
@@ -154,7 +154,13 @@
     <p style="font-size:9px; color:#555; margin-bottom:10px;">Maîtriser les flux entrants, sécuriser la réception et structurer le tri — étape la plus critique et complexe de l'atelier.</p>
 
     <div class="leviers">
-      <div class="levier">
+      <% lev = @leviers[['A', 1]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="A"
+           data-levier-tracker-numero-value="1">
         <div class="levier-num">1</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -168,9 +174,16 @@
             <li>Identification des gaspillages et points de blocage</li>
             <li>Chronométrage et mesure de la charge de travail réelle</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 2]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="A"
+           data-levier-tracker-numero-value="2">
         <div class="levier-num">2</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -183,9 +196,16 @@
             <li>Standardisation des postes de tri</li>
             <li>Réduction de la pénibilité physique</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 3]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="A"
+           data-levier-tracker-numero-value="3">
         <div class="levier-num">3</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -198,9 +218,16 @@
             <li>Intégration de l'IA de reconnaissance visuelle des jouets</li>
             <li>Zéro saisie manuelle sur les flux entrants</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 4]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="A"
+           data-levier-tracker-numero-value="4">
         <div class="levier-num">4</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -213,9 +240,16 @@
             <li>Procédures de réception et contrôle qualité</li>
             <li>Fiches réflexe pour les salariés en insertion</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['A', 5]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="A"
+           data-levier-tracker-numero-value="5">
         <div class="levier-num">5</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -228,21 +262,27 @@
             <li>Transfert de compétences aux encadrants (12h)</li>
             <li>Prise en main des outils IoT et IA (10h)</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
     </div>
 
-    <table class="recap-table">
+    <%
+      _a = [[1,20,1800],[2,25,2250],[3,45,4050],[4,25,2250],[5,43,3870]]
+      _a_h = _a.sum { |n,h,_b| @leviers[['A',n]]&.actif ? h : 0 }
+      _a_b = _a.sum { |n,_h,b| @leviers[['A',n]]&.actif ? b : 0 }
+    %>
+    <table class="recap-table" data-controller="recap" data-recap-module-value="A">
       <thead>
         <tr><th>Levier</th><th>Heures</th><th>Budget HT</th></tr>
       </thead>
       <tbody>
-        <tr><td>1. Analyse des flux et opérations</td><td>20h</td><td>1 800 €</td></tr>
-        <tr><td>2. Organisation</td><td>25h</td><td>2 250 €</td></tr>
-        <tr><td>3. Digitalisation (IoT + IA reconnaissance)</td><td>45h</td><td>4 050 €</td></tr>
-        <tr><td>4. Écriture des procédures</td><td>25h</td><td>2 250 €</td></tr>
-        <tr><td>5. Formation</td><td>43h</td><td>3 870 €</td></tr>
-        <tr class="total-row"><td>TOTAL MODULE A</td><td>158h</td><td>14 220 € HT</td></tr>
+        <tr data-recap-target="row" data-levier-num="1" data-hours="20" data-budget="1800"<% unless @leviers[['A',1]]&.actif %> style="display:none"<% end %>><td>1. Analyse des flux et opérations</td><td>20h</td><td>1 800 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="2" data-hours="25" data-budget="2250"<% unless @leviers[['A',2]]&.actif %> style="display:none"<% end %>><td>2. Organisation</td><td>25h</td><td>2 250 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="3" data-hours="45" data-budget="4050"<% unless @leviers[['A',3]]&.actif %> style="display:none"<% end %>><td>3. Digitalisation (IoT + IA reconnaissance)</td><td>45h</td><td>4 050 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="4" data-hours="25" data-budget="2250"<% unless @leviers[['A',4]]&.actif %> style="display:none"<% end %>><td>4. Écriture des procédures</td><td>25h</td><td>2 250 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="5" data-hours="43" data-budget="3870"<% unless @leviers[['A',5]]&.actif %> style="display:none"<% end %>><td>5. Formation</td><td>43h</td><td>3 870 €</td></tr>
+        <tr class="total-row"><td>TOTAL MODULE A</td><td data-recap-target="totalHours"><%= _a_h %>h</td><td data-recap-target="totalBudget"><%= _a_b.to_s.reverse.gsub(/(\d{3})(?=\d)/,'\1 ').reverse %> € HT</td></tr>
       </tbody>
     </table>
 
@@ -279,7 +319,13 @@
     <p style="font-size:9px; color:#555; margin-bottom:10px;">Structurer et piloter la performance de la valorisation, implémenter le vrac et développer l'autonomie des équipes via la donnée et les indicateurs.</p>
 
     <div class="leviers">
-      <div class="levier">
+      <% lev = @leviers[['B', 1]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="B"
+           data-levier-tracker-numero-value="1">
         <div class="levier-num">1</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -292,9 +338,16 @@
             <li>Diagnostic de la productivité par poste</li>
             <li>Identification des gaspillages et opportunités d'amélioration</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 2]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="B"
+           data-levier-tracker-numero-value="2">
         <div class="levier-num">2</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -307,9 +360,16 @@
             <li>Structuration des zones de valorisation</li>
             <li>Définition des standards de performance par poste</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 3]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="B"
+           data-levier-tracker-numero-value="3">
         <div class="levier-num">3</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -322,9 +382,16 @@
             <li>Mise en place de tableaux de bord de pilotage de la performance</li>
             <li>Indicateurs temps réel du tri à la valorisation finale</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 4]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="B"
+           data-levier-tracker-numero-value="4">
         <div class="levier-num">4</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -337,9 +404,16 @@
             <li>Procédures vrac et gestion des flux associés</li>
             <li>Standards de management visuel et de performance</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['B', 5]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="B"
+           data-levier-tracker-numero-value="5">
         <div class="levier-num">5</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -352,21 +426,27 @@
             <li>Formation aux outils digitaux et tableaux de bord (12h)</li>
             <li>Analyse d'indicateurs et posture de résolution de problèmes (8h)</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
     </div>
 
-    <table class="recap-table">
+    <%
+      _b = [[1,25,2250],[2,35,3150],[3,55,4950],[4,38,3420],[5,40,3600]]
+      _b_h = _b.sum { |n,h,_b| @leviers[['B',n]]&.actif ? h : 0 }
+      _b_b = _b.sum { |n,_h,b| @leviers[['B',n]]&.actif ? b : 0 }
+    %>
+    <table class="recap-table" data-controller="recap" data-recap-module-value="B">
       <thead>
         <tr><th>Levier</th><th>Heures</th><th>Budget HT</th></tr>
       </thead>
       <tbody>
-        <tr><td>1. Analyse des flux et opérations</td><td>25h</td><td>2 250 €</td></tr>
-        <tr><td>2. Organisation</td><td>35h</td><td>3 150 €</td></tr>
-        <tr><td>3. Digitalisation (IA tarification + tableaux de bord)</td><td>55h</td><td>4 950 €</td></tr>
-        <tr><td>4. Écriture des procédures</td><td>38h</td><td>3 420 €</td></tr>
-        <tr><td>5. Formation</td><td>40h</td><td>3 600 €</td></tr>
-        <tr class="total-row"><td>TOTAL MODULE B</td><td>193h</td><td>17 370 € HT</td></tr>
+        <tr data-recap-target="row" data-levier-num="1" data-hours="25" data-budget="2250"<% unless @leviers[['B',1]]&.actif %> style="display:none"<% end %>><td>1. Analyse des flux et opérations</td><td>25h</td><td>2 250 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="2" data-hours="35" data-budget="3150"<% unless @leviers[['B',2]]&.actif %> style="display:none"<% end %>><td>2. Organisation</td><td>35h</td><td>3 150 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="3" data-hours="55" data-budget="4950"<% unless @leviers[['B',3]]&.actif %> style="display:none"<% end %>><td>3. Digitalisation (IA tarification + tableaux de bord)</td><td>55h</td><td>4 950 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="4" data-hours="38" data-budget="3420"<% unless @leviers[['B',4]]&.actif %> style="display:none"<% end %>><td>4. Écriture des procédures</td><td>38h</td><td>3 420 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="5" data-hours="40" data-budget="3600"<% unless @leviers[['B',5]]&.actif %> style="display:none"<% end %>><td>5. Formation</td><td>40h</td><td>3 600 €</td></tr>
+        <tr class="total-row"><td>TOTAL MODULE B</td><td data-recap-target="totalHours"><%= _b_h %>h</td><td data-recap-target="totalBudget"><%= _b_b.to_s.reverse.gsub(/(\d{3})(?=\d)/,'\1 ').reverse %> € HT</td></tr>
       </tbody>
     </table>
 
@@ -403,7 +483,13 @@
     <p style="font-size:9px; color:#555; margin-bottom:10px;">Fiabiliser la gestion des stocks de produits finis, remplacer GDR par une solution adaptée et connecter l'atelier aux outils et logiciels de ses partenaires clients.</p>
 
     <div class="leviers">
-      <div class="levier">
+      <% lev = @leviers[['C', 1]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="C"
+           data-levier-tracker-numero-value="1">
         <div class="levier-num">1</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -416,9 +502,16 @@
             <li>Audit de l'existant GDR : données, usages, points de douleur</li>
             <li>Analyse des besoins de connexion avec les partenaires clients</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 2]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="C"
+           data-levier-tracker-numero-value="2">
         <div class="levier-num">2</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -431,9 +524,16 @@
             <li>Organisation des zones de picking et d'expédition</li>
             <li>Procédures d'inventaire tournant</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 3]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="C"
+           data-levier-tracker-numero-value="3">
         <div class="levier-num">3</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -446,9 +546,16 @@
             <li>Connexion aux API et logiciels clients pour synchronisation automatique</li>
             <li>Exploration de l'IA pour la prévision des stocks</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 4]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="C"
+           data-levier-tracker-numero-value="4">
         <div class="levier-num">4</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -461,9 +568,16 @@
             <li>Guide d'utilisation du nouveau système d'information</li>
             <li>Procédures de synchronisation et échanges de données clients</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
-      <div class="levier">
+      <% lev = @leviers[['C', 5]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="C"
+           data-levier-tracker-numero-value="5">
         <div class="levier-num">5</div>
         <div class="levier-body">
           <div class="levier-top">
@@ -476,21 +590,27 @@
             <li>Formation aux connexions API et interfaces clients (6h)</li>
             <li>Préparation à la sortie &amp; Passeport Compétences salariés (6h)</li>
           </ul>
+          <%= render 'levier_track', lev: lev %>
         </div>
       </div>
     </div>
 
-    <table class="recap-table">
+    <%
+      _c = [[1,15,1350],[2,20,1800],[3,35,3150],[4,20,1800],[5,19,1710]]
+      _c_h = _c.sum { |n,h,_b| @leviers[['C',n]]&.actif ? h : 0 }
+      _c_b = _c.sum { |n,_h,b| @leviers[['C',n]]&.actif ? b : 0 }
+    %>
+    <table class="recap-table" data-controller="recap" data-recap-module-value="C">
       <thead>
         <tr><th>Levier</th><th>Heures</th><th>Budget HT</th></tr>
       </thead>
       <tbody>
-        <tr><td>1. Analyse des flux et opérations</td><td>15h</td><td>1 350 €</td></tr>
-        <tr><td>2. Organisation</td><td>20h</td><td>1 800 €</td></tr>
-        <tr><td>3. Digitalisation (SI + API + IA)</td><td>35h</td><td>3 150 €</td></tr>
-        <tr><td>4. Écriture des procédures</td><td>20h</td><td>1 800 €</td></tr>
-        <tr><td>5. Formation</td><td>19h</td><td>1 710 €</td></tr>
-        <tr class="total-row"><td>TOTAL MODULE C</td><td>109h</td><td>9 810 € HT</td></tr>
+        <tr data-recap-target="row" data-levier-num="1" data-hours="15" data-budget="1350"<% unless @leviers[['C',1]]&.actif %> style="display:none"<% end %>><td>1. Analyse des flux et opérations</td><td>15h</td><td>1 350 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="2" data-hours="20" data-budget="1800"<% unless @leviers[['C',2]]&.actif %> style="display:none"<% end %>><td>2. Organisation</td><td>20h</td><td>1 800 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="3" data-hours="35" data-budget="3150"<% unless @leviers[['C',3]]&.actif %> style="display:none"<% end %>><td>3. Digitalisation (SI + API + IA)</td><td>35h</td><td>3 150 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="4" data-hours="20" data-budget="1800"<% unless @leviers[['C',4]]&.actif %> style="display:none"<% end %>><td>4. Écriture des procédures</td><td>20h</td><td>1 800 €</td></tr>
+        <tr data-recap-target="row" data-levier-num="5" data-hours="19" data-budget="1710"<% unless @leviers[['C',5]]&.actif %> style="display:none"<% end %>><td>5. Formation</td><td>19h</td><td>1 710 €</td></tr>
+        <tr class="total-row"><td>TOTAL MODULE C</td><td data-recap-target="totalHours"><%= _c_h %>h</td><td data-recap-target="totalBudget"><%= _c_b.to_s.reverse.gsub(/(\d{3})(?=\d)/,'\1 ').reverse %> € HT</td></tr>
       </tbody>
     </table>
 
@@ -552,34 +672,45 @@
 
     <div class="section-title">5. <span>Récapitulatif Financier &amp; Gains Attendus</span></div>
 
-    <table class="recap-global">
+    <%
+      _ga_h = [[1,20],[2,25],[3,45],[4,25],[5,43]].sum { |n,h| @leviers[['A',n]]&.actif ? h : 0 }
+      _ga_b = [[1,1800],[2,2250],[3,4050],[4,2250],[5,3870]].sum { |n,b| @leviers[['A',n]]&.actif ? b : 0 }
+      _gb_h = [[1,25],[2,35],[3,55],[4,38],[5,40]].sum { |n,h| @leviers[['B',n]]&.actif ? h : 0 }
+      _gb_b = [[1,2250],[2,3150],[3,4950],[4,3420],[5,3600]].sum { |n,b| @leviers[['B',n]]&.actif ? b : 0 }
+      _gc_h = [[1,15],[2,20],[3,35],[4,20],[5,19]].sum { |n,h| @leviers[['C',n]]&.actif ? h : 0 }
+      _gc_b = [[1,1350],[2,1800],[3,3150],[4,1800],[5,1710]].sum { |n,b| @leviers[['C',n]]&.actif ? b : 0 }
+      _grand_h = _ga_h + _gb_h + _gc_h
+      _grand_b = _ga_b + _gb_b + _gc_b
+      fmt_b = ->(n) { n.to_s.reverse.gsub(/(\d{3})(?=\d)/,'\1 ').reverse }
+    %>
+    <table class="recap-global" data-controller="recap">
       <thead>
         <tr><th>Module</th><th>Période</th><th>Total Heures</th><th>Budget HT</th></tr>
       </thead>
       <tbody>
-        <tr>
+        <tr data-recap-target="moduleRow" data-module="A">
           <td>Module A — Réception, Flux &amp; Tri</td>
           <td>S2 2026</td>
-          <td>158h</td>
-          <td>14 220 €</td>
+          <td data-mod-hours><%= _ga_h %>h</td>
+          <td data-mod-budget><%= fmt_b.call(_ga_b) %> €</td>
         </tr>
-        <tr>
+        <tr data-recap-target="moduleRow" data-module="B">
           <td>Module B — Valorisation, Vrac &amp; Performance</td>
           <td>S1 2027</td>
-          <td>193h</td>
-          <td>17 370 €</td>
+          <td data-mod-hours><%= _gb_h %>h</td>
+          <td data-mod-budget><%= fmt_b.call(_gb_b) %> €</td>
         </tr>
-        <tr>
+        <tr data-recap-target="moduleRow" data-module="C">
           <td>Module C — Stocks, SI &amp; Connexions Clients</td>
           <td>S2 2027</td>
-          <td>109h</td>
-          <td>9 810 €</td>
+          <td data-mod-hours><%= _gc_h %>h</td>
+          <td data-mod-budget><%= fmt_b.call(_gc_b) %> €</td>
         </tr>
         <tr class="grand-total">
           <td>TOTAL PROJET V2</td>
           <td>2026 — 2027</td>
-          <td>460h</td>
-          <td>41 400 € HT</td>
+          <td data-recap-target="grandHours"><%= _grand_h %>h</td>
+          <td data-recap-target="grandBudget"><%= fmt_b.call(_grand_b) %> € HT</td>
         </tr>
       </tbody>
     </table>
