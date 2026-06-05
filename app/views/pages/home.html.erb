@@ -47,6 +47,16 @@
           <span class="quick-action-label">Jouets à contrôler</span>
         <% end %>
       </div>
+      <% if current_user.admin? %>
+        <div class="col-6 col-md-3 d-flex">
+          <%= link_to projet_path, class: "quick-action-card" do %>
+            <div class="quick-action-icon icon-projet">
+              <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <span class="quick-action-label">Projet RE-PLAY V2</span>
+          <% end %>
+        </div>
+      <% end %>
     </div>
   </div>
 <% else %>
