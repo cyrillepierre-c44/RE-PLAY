@@ -40,6 +40,7 @@ The app manages donated/refurbished toy inventory for a French resale operation:
 - **Toy** — individual toy, belongs to a Box and Category. Has condition fields (`clean`, `complete`, `playable`), `location` (defaults to "En attente de validation"), `price` (AI-suggested), `barcode`, and an attached `photo`
 - **Action** — polymorphic audit log; records every user action on a Box or Toy with a `content` string. Also used to determine ownership for authorization.
 - **User** — Devise authentication with an `admin` boolean flag
+- **ProjetLevier** — tracks the selection and progression of each levier in the Projet devis. Fields: `module_code` (A/B/C), `numero` (1–5), `actif` (boolean, default true), `progression` (integer 0–100). Unique index on [module_code, numero]. Auto-created on first visit to `/projet`.
 
 ### Authorization (Pundit)
 
@@ -49,6 +50,7 @@ Key authorization rules:
 - **Edit/update** on Box or Toy: only the user who originally acted on it (`record.actions.where(user: user).any?`)
 - **Destroy Toy / Verify Toy**: admin only (`user.admin?`)
 - **Destroy Box**: the creator (via actions)
+- **Projet / ProjetLeviers**: admin only (`user.admin?`) — via `PagePolicy#projet?`
 
 ### Toy Lifecycle
 
@@ -65,13 +67,48 @@ When a toy is created or updated, `ToysController#chat_response` calls RubyLLM w
 
 ```
 root → pages#home
-/boxes          → BoxesController (index, show, new, create, edit, update, destroy)
-/boxes/:id/toys → ToysController  (new, create — nested)
-/toys           → ToysController  (index, show, edit, update, destroy)
+/boxes               → BoxesController (index, show, new, create, edit, update, destroy)
+/boxes/:id/toys      → ToysController  (new, create — nested)
+/toys                → ToysController  (index, show, edit, update, destroy)
 /toys/:id/verify         GET   → verify form (admin only)
 /toys/:id/confirm_verify PATCH → save verification result (admin only)
 /about_us, /onboarding, /enjoue → PagesController (Pundit skipped)
+/projet                  GET   → pages#projet (admin only)
+/projet_leviers/:id      PATCH → projet_leviers#update (admin only)
 ```
+
+### Page Projet (devis RE-PLAY V2)
+
+Admin-only page at `/projet` displaying a 7-page consulting quote (devis N° 2026-RPV2-01) with interactive tracking features.
+
+**Structure :**
+- `app/views/pages/projet.html.erb` — 7 devis pages (`.devis-page`) inside `.projet-devis-wrapper`
+- `app/assets/stylesheets/pages/_projet.scss` — all devis styles, scoped under `.projet-devis-wrapper`
+- `app/views/pages/_levier_track.html.erb` — partial rendered in each levier for toggle + progress bar
+
+**Print / paper mode :**
+- Toolbar (sticky, `#1a2332`) with 3 buttons: mode papier, imprimer, partager
+- `body.paper-mode` class for print-preview look (white backgrounds)
+- `@media print`: hides toolbar/navbar, forces A4 layout (`break-after: page`), hides `.levier-track` and `.levier--off`
+- Mobile scaling via `transform: scale()` on `.devis-page` elements (IIFE JS at bottom of view)
+
+**Levier tracking (Stimulus) :**
+- 15 leviers across pages 3/4/5 (Modules A/B/C, leviers 1–5 each)
+- Each levier div: `data-controller="levier-tracker"` with values `id`, `actif`, `module`, `numero`
+- Toggle (actif/exclu) + barre de progression (0–100%) persistés via `PATCH /projet_leviers/:id`
+- Stimulus controller: `app/javascript/controllers/levier_tracker_controller.js`
+  - Dispatches `levier:toggled` on `window` after each toggle
+- Leviers exclus (`levier--off`): opacity 0.4 à l'écran, masqués à l'impression
+
+**Recap tables dynamiques (Stimulus) :**
+- 4 tableaux : Module A (page 3), Module B (page 4), Module C (page 5), récapitulatif global (page 6)
+- Chaque tableau a `data-controller="recap"` ; les 3 tableaux modules ont aussi `data-recap-module-value="X"`
+- Lignes de leviers : `data-recap-target="row"` + `data-levier-num`, `data-hours`, `data-budget`
+- Totaux : `data-recap-target="totalHours/totalBudget"` (modules) et `grandHours/grandBudget` (global)
+- Stimulus controller: `app/javascript/controllers/recap_controller.js`
+  - Écoute `levier:toggled` sur `window`, masque/affiche les lignes et recalcule les totaux
+  - Totaux initiaux calculés côté serveur (Ruby) dans la vue selon l'état `actif` en base
+- Lignes TOTAL MODULE / TOTAL PROJET V2 : fond or `#c9a84c`, texte marine `#1a1a2e`
 
 ### File Storage
 
@@ -84,4 +121,4 @@ SCSS structured as `config/` (variables, Bootstrap overrides), `components/`, an
 ### Infrastructure
 
 - PostgreSQL database (Solid Queue / Solid Cache / Solid Cable — database-backed, no Redis needed)
-- Deployed via Kamal
+- Deployed on Heroku (branch `projet` → `main`)
