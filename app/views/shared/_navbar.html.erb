@@ -29,6 +29,11 @@
               <i class="fa-solid fa-chart-bar"></i> Tableau de bord
             <% end %>
           </li>
+          <li class="nav-item">
+            <%= link_to projet_path, class: "nav-link #{'active' if action_name == 'projet'}" do %>
+              <i class="fa-solid fa-file-invoice"></i> Projet
+            <% end %>
+          </li>
         <% end %>
       </ul>
     <% end %>
@@ -111,6 +116,10 @@
       <%= link_to dashboard_path, class: "bottom-tab #{'active' if action_name == 'dashboard'}" do %>
         <i class="fa-solid fa-chart-bar"></i>
         <span>Dashboard</span>
+      <% end %>
+      <%= link_to projet_path, class: "bottom-tab #{'active' if action_name == 'projet'}" do %>
+        <i class="fa-solid fa-file-invoice"></i>
+        <span>Projet</span>
       <% end %>
     <% end %>
   </nav>

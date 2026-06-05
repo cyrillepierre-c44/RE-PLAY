@@ -28,4 +28,8 @@ class PagePolicy < ApplicationPolicy
   def export_csv?
     user.admin?
   end
+
+  def projet?
+    user.admin?
+  end
 end
