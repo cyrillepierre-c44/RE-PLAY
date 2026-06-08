@@ -51,7 +51,7 @@
         <div class="flex-fill">
           <label class="filter-label"><i class="fa-solid fa-filter me-1"></i>Type</label>
           <%= f.select :type,
-            [["Tous", ""], ["Jouets", "toys"], ["Boîtes", "boxes"]],
+            [["Tous", ""], ["Jouets", "toys"], ["Caisses", "boxes"]],
             { selected: @type_filter.to_s },
             class: "form-select form-select-sm filter-select w-100",
             data: { action: "change->date-range#autoSubmit" } %>
@@ -82,7 +82,7 @@
 
     <%# Dans les boites %>
     <div class="col-12 col-md kpi-group kpi-group-boxes">
-      <p class="kpi-group-label"><i class="fa-solid fa-box me-2"></i>Dans les boîtes</p>
+      <p class="kpi-group-label"><i class="fa-solid fa-boxes-stacked me-2"></i>Dans les caisses</p>
       <div class="row g-2">
         <div class="col-6">
           <div class="kpi-card kpi-boxes kpi-count">
@@ -107,7 +107,7 @@
 
     <%# En attente %>
     <div class="col-12 col-md kpi-group kpi-group-waiting">
-      <p class="kpi-group-label"><i class="fa-solid fa-hourglass-half me-2"></i>En attente</p>
+      <p class="kpi-group-label"><i class="fa-solid fa-clock me-2"></i>En attente</p>
       <div class="row g-2">
         <div class="col-6">
           <div class="kpi-card kpi-waiting kpi-count">
@@ -218,7 +218,7 @@
     <div class="col-md-6">
       <div class="detail-card p-4 h-100">
         <div class="onb-section-title" style="justify-content:flex-start;" mb-3">
-                <h2><i class="fa-solid fa-puzzle-piece me-2 text-coral"></i>Jouets vs Boîtes</h2>
+                <h2><%= toys_icon(html_class: "me-2 text-coral") %>Jouets vs <i class="fa-solid fa-boxes-stacked me-1 text-coral"></i>Caisses</h2>
         </div>
         <div class="split-stats">
           <div class="split-item">
@@ -236,7 +236,7 @@
           </div>
           <div class="progress-legend mt-1">
             <span><%= (@toy_actions_count.to_f / @total_actions * 100).round %>% jouets</span>
-            <span><%= (@box_actions_count.to_f / @total_actions * 100).round %>% boîtes</span>
+            <span><%= (@box_actions_count.to_f / @total_actions * 100).round %>% caisses</span>
           </div>
         <% end %>
       </div>
@@ -396,7 +396,7 @@
                 <% t_pct = @pareto_total_toys.positive?  ? (row[:toys_count] / @pareto_total_toys  * 100).round : 0 %>
                 <% p_pct = @pareto_total_price.positive? ? (row[:price]      / @pareto_total_price * 100).round : 0 %>
                 <div class="mini-bar-row">
-                  <span class="mini-bar-label"><i class="fa-solid fa-puzzle-piece"></i></span>
+                  <span class="mini-bar-label"><%= toys_icon %></span>
                   <div class="mini-bar-wrap">
                     <div class="mini-bar mini-bar-weight" style="width: <%= t_pct %>%"></div>
                   </div>

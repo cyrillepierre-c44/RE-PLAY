@@ -1,0 +1,55 @@
+.search-id-group {
+  border-radius: $border-radius-lg;
+  overflow: hidden;
+  box-shadow: $card-box-shadow;
+
+  .search-id-prefix {
+    background: $coral;
+    color: $white;
+    font-weight: 900;
+    font-size: 1.1rem;
+    padding: 0 1rem;
+    border: none;
+    min-width: 2.8rem;
+    justify-content: center;
+  }
+
+  .search-id-input {
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: $navy;
+    background: $white;
+
+    &:focus {
+      box-shadow: none;
+      border-color: transparent;
+    }
+
+    &::placeholder {
+      font-weight: 400;
+      color: #9CA3AF;
+    }
+  }
+
+  .search-id-clear {
+    background: $white;
+    border: none;
+    color: #9CA3AF;
+    padding: 0 0.9rem;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+
+    &:hover { color: $coral; }
+  }
+
+  .search-id-submit {
+    background: $coral;
+    color: $white;
+    border: none;
+    padding: 0 1rem;
+
+    &:hover { background: darken($coral, 8%); }
+  }
+}

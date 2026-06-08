@@ -1,4 +1,4 @@
-<% content_for :title, "#{params[:new] ? 'Nouvelle' : 'Modifier'} boîte N°#{@box.id} · RE-PLAY" %>
+<% content_for :title, "#{params[:new] ? 'Nouvelle' : 'Modifier'} caisse C#{@box.id} · RE-PLAY" %>
 
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
@@ -6,7 +6,7 @@
       <%= link_to boxes_path, class: "btn-back-boxes d-flex align-items-center gap-2" do %>
         <i class="fa-solid fa-circle-arrow-left" style="font-size:1.8rem;"></i>
         <i class="fa-solid fa-boxes-stacked btn-back-context-icon" style="font-size:1.8rem;"></i>
-        <span class="toy-show-title" style="font-size:1.4rem; margin:0;">Nouvelle boîte</span>
+        <span class="toy-show-title" style="font-size:1.4rem; margin:0;">Nouvelle caisse</span>
       <% end %>
     <% else %>
       <%= link_to box_path(@box), class: "btn-back-boxes" do %>
@@ -15,15 +15,15 @@
       <% end %>
     <% end %>
     <% unless params[:new] %>
-      <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-box me-1"></i>N°&nbsp;<%= @box.id %></span>
+      <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-box me-1"></i>C<%= @box.id %></span>
     <% end %>
   </div>
 
   <% if params[:new] %>
     <div class="d-flex align-items-center justify-content-center gap-3 mb-3 p-3" style="background:linear-gradient(135deg,rgba(255,107,53,0.08),rgba(255,107,53,0.04)); border-radius:1rem; border:2px dashed rgba(255,107,53,0.35);">
       <div style="text-align:center;">
-        <div style="font-size:0.8rem; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.2rem;">Étiqueter la boîte</div>
-        <div style="font-size:2.8rem; font-weight:900; color:#FF6B35; line-height:1;">N°&nbsp;<%= @box.id %></div>
+        <div style="font-size:0.8rem; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.2rem;">Étiqueter la caisse</div>
+        <div style="font-size:2.8rem; font-weight:900; color:#FF6B35; line-height:1;">C<%= @box.id %></div>
       </div>
       <i class="fa-solid fa-tag" style="font-size:2rem; color:rgba(255,107,53,0.4);"></i>
     </div>
@@ -32,7 +32,7 @@
   <div class="detail-card p-4">
     <% unless params[:new] %>
       <div class="d-flex align-items-center gap-3 mb-1">
-        <h1 class="toy-show-title" style="font-size:1.6rem;">Modifier la boîte N°<%= @box.id %></h1>
+        <h1 class="toy-show-title" style="font-size:1.6rem;">Modifier la caisse C<%= @box.id %></h1>
       </div>
     <% end %>
     <p style="font-size:1.15rem; font-weight:700; color:#1A2B4A; margin-bottom:1rem;"><%= @box.category.name %></p>

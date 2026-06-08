@@ -1,12 +1,12 @@
-<% content_for :title, "Contrôle qualité · Jouet N°#{@toy.id} · RE-PLAY" %>
+<% content_for :title, "Contrôle qualité · Jouet J#{@toy.id} · RE-PLAY" %>
 
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <%= link_to toy_path(@toy), class: "btn-back-boxes" do %>
       <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-puzzle-piece btn-back-context-icon"></i>
+      <i class="fa-solid fa-gift btn-back-context-icon"></i>
     <% end %>
-    <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-puzzle-piece me-1"></i>N°&nbsp;<%= @toy.id %></span>
+    <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-gift me-1"></i>J<%= @toy.id %></span>
   </div>
 
   <div class="verify-header mb-3">
@@ -127,10 +127,10 @@
           </div>
         <% end %>
 
-        <%# Commentaire admin %>
+        <%# Commentaire qualité %>
         <div class="mb-3">
           <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">
-            <i class="fa-solid fa-shield-halved me-1" style="color:#FF6B35;"></i>Commentaire admin (facultatif)
+            <i class="fa-solid fa-shield-halved me-1" style="color:#FF6B35;"></i>Commentaire qualité (facultatif)
           </div>
           <%= f.input :admin_comment,
               label: false,
