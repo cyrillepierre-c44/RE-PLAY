@@ -8,27 +8,27 @@ puts "Creating seeds..."
 
 # Create categories from the list
 categories = [
-  "Poupons, Barbies, Bratz, têtes à coiffer, accessoires",
-  "Véhicules, circuits, garages",
-  "Lego & Playmobil",
-  "Livres 0 - 6 ans",
-  "Livres 7 - 10 ans",
-  "Livres, mangas, BD 11 ans et +",
-  "Jeux de société 0 à 6 ans",
-  "Jeux de société 7 à 11 ans",
-  "Jeux de société 12 ans et +",
-  "Puzzle et loisirs créatifs",
-  "Peluches et doudous",
-  "Jeux d'extérieur",
-  "Jouet premier âge",
-  "Jeux de construction",
-  "Figurines et mini monde",
-  "Imitation",
-  "Déguisements"
+  { name: "Poupons, Barbies, Bratz, têtes à coiffer, accessoires", icon: "fa-child-dress" },
+  { name: "Véhicules, circuits, garages",                          icon: "fa-car" },
+  { name: "Lego & Playmobil",                                      icon: "fa-cubes" },
+  { name: "Livres 0 - 6 ans",                                      icon: "fa-book" },
+  { name: "Livres 7 - 10 ans",                                     icon: "fa-book-open" },
+  { name: "Livres, mangas, BD 11 ans et +",                        icon: "fa-book-bookmark" },
+  { name: "Jeux de société 0 à 6 ans",                             icon: "fa-dice" },
+  { name: "Jeux de société 7 à 11 ans",                            icon: "fa-dice-five" },
+  { name: "Jeux de société 12 ans et +",                           icon: "fa-chess" },
+  { name: "Puzzle et loisirs créatifs",                            icon: "fa-puzzle-piece" },
+  { name: "Peluches et doudous",                                   icon: "fa-hippo" },
+  { name: "Jeux d'extérieur",                                      icon: "fa-futbol" },
+  { name: "Jouet premier âge",                                     icon: "fa-baby" },
+  { name: "Jeux de construction",                                  icon: "fa-hammer" },
+  { name: "Figurines et mini monde",                               icon: "fa-chess-pawn" },
+  { name: "Imitation",                                             icon: "fa-masks-theater" },
+  { name: "Déguisements",                                          icon: "fa-hat-wizard" }
 ]
 
-categories.each do |name|
-  Category.create!(name: )
+categories.each do |attrs|
+  Category.create!(attrs)
 end
 
 puts "#{Category.count} categories created!"

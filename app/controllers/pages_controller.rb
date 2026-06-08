@@ -47,9 +47,10 @@ class PagesController < ApplicationController
                        elsif action.content&.include?("supprimé") then "Suppression"
                        else "Autre"
                        end
-        type  = action.actionable_type == "Toy" ? "Jouet" : "Boîte"
+        type  = action.actionable_type == "Toy" ? "Jouet" : "Caisse"
         role  = action.user&.admin ? "Admin" : "Utilisateur"
-        objet = "#{type} \##{action.actionable_id}"
+        prefix = action.actionable_type == "Toy" ? "J" : "C"
+        objet = "#{prefix}#{action.actionable_id}"
         csv << [
           action.created_at.strftime("%d/%m/%Y %H:%M"),
           action.user&.email&.split("@")&.first,
@@ -195,11 +196,14 @@ class PagesController < ApplicationController
     @nc_total = nc_scope.count
 
     @nc_by_type = [
-      { key: "NC:propre",    label: "Propre",    icon: "fa-soap",       count: nc_scope.where("content LIKE ?", "%[NC:propre]%").count },
+      { key: "NC:français",  label: "Français",  icon: "fa-flag",       count: nc_scope.where("content LIKE ?", "%[NC:français]%").count },
+      { key: "NC:CE",        label: "CE/Marque", icon: "fa-award",      count: nc_scope.where("content LIKE ?", "%[NC:CE%").count },
+      { key: "NC:sécurité",  label: "Sécurité",  icon: "fa-lock",       count: nc_scope.where("content LIKE ?", "%[NC:sécurité]%").count },
+      { key: "NC:propreté",  label: "Propre",    icon: "fa-soap",       count: nc_scope.where("content LIKE ?", "%[NC:propr%").count },
       { key: "NC:complet",   label: "Complet",   icon: "fa-list-check", count: nc_scope.where("content LIKE ?", "%[NC:complet]%").count },
       { key: "NC:jouable",   label: "Jouable",   icon: "fa-gamepad",    count: nc_scope.where("content LIKE ?", "%[NC:jouable]%").count },
       { key: "NC:catégorie", label: "Catégorie", icon: "fa-tag",        count: nc_scope.where("content LIKE ?", "%[NC:catégorie]%").count }
-    ]
+    ].reject { |t| t[:count] == 0 }
 
     nc_toy_ids = nc_scope.where(actionable_type: "Toy").pluck(:actionable_id).uniq
     return @nc_by_creator = [] if nc_toy_ids.empty?
@@ -207,7 +211,6 @@ class PagesController < ApplicationController
     creator_map = Action
       .select("DISTINCT ON (actionable_id) actionable_id, user_id")
       .where(actionable_type: "Toy", actionable_id: nc_toy_ids)
-      .where("content LIKE ?", "%créé%")
       .order("actionable_id, created_at ASC")
       .each_with_object({}) { |a, h| h[a.actionable_id] = a.user_id }
 

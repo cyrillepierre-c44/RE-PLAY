@@ -1,4 +1,4 @@
-<% content_for :title, "#{params[:new] ? 'Nouveau' : 'Modifier'} jouet N°#{@toy.id} · RE-PLAY" %>
+<% content_for :title, "#{params[:new] ? 'Nouveau' : 'Modifier'} jouet J#{@toy.id} · RE-PLAY" %>
 
 <div class="container py-4">
   <% if params[:new] %>
@@ -9,14 +9,14 @@
   <% else %>
     <%= link_to toy_path(@toy), class: "btn-back-boxes mb-3 d-inline-block" do %>
       <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-puzzle-piece btn-back-context-icon"></i>
+      <i class="fa-solid fa-gift btn-back-context-icon"></i>
     <% end %>
   <% end %>
 
 
   <div class="detail-card p-4">
     <div class="d-flex align-items-center gap-3 mb-1">
-      <h1 class="toy-show-title" style="font-size:1.6rem;"><%= params[:new] ? 'Nouveau jouet' : "Modifier le jouet" %> N°<%= @toy.id %></h1>
+      <h1 class="toy-show-title" style="font-size:1.6rem;"><%= params[:new] ? 'Nouveau jouet' : "Modifier le jouet" %> J<%= @toy.id %></h1>
     </div>
     <% if @toy.category %>
       <p style="font-size:1.15rem; font-weight:700; color:#1A2B4A; margin-bottom:1rem;"><%= @toy.category.name %></p>

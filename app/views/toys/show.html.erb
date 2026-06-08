@@ -1,4 +1,4 @@
-<% content_for :title, "Jouet N°#{@toy.id} · RE-PLAY" %>
+<% content_for :title, "Jouet J#{@toy.id} · RE-PLAY" %>
 <% if @toy.photo.attached? && @toy.price.nil? %>
   <script>
     var key = "toy_reload_<%= @toy.id %>_<%= @toy.updated_at.to_i %>";
@@ -10,9 +10,16 @@
   </script>
 <% end %>
 <div class="container py-4">
-  <%= link_to toys_path, class: "btn-back-boxes mb-3 d-inline-block" do %>
-    <i class="fa-solid fa-circle-arrow-left"></i>
-    <i class="fa-solid fa-puzzle-piece btn-back-context-icon"></i>
+  <% if params[:back_box].present? %>
+    <%= link_to box_path(params[:back_box]), class: "btn-back-boxes mb-3 d-inline-block" do %>
+      <i class="fa-solid fa-circle-arrow-left"></i>
+      <i class="fa-solid fa-box btn-back-context-icon"></i>
+    <% end %>
+  <% else %>
+    <%= link_to toys_path(filter: params[:back_filter]), class: "btn-back-boxes mb-3 d-inline-block" do %>
+      <i class="fa-solid fa-circle-arrow-left"></i>
+      <%= toys_icon(html_class: "btn-back-context-icon") %>
+    <% end %>
   <% end %>
 
   <div class="row g-4">
@@ -44,9 +51,29 @@
       <div class="detail-card p-4 h-100">
 
         <div class="d-flex align-items-center justify-content-between mb-2">
-          <h1 class="toy-show-title"><i class="fa-solid fa-puzzle-piece me-2"></i>N°&nbsp;<%= @toy.id %></h1>
-          <span class="toy-show-category-badge"><i class="fa-solid fa-tag me-1"></i><%= truncate(@toy.category.name, length: 18) %></span>
+          <h1 class="toy-show-title"><i class="fa-solid fa-gift me-2"></i>J<%= @toy.id %></h1>
+          <span class="toy-show-category-badge"><i class="fa-solid <%= @toy.category.icon.presence || 'fa-tag' %> me-1"></i><%= truncate(@toy.category.name, length: 18) %></span>
         </div>
+
+        <%# Note vocale opérateur %>
+        <% if @toy.operator_note.present? %>
+          <div class="mb-2" style="background:#f0f4ff; padding:0.65rem 0.85rem; border-radius:0.5rem; border-left:3px solid #1A2B4A;">
+            <div style="font-size:0.7rem; font-weight:700; color:#1A2B4A; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.2rem;">
+              <i class="fa-solid fa-microphone me-1"></i>Note de l'opérateur
+            </div>
+            <div style="font-size:0.9rem; color:#1A2B4A;"><%= @toy.operator_note %></div>
+          </div>
+        <% end %>
+
+        <%# Commentaire qualité admin %>
+        <% if @toy.admin_comment.present? %>
+          <div class="mb-2" style="background:#fff8f0; padding:0.65rem 0.85rem; border-radius:0.5rem; border-left:3px solid #F97316;">
+            <div style="font-size:0.7rem; font-weight:700; color:#F97316; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.2rem;">
+              <i class="fa-solid fa-triangle-exclamation me-1"></i>Commentaire qualité
+            </div>
+            <div style="font-size:0.9rem; color:#1A2B4A;"><%= @toy.admin_comment %></div>
+          </div>
+        <% end %>
 
         <%# Infos barcode / emplacement %>
         <div class="toy-show-info-grid mb-2">

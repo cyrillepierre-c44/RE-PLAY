@@ -14,29 +14,29 @@
 
 <% if user_signed_in? %>
   <div class="container mt-4 mb-5">
-<div class="row g-3">
-      <div class="col-6 col-md-3 d-flex">
-        <%= link_to boxes_path, class: "quick-action-card" do %>
-          <div class="quick-action-icon icon-boxes">
-            <i class="fa-solid fa-box-open"></i>
-          </div>
-          <span class="quick-action-label">Voir les boîtes</span>
-        <% end %>
-      </div>
-      <div class="col-6 col-md-3 d-flex">
-        <%= link_to toys_path, class: "quick-action-card" do %>
-          <div class="quick-action-icon icon-toys">
-            <i class="fa-solid fa-puzzle-piece"></i>
-          </div>
-          <span class="quick-action-label">Voir les jouets</span>
-        <% end %>
-      </div>
+    <div class="row g-3">
       <div class="col-6 col-md-3 d-flex">
         <%= link_to new_box_path, class: "quick-action-card" do %>
           <div class="quick-action-icon icon-new">
             <i class="fa-solid fa-plus"></i>
           </div>
-          <span class="quick-action-label">Nouvelle boîte</span>
+          <span class="quick-action-label">Nouvelle caisse</span>
+        <% end %>
+      </div>
+      <div class="col-6 col-md-3 d-flex">
+        <%= link_to boxes_path, class: "quick-action-card" do %>
+          <div class="quick-action-icon icon-boxes">
+            <i class="fa-solid fa-box-open"></i>
+          </div>
+          <span class="quick-action-label">Voir les caisses</span>
+        <% end %>
+      </div>
+      <div class="col-6 col-md-3 d-flex">
+        <%= link_to toys_path, class: "quick-action-card" do %>
+          <div class="quick-action-icon icon-toys">
+            <%= toys_icon(style: "width:1.5rem;height:1.5rem;") %>
+          </div>
+          <span class="quick-action-label">Voir les jouets</span>
         <% end %>
       </div>
       <div class="col-6 col-md-3 d-flex">
@@ -53,7 +53,7 @@
             <div class="quick-action-icon icon-projet">
               <i class="fa-solid fa-file-invoice"></i>
             </div>
-            <span class="quick-action-label">Projet RE-PLAY V2</span>
+            <span class="quick-action-label">Projet <span style="white-space: nowrap;">RE-PLAY V2</span></span>
           <% end %>
         </div>
       <% end %>

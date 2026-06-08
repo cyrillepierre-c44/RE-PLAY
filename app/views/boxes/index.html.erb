@@ -1,45 +1,69 @@
-<% content_for :title, "Boîtes · RE-PLAY" %>
+<% content_for :title, "Caisses · RE-PLAY" %>
 
 <div class="container py-4">
   <div class="page-header">
     <div>
-      <h1 class="page-title"><i class="fa-solid fa-boxes-stacked me-2" style="color:#FF6B35;"></i>Boîtes</h1>
+      <h1 class="page-title"><i class="fa-solid fa-boxes-stacked me-2" style="color:#FF6B35;"></i>Caisses</h1>
       <p class="page-subtitle">
         <% if params[:filter] == 'empty' %>
-          Boîtes vidées
+          Caisses vidées
         <% elsif params[:filter] == 'suppr' %>
-          Boîtes jetées
+          Caisses jetées
         <% else %>
-          Boîtes en cours de traitement
+          Caisses en cours de traitement
         <% end %>
       </p>
     </div>
-    <%= link_to new_box_path, class: "btn-new-box", title: "Nouvelle boîte" do %>
+    <%= link_to new_box_path, class: "btn-new-box", title: "Nouvelle caisse" do %>
       <i class="fa-solid fa-plus"></i>
     <% end %>
   </div>
 
   <div class="mb-3">
-    <% cat_scope = params[:category_id].present? ? Box.where(category_id: params[:category_id]) : Box %>
+    <%= form_with url: boxes_path, method: :get, local: true do |f| %>
+      <%= hidden_field_tag :category_id, params[:category_id] if params[:category_id].present? %>
+      <div class="input-group search-id-group">
+        <span class="input-group-text search-id-prefix">C</span>
+        <%= f.text_field :q,
+              value: params[:q].to_s.gsub(/\D/, ''),
+              placeholder: "Numéro de caisse",
+              inputmode: "numeric",
+              pattern: "[0-9]*",
+              autocomplete: "off",
+              class: "form-control search-id-input" %>
+        <% if params[:q].present? %>
+          <%= link_to boxes_path(category_id: params[:category_id]),
+                class: "btn search-id-clear" do %>
+            <i class="fa-solid fa-xmark"></i>
+          <% end %>
+        <% end %>
+        <button type="submit" class="btn search-id-submit">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
     <div class="filter-tabs filter-tabs-boxes">
       <%= link_to boxes_path(category_id: params[:category_id]),
             class: "filter-tab filter-tab-box-active filter-tab-full #{'active' unless params[:filter].in?(%w[suppr empty])}" do %>
         <i class="fa-solid fa-box"></i>
         En cours
-        <span class="filter-count"><%= cat_scope.active.count %></span>
+        <span class="filter-count"><%= @count_scope.active.count %></span>
       <% end %>
       <div class="filter-tabs-sub-row">
         <%= link_to boxes_path(filter: "empty", category_id: params[:category_id]),
               class: "filter-tab filter-tab-box-empty #{'active' if params[:filter] == 'empty'}" do %>
           <i class="fa-solid fa-box-open"></i>
           Vides
-          <span class="filter-count"><%= cat_scope.empty.count %></span>
+          <span class="filter-count"><%= @count_scope.empty.count %></span>
         <% end %>
         <%= link_to boxes_path(filter: "suppr", category_id: params[:category_id]),
               class: "filter-tab filter-tab-box-suppr #{'active' if params[:filter] == 'suppr'}" do %>
           <i class="fa-solid fa-dumpster"></i>
           Jetées
-          <span class="filter-count"><%= cat_scope.suppr.count %></span>
+          <span class="filter-count"><%= @count_scope.suppr.count %></span>
         <% end %>
       </div>
     </div>
@@ -60,10 +84,10 @@
       <div style="font-size: 4rem; color: rgba(255,107,53,0.2); margin-bottom: 1rem;">
         <i class="fa-solid fa-boxes-stacked"></i>
       </div>
-      <h3 style="color: #6B7280;">Aucune boîte ici</h3>
+      <h3 style="color: #6B7280;">Aucune caisse ici</h3>
       <% unless params[:filter] == 'suppr' %>
         <%= link_to new_box_path, class: "btn btn-primary mt-2" do %>
-          <i class="fa-solid fa-plus me-1"></i>Nouvelle boîte
+          <i class="fa-solid fa-plus me-1"></i>Nouvelle caisse
         <% end %>
       <% end %>
     </div>
@@ -71,7 +95,7 @@
     <div class="row g-3">
       <% @boxes.each do |box| %>
         <div class="col-12 col-sm-6 col-lg-4">
-          <%= link_to box_path(box), class: "box-card d-block text-decoration-none" do %>
+          <%= link_to box_path(box, back_filter: params[:filter]), class: "box-card d-block text-decoration-none" do %>
             <div class="box-card-header">
               <div class="d-flex align-items-center gap-2">
                 <% if box.suppr? %>
@@ -89,11 +113,13 @@
                   <% else %>
                     <i class="fa-solid fa-box me-1" style="color:#FF6B35; font-size:0.9em;"></i>
                   <% end %>
-                  N°&nbsp;<%= box.id %>
+                  C<%= box.id %>
                 </span>
               </div>
             </div>
-            <div class="box-card-category"><%= box.category.name %></div>
+            <div class="box-card-category">
+              <i class="fa-solid <%= box.category.icon.presence || 'fa-tag' %> me-1"></i><%= box.category.name %>
+            </div>
             <div class="box-card-details">
               <div class="box-card-details-left">
                 <% if box.electronic? %>
@@ -104,7 +130,7 @@
               </div>
               <% if box.nb_toys.present? %>
                 <span class="box-toy-count" title="<%= box.nb_toys %> jouet<%= 's' if box.nb_toys > 1 %>">
-                  <i class="fa-solid fa-puzzle-piece"></i>
+                  <%= toys_icon %>
                   <%= box.nb_toys %>
                 </span>
               <% end %>

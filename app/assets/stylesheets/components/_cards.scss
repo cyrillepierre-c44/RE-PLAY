@@ -383,6 +383,25 @@ a.toy-card {
   box-shadow: 0 2px 6px rgba(0,0,0,0.12);
 }
 
+.toy-card-review-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(249, 115, 22, 0.90);
+  backdrop-filter: blur(3px);
+  color: $white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
 // ── Toy Show ─────────────────────────────────────────────────
 .toy-show-photo-wrap {
   position: relative;
@@ -473,6 +492,14 @@ a.toy-card {
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+
+  > form {
+    flex: 1;
+    min-width: 44px;
+    display: flex;
+
+    .toy-show-btn { flex: 1; width: 100%; }
+  }
 }
 
 .toy-show-actions-pending {

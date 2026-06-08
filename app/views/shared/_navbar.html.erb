@@ -11,15 +11,12 @@
       <ul class="navbar-nav mx-auto gap-1 d-none d-md-flex flex-row">
         <li class="nav-item">
           <%= link_to boxes_path, class: "nav-link #{'active' if controller_name == 'boxes'}" do %>
-            <i class="fa-solid fa-box"></i> Boîtes
+            <i class="fa-solid fa-boxes-stacked"></i> Caisses
           <% end %>
         </li>
         <li class="nav-item">
           <%= link_to toys_path, class: "nav-link #{'active' if controller_name == 'toys'}" do %>
-            <span style="display:inline-block; position:relative; width:1em; height:1em; vertical-align:middle;">
-              <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; top:0; left:0;"></i>
-              <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; bottom:0; right:0; transform:rotate(90deg);"></i>
-            </span>
+            <%= toys_icon %>
             Jouets
           <% end %>
         </li>
@@ -102,14 +99,11 @@
 <% if user_signed_in? %>
   <nav class="bottom-tab-bar d-md-none">
     <%= link_to boxes_path, class: "bottom-tab #{'active' if controller_name == 'boxes'}" do %>
-      <i class="fa-solid fa-box"></i>
-      <span>Boîtes</span>
+      <i class="fa-solid fa-boxes-stacked"></i>
+      <span>Caisses</span>
     <% end %>
     <%= link_to toys_path, class: "bottom-tab #{'active' if controller_name == 'toys'}" do %>
-      <span style="display:inline-block; position:relative; width:1.1em; height:1.1em;">
-        <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; top:0; left:0;"></i>
-        <i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.7em; bottom:0; right:0; transform:rotate(90deg);"></i>
-      </span>
+      <%= toys_icon %>
       <span>Jouets</span>
     <% end %>
     <% if current_user.admin %>

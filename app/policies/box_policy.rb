@@ -42,4 +42,8 @@ class BoxPolicy < ApplicationPolicy
   def toggle_empty?
     true
   end
+
+  def restore?
+    user.admin? || record.actions.where(user: user).any?
+  end
 end

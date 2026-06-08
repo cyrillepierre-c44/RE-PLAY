@@ -2,12 +2,12 @@
 
 <div class="container py-4">
   <div class="page-header mb-4">
-    <%= link_to boxes_path, class: "btn-back-boxes", title: "Retour aux boîtes" do %>
+    <%= link_to boxes_path, class: "btn-back-boxes", title: "Retour aux caisses" do %>
       <i class="fa-solid fa-circle-arrow-left"></i>
       <i class="fa-solid fa-boxes-stacked btn-back-context-icon"></i>
     <% end %>
     <div style="text-align: right;">
-      <h1 class="page-title"><span style="display:inline-block; position:relative; width:1.4em; height:1em; vertical-align:middle;" class="me-2"><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; top:0; left:0; color:#FF6B35;"></i><i class="fa-solid fa-puzzle-piece" style="position:absolute; font-size:0.75em; bottom:0; right:0; transform:rotate(90deg); color:#FF6B35;"></i></span>Jouets</h1>
+      <h1 class="page-title"><%= toys_icon(html_class: "me-2", style: "color:#FF6B35;") %>Jouets</h1>
       <p class="page-subtitle">
         <% if params[:filter] == "validated" %>
           Jouets reconditionnés et validés
@@ -21,26 +21,51 @@
   </div>
 
   <div class="mb-3">
-    <% cat_scope = params[:category_id].present? ? Toy.where(category_id: params[:category_id]) : Toy %>
+    <%= form_with url: toys_path, method: :get, local: true do |f| %>
+      <%= hidden_field_tag :filter, params[:filter] if params[:filter].present? %>
+      <%= hidden_field_tag :category_id, params[:category_id] if params[:category_id].present? %>
+      <div class="input-group search-id-group">
+        <span class="input-group-text search-id-prefix">J</span>
+        <%= f.text_field :q,
+              value: params[:q].to_s.gsub(/\D/, ''),
+              placeholder: "Numéro de jouet",
+              inputmode: "numeric",
+              pattern: "[0-9]*",
+              autocomplete: "off",
+              class: "form-control search-id-input" %>
+        <% if params[:q].present? %>
+          <%= link_to toys_path(filter: params[:filter], category_id: params[:category_id]),
+                class: "btn search-id-clear" do %>
+            <i class="fa-solid fa-xmark"></i>
+          <% end %>
+        <% end %>
+        <button type="submit" class="btn search-id-submit">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-3">
     <div class="filter-tabs filter-tabs-toys">
       <%= link_to toys_path(category_id: params[:category_id]),
             class: "filter-tab filter-tab-waiting filter-tab-full #{'active' if params[:filter].blank? || params[:filter] == 'waiting'}" do %>
-        <i class="fa-solid fa-hourglass-half"></i>
+        <i class="fa-solid fa-clock"></i>
         Attente
-        <span class="filter-count"><%= cat_scope.waiting.count %></span>
+        <span class="filter-count"><%= @count_scope.waiting.count %></span>
       <% end %>
       <div class="filter-tabs-sub-row">
         <%= link_to toys_path(filter: "validated", category_id: params[:category_id]),
               class: "filter-tab filter-tab-validated #{'active' if params[:filter] == 'validated'}" do %>
           <i class="fa-solid fa-store"></i>
           Prêts
-          <span class="filter-count"><%= cat_scope.validated.count %></span>
+          <span class="filter-count"><%= @count_scope.validated.count %></span>
         <% end %>
         <%= link_to toys_path(filter: "deleted", category_id: params[:category_id]),
               class: "filter-tab filter-tab-deleted #{'active' if params[:filter] == 'deleted'}" do %>
           <i class="fa-solid fa-trash-can"></i>
           Jetés
-          <span class="filter-count"><%= cat_scope.deleted.count %></span>
+          <span class="filter-count"><%= @count_scope.deleted.count %></span>
         <% end %>
       </div>
     </div>
@@ -70,7 +95,7 @@
   <% if @toys.empty? %>
     <div class="text-center py-5">
       <div style="font-size: 4rem; color: rgba(255,107,53,0.2); margin-bottom: 1rem;">
-        <i class="fa-solid fa-puzzle-piece"></i>
+        <%= toys_icon(style: "width:1.3em;height:1.3em;") %>
       </div>
       <h3 style="color: #6B7280;">Aucun jouet ici</h3>
       <p style="color: #9CA3AF;">
@@ -85,7 +110,7 @@
     <div class="row g-3">
       <% @toys.each do |toy| %>
         <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-          <%= link_to toy_path(toy), class: "toy-card" do %>
+          <%= link_to toy_path(toy, back_filter: params[:filter]), class: "toy-card" do %>
             <div class="toy-card-photo-wrap">
               <% if toy.photo.attached? %>
                 <%= image_tag toy.photo, class: "toy-card-img" %>
@@ -99,6 +124,11 @@
                 <span class="status-dot status-dot-deleted toy-card-status-dot" title="Jeté"></span>
               <% elsif toy.market? %>
                 <span class="status-dot status-dot-validated toy-card-status-dot" title="Validé"></span>
+              <% elsif toy.review? %>
+                <span class="status-dot status-dot-review toy-card-status-dot" title="Contrôle qualité refusé"></span>
+                <div class="toy-card-review-badge">
+                  <i class="fa-solid fa-triangle-exclamation"></i> CQ refusé
+                </div>
               <% else %>
                 <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente de validation"></span>
               <% end %>
@@ -109,13 +139,15 @@
                   <i class="fa-solid fa-trash-can me-1"></i>
                 <% elsif toy.market? %>
                   <i class="fa-solid fa-store me-1"></i>
+                <% elsif toy.review? %>
+                  <i class="fa-solid fa-triangle-exclamation me-1" style="color:#F97316;"></i>
                 <% else %>
-                  <i class="fa-solid fa-hourglass-half me-1"></i>
+                  <i class="fa-solid fa-clock me-1"></i>
                 <% end %>
-                N°&nbsp;<%= toy.id %>
+                J<%= toy.id %>
               </div>
               <div class="toy-card-meta">
-                <span class="toy-card-category"><i class="fa-solid fa-layer-group me-1"></i><%= truncate(toy.category.name, length: 20) %></span>
+                <span class="toy-card-category"><i class="fa-solid <%= toy.category.icon.presence || 'fa-tag' %> me-1"></i><%= truncate(toy.category.name, length: 20) %></span>
                 <div class="toy-card-conditions">
                   <span class="condition-icon <%= toy.french? ? 'ok' : 'ko' %>" title="<%= toy.french? ? 'Français' : 'Pas en français' %>">
                     <i class="fa-solid fa-flag"></i>
