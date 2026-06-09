@@ -48,7 +48,7 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def toggle_sold?
-    record.actions.where(user: user).any?
+    user.admin? || record.actions.where(user: user).any?
   end
 
   def verify?

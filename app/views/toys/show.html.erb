@@ -99,7 +99,7 @@
               <span style="font-family: monospace;"><%= @toy.barcode %></span>
             </div>
           <% end %>
-          <% if @toy.location.present? && !@toy.location.include?("attente") %>
+          <% if @toy.location.present? && !@toy.location.match?(/attente|^des\s/i) %>
             <div class="toy-show-info-item">
               <i class="fa-solid fa-location-dot"></i>
               <span><%= @toy.location %></span>
