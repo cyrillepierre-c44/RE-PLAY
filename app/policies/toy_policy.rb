@@ -47,6 +47,10 @@ class ToyPolicy < ApplicationPolicy
     user.admin? || record.actions.where(user: user).any?
   end
 
+  def toggle_sold?
+    record.actions.where(user: user).any?
+  end
+
   def verify?
     user.present? && user.admin?
   end

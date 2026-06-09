@@ -16,7 +16,8 @@
       <i class="fa-solid fa-box btn-back-context-icon"></i>
     <% end %>
   <% else %>
-    <%= link_to toys_path(filter: params[:back_filter]), class: "btn-back-boxes mb-3 d-inline-block" do %>
+    <% back_filter = params[:back_filter].presence || (@toy.sold? ? "sold" : (@toy.market? ? "validated" : nil)) %>
+    <%= link_to toys_path(filter: back_filter), class: "btn-back-boxes mb-3 d-inline-block" do %>
       <i class="fa-solid fa-circle-arrow-left"></i>
       <%= toys_icon(html_class: "btn-back-context-icon") %>
     <% end %>
@@ -52,7 +53,22 @@
 
         <div class="d-flex align-items-center justify-content-between mb-2">
           <h1 class="toy-show-title"><i class="fa-solid fa-gift me-2"></i>J<%= @toy.id %></h1>
-          <span class="toy-show-category-badge"><i class="fa-solid <%= @toy.category.icon.presence || 'fa-tag' %> me-1"></i><%= truncate(@toy.category.name, length: 18) %></span>
+          <div class="d-flex align-items-center gap-2">
+            <% if @toy.market? && policy(@toy).toggle_sold? %>
+              <%= button_to toggle_sold_toy_path(@toy), method: :patch, class: "toy-sold-toggle-btn" do %>
+                <div class="d-flex align-items-center gap-2">
+                  <i class="fa-solid fa-store toy-sold-toggle-icon-left <%= @toy.sold? ? 'dimmed' : 'active' %>" title="Disponible"></i>
+                  <div class="toy-sold-toggle-wrap <%= @toy.sold? ? 'is-sold' : 'is-available' %>">
+                    <div class="toy-sold-toggle-track">
+                      <div class="toy-sold-toggle-thumb"></div>
+                    </div>
+                  </div>
+                  <i class="fa-solid fa-tag toy-sold-toggle-icon-right <%= @toy.sold? ? 'active' : 'dimmed' %>" title="Vendu"></i>
+                </div>
+              <% end %>
+            <% end %>
+            <span class="toy-show-category-badge"><i class="fa-solid <%= @toy.category.icon.presence || 'fa-tag' %> me-1"></i><%= truncate(@toy.category.name, length: 18) %></span>
+          </div>
         </div>
 
         <%# Note vocale opérateur %>

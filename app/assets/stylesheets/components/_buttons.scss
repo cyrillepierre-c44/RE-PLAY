@@ -124,6 +124,56 @@
   }
 }
 
+// ── Toy sold/available toggle ────────────────────────────────
+.toy-sold-toggle-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  form { margin: 0; }
+}
+
+.toy-sold-toggle-icon-left,
+.toy-sold-toggle-icon-right {
+  font-size: 1.2rem;
+  transition: color 0.3s;
+
+  &.active { color: $navy; }
+  &.dimmed { color: rgba($navy, 0.25); }
+}
+
+.toy-sold-toggle-wrap {
+  .toy-sold-toggle-track {
+    width: 64px;
+    height: 32px;
+    border-radius: 16px;
+    background: $navy;
+    position: relative;
+    transition: background 0.3s;
+
+    .toy-sold-toggle-thumb {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: $white;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+    }
+  }
+
+  &.is-sold {
+    .toy-sold-toggle-track {
+      background: rgba(26, 35, 50, 0.30);
+
+      .toy-sold-toggle-thumb { transform: translateX(32px); }
+    }
+  }
+}
+
 .btn-new-box {
   width: 48px;
   height: 48px;
