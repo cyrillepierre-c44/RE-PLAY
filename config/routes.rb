@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       get :verify
       patch :confirm_verify
       patch :restore
+      patch :toggle_sold
     end
     collection do
       delete :purge_deleted

@@ -1,5 +1,5 @@
 class ToysController < ApplicationController
-  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore]
+  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore toggle_sold]
   before_action :box_find, only: %i[new create quick_discard]
 
   # SYSTEM_PROMPT = "Tu es un expert en vente de jouet d'occasion reconditionnés issus de dons.
@@ -17,7 +17,9 @@ class ToysController < ApplicationController
       num = params[:q].to_s.gsub(/\D/, '')
       @toys = num.present? ? base_scope.where(id: num) : base_scope.none
     elsif params[:filter] == "validated"
-      @toys = base_scope.validated.order(created_at: :desc)
+      @toys = base_scope.validated.available.order(created_at: :desc)
+    elsif params[:filter] == "sold"
+      @toys = base_scope.validated.sold.order(created_at: :desc)
     elsif params[:filter] == "deleted"
       @toys = base_scope.deleted.order(created_at: :desc)
     else
@@ -117,7 +119,7 @@ class ToysController < ApplicationController
     if @toy.update(status: :suppr)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} a supprimé le jouet J#{@toy.id}")
-      redirect_to box_path(@toy.box), notice: "Jouet supprimé avec succès."
+      redirect_to toys_path(filter: "deleted"), notice: "Jouet J#{@toy.id} supprimé."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
@@ -128,10 +130,18 @@ class ToysController < ApplicationController
     if @toy.update(status: :pending)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} a réintégré le jouet J#{@toy.id} en attente")
-      redirect_to toy_path(@toy), notice: "Jouet réintégré en attente."
+      redirect_to toys_path, notice: "Jouet J#{@toy.id} remis en attente."
     else
       redirect_to toy_path(@toy), alert: @toy.errors.full_messages.to_sentence
     end
+  end
+
+  def toggle_sold
+    authorize @toy
+    @toy.update!(sold: !@toy.sold)
+    label = @toy.sold? ? "marqué le jouet J#{@toy.id} comme vendu" : "marqué le jouet J#{@toy.id} comme disponible"
+    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a #{label}")
+    redirect_to toy_path(@toy), notice: @toy.sold? ? "Jouet J#{@toy.id} marqué comme vendu." : nil
   end
 
   def purge_deleted

@@ -11,6 +11,8 @@
       <p class="page-subtitle">
         <% if params[:filter] == "validated" %>
           Jouets reconditionnés et validés
+        <% elsif params[:filter] == "sold" %>
+          Jouets vendus
         <% elsif params[:filter] == "deleted" %>
           Jouets jetés
         <% else %>
@@ -58,13 +60,19 @@
         <%= link_to toys_path(filter: "validated", category_id: params[:category_id]),
               class: "filter-tab filter-tab-validated #{'active' if params[:filter] == 'validated'}" do %>
           <i class="fa-solid fa-store"></i>
-          Prêts
-          <span class="filter-count"><%= @count_scope.validated.count %></span>
+          <span class="tab-label">Prêts</span>
+          <span class="filter-count"><%= @count_scope.validated.available.count %></span>
+        <% end %>
+        <%= link_to toys_path(filter: "sold", category_id: params[:category_id]),
+              class: "filter-tab filter-tab-sold #{'active' if params[:filter] == 'sold'}" do %>
+          <i class="fa-solid fa-tag"></i>
+          <span class="tab-label">Vendus</span>
+          <span class="filter-count"><%= @count_scope.validated.sold.count %></span>
         <% end %>
         <%= link_to toys_path(filter: "deleted", category_id: params[:category_id]),
               class: "filter-tab filter-tab-deleted #{'active' if params[:filter] == 'deleted'}" do %>
           <i class="fa-solid fa-trash-can"></i>
-          Jetés
+          <span class="tab-label">Jetés</span>
           <span class="filter-count"><%= @count_scope.deleted.count %></span>
         <% end %>
       </div>
@@ -100,7 +108,9 @@
       <h3 style="color: #6B7280;">Aucun jouet ici</h3>
       <p style="color: #9CA3AF;">
         <% if params[:filter] == "validated" %>
-          Aucun jouet validé pour le moment.
+          Aucun jouet disponible pour le moment.
+        <% elsif params[:filter] == "sold" %>
+          Aucun jouet vendu pour le moment.
         <% else %>
           Tous les jouets sont validés !
         <% end %>
@@ -110,7 +120,7 @@
     <div class="row g-3">
       <% @toys.each do |toy| %>
         <div class="col-12 col-sm-6 col-md-4 col-xl-3">
-          <%= link_to toy_path(toy, back_filter: params[:filter]), class: "toy-card" do %>
+          <%= link_to toy_path(toy, back_filter: params[:filter]), class: "toy-card #{'toy-card--sold' if toy.sold?}" do %>
             <div class="toy-card-photo-wrap">
               <% if toy.photo.attached? %>
                 <%= image_tag toy.photo, class: "toy-card-img" %>
@@ -131,6 +141,11 @@
                 </div>
               <% else %>
                 <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente de validation"></span>
+              <% end %>
+              <% if toy.sold? %>
+                <div class="toy-card-sold-badge">
+                  <i class="fa-solid fa-tag"></i> Vendu
+                </div>
               <% end %>
             </div>
             <div class="toy-card-body">

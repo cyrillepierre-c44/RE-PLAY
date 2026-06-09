@@ -402,6 +402,50 @@ a.toy-card {
   gap: 0.3rem;
 }
 
+// ── Jouet vendu ──────────────────────────────────────────────
+.toy-card--sold {
+  opacity: 0.72;
+
+  .toy-card-img,
+  .toy-card-no-img {
+    filter: blur(2px);
+  }
+
+  .toy-card-photo-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent 0px,
+      transparent 7px,
+      rgba(0, 0, 0, 0.18) 7px,
+      rgba(0, 0, 0, 0.18) 9px
+    );
+    border-radius: inherit;
+    pointer-events: none;
+  }
+}
+
+.toy-card-sold-badge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(26, 35, 50, 0.85);
+  backdrop-filter: blur(3px);
+  color: $white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
 // ── Toy Show ─────────────────────────────────────────────────
 .toy-show-photo-wrap {
   position: relative;
