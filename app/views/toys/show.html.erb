@@ -51,7 +51,7 @@
     <div class="col-12 col-md-7">
       <div class="detail-card p-4 h-100">
 
-        <div class="d-flex align-items-center justify-content-between mb-2">
+        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
           <h1 class="toy-show-title"><i class="fa-solid fa-gift me-2"></i>J<%= @toy.id %></h1>
           <div class="d-flex align-items-center gap-2">
             <% if @toy.market? && policy(@toy).toggle_sold? %>

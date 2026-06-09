@@ -50,27 +50,28 @@
 
   <div class="mb-3">
     <div class="filter-tabs filter-tabs-toys">
+      <% f = @active_filter || params[:filter] %>
       <%= link_to toys_path(category_id: params[:category_id]),
-            class: "filter-tab filter-tab-waiting filter-tab-full #{'active' if params[:filter].blank? || params[:filter] == 'waiting'}" do %>
+            class: "filter-tab filter-tab-waiting filter-tab-full #{'active' if f.blank? || f == 'waiting'}" do %>
         <i class="fa-solid fa-clock"></i>
         Attente
         <span class="filter-count"><%= @count_scope.waiting.count %></span>
       <% end %>
       <div class="filter-tabs-sub-row">
         <%= link_to toys_path(filter: "validated", category_id: params[:category_id]),
-              class: "filter-tab filter-tab-validated #{'active' if params[:filter] == 'validated'}" do %>
+              class: "filter-tab filter-tab-validated #{'active' if f == 'validated'}" do %>
           <i class="fa-solid fa-store"></i>
           <span class="tab-label">Prêts</span>
           <span class="filter-count"><%= @count_scope.validated.available.count %></span>
         <% end %>
         <%= link_to toys_path(filter: "sold", category_id: params[:category_id]),
-              class: "filter-tab filter-tab-sold #{'active' if params[:filter] == 'sold'}" do %>
+              class: "filter-tab filter-tab-sold #{'active' if f == 'sold'}" do %>
           <i class="fa-solid fa-tag"></i>
           <span class="tab-label">Vendus</span>
           <span class="filter-count"><%= @count_scope.validated.sold.count %></span>
         <% end %>
         <%= link_to toys_path(filter: "deleted", category_id: params[:category_id]),
-              class: "filter-tab filter-tab-deleted #{'active' if params[:filter] == 'deleted'}" do %>
+              class: "filter-tab filter-tab-deleted #{'active' if f == 'deleted'}" do %>
           <i class="fa-solid fa-trash-can"></i>
           <span class="tab-label">Jetés</span>
           <span class="filter-count"><%= @count_scope.deleted.count %></span>

@@ -7,6 +7,12 @@ class BoxesController < ApplicationController
     if params[:q].present?
       num = params[:q].to_s.gsub(/\D/, '')
       @boxes = num.present? ? base_scope.where(id: num) : base_scope.none
+      if @boxes.one?
+        b = @boxes.first
+        @active_filter = if b.suppr? then "suppr"
+                         elsif b.empty? then "empty"
+                         end
+      end
     elsif params[:filter] == "suppr"
       @boxes = base_scope.suppr.order(created_at: :desc)
     elsif params[:filter] == "empty"

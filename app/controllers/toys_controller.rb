@@ -16,6 +16,13 @@ class ToysController < ApplicationController
     if params[:q].present?
       num = params[:q].to_s.gsub(/\D/, '')
       @toys = num.present? ? base_scope.where(id: num) : base_scope.none
+      if @toys.one?
+        t = @toys.first
+        @active_filter = if t.suppr? then "deleted"
+                         elsif t.market? && t.sold? then "sold"
+                         elsif t.market? then "validated"
+                         end
+      end
     elsif params[:filter] == "validated"
       @toys = base_scope.validated.available.order(created_at: :desc)
     elsif params[:filter] == "sold"
