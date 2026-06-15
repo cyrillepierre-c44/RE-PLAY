@@ -174,6 +174,7 @@
             <li>Identification des gaspillages et points de blocage</li>
             <li>Chronométrage et mesure de la charge de travail réelle</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -196,6 +197,7 @@
             <li>Standardisation des postes de tri</li>
             <li>Réduction de la pénibilité physique</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -218,6 +220,7 @@
             <li>Intégration de l'IA de reconnaissance visuelle des jouets</li>
             <li>Zéro saisie manuelle sur les flux entrants</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -240,6 +243,7 @@
             <li>Procédures de réception et contrôle qualité</li>
             <li>Fiches réflexe pour les salariés en insertion</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -262,6 +266,7 @@
             <li>Transfert de compétences aux encadrants (12h)</li>
             <li>Prise en main des outils IoT et IA (10h)</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -338,6 +343,7 @@
             <li>Diagnostic de la productivité par poste</li>
             <li>Identification des gaspillages et opportunités d'amélioration</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -360,6 +366,7 @@
             <li>Structuration des zones de valorisation</li>
             <li>Définition des standards de performance par poste</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -382,6 +389,7 @@
             <li>Mise en place de tableaux de bord de pilotage de la performance</li>
             <li>Indicateurs temps réel du tri à la valorisation finale</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -404,6 +412,7 @@
             <li>Procédures vrac et gestion des flux associés</li>
             <li>Standards de management visuel et de performance</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -426,6 +435,7 @@
             <li>Formation aux outils digitaux et tableaux de bord (12h)</li>
             <li>Analyse d'indicateurs et posture de résolution de problèmes (8h)</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -502,6 +512,7 @@
             <li>Audit de l'existant GDR : données, usages, points de douleur</li>
             <li>Analyse des besoins de connexion avec les partenaires clients</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -524,6 +535,7 @@
             <li>Organisation des zones de picking et d'expédition</li>
             <li>Procédures d'inventaire tournant</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -546,6 +558,7 @@
             <li>Connexion aux API et logiciels clients pour synchronisation automatique</li>
             <li>Exploration de l'IA pour la prévision des stocks</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -568,6 +581,7 @@
             <li>Guide d'utilisation du nouveau système d'information</li>
             <li>Procédures de synchronisation et échanges de données clients</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -590,6 +604,7 @@
             <li>Formation aux connexions API et interfaces clients (6h)</li>
             <li>Préparation à la sortie &amp; Passeport Compétences salariés (6h)</li>
           </ul>
+          <%= render 'levier_gantt', lev: lev %>
           <%= render 'levier_track', lev: lev %>
         </div>
       </div>
@@ -804,6 +819,10 @@
     </div>
 
     <div class="section-title">7. <span>Conditions &amp; Acceptation</span></div>
+
+    <div class="devis-comment" contenteditable="true"
+         data-controller="devis-comment"
+         data-placeholder="Commentaire libre (ex : conditions particulières, rappel contexte, note client…)"></div>
 
     <div class="devis-conditions">
       <p><strong>Validité du devis :</strong> 60 jours à compter de la date d'émission</p>
