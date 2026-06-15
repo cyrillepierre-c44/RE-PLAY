@@ -247,8 +247,20 @@
         justify-content: center;
         flex-shrink: 0;
       }
-      .levier-body { flex: 1; }
+      .levier-body {
+        flex: 1;
+        display: grid;
+        grid-template-columns: auto minmax(70px, 1fr);
+        column-gap: 10px;
+        grid-template-areas:
+          "top   top"
+          "sub   gantt"
+          "list  gantt"
+          "track track";
+        align-items: start;
+      }
       .levier-top {
+        grid-area: top;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -263,8 +275,9 @@
         border-radius: 10px;
         font-weight: 600;
       }
-      .levier-sub { font-size: 9px; color: #c9a84c; font-weight: 600; margin-bottom: 4px; }
-      ul { list-style: none; padding: 0; }
+      .levier-sub   { grid-area: sub;   font-size: 9px; color: #c9a84c; font-weight: 600; margin-bottom: 4px; }
+      .levier-gantt { grid-area: gantt; }
+      ul            { grid-area: list;  list-style: none; padding: 0; }
       ul li {
         font-size: 9px;
         color: #555;
@@ -276,6 +289,7 @@
 
       // ── Tracking row (toggle + progress bar + %)
       .levier-track {
+        grid-area: track;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -586,6 +600,145 @@ body.paper-mode .projet-devis-wrapper {
   .gains-table .gain-val { color: #333; }
 }
 
+// ── Champ commentaire libre (page 7, avant conditions) ──
+.devis-comment {
+  min-height: 48px;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border: 1.5px dashed #aaa;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #1a2332;
+  outline: none;
+  cursor: text;
+
+  &:empty::before {
+    content: attr(data-placeholder);
+    color: #aaa;
+    font-style: italic;
+    pointer-events: none;
+  }
+
+  &:focus {
+    border-color: #c9a84c;
+    background: #fffdf4;
+  }
+}
+
+// ── Mini Gantt par levier (inline à droite des li) ──
+.levier-gantt {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+// Règle : [badge-date] [ticks] [badge-date]
+.gantt-ruler {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border-bottom: 2px solid #c9a84c;
+  padding-bottom: 2px;
+  margin-bottom: 1px;
+}
+
+// Badge cliquable — affiche DD/MM, input invisible en overlay pour le date-picker natif
+.gantt-date-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: #fffdf4;
+  border: 1px solid #c9a84c;
+  border-radius: 2px;
+  padding: 0 3px;
+  height: 13px;
+  cursor: pointer;
+  min-width: 28px;
+
+  .gantt-date-lbl {
+    font-size: 7px;
+    color: #888;
+    white-space: nowrap;
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  input[type="date"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.gantt-ticks {
+  flex: 1;
+  position: relative;
+  height: 13px;
+  overflow: hidden;
+  min-width: 0;
+
+  .gantt-tick {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: 6px;
+    color: #bbb;
+    white-space: nowrap;
+    bottom: 1px;
+  }
+}
+
+// Rangées de barres (sans labels — les li sont déjà à gauche)
+.gantt-bars { display: flex; flex-direction: column; }
+
+.gantt-row {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.gantt-track {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  background: #efefef;
+  border-radius: 2px;
+}
+
+.gantt-bar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 7px;
+  background: #7aabd4;
+  border-radius: 2px;
+  cursor: grab;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  min-width: 3px;
+
+  &:active { cursor: grabbing; }
+}
+
+.gantt-handle {
+  width: 4px;
+  background: rgba(0,0,0,0.22);
+  cursor: col-resize;
+  flex-shrink: 0;
+
+  &--l { border-radius: 2px 1px 1px 2px; }
+  &--r { border-radius: 1px 2px 2px 1px; }
+}
+
 // ── Impression ──
 @media print {
   @page { size: A4; margin: 0; }
@@ -623,6 +776,18 @@ body.paper-mode .projet-devis-wrapper {
   // Masquer les contrôles de suivi et les leviers exclus à l'impression
   .levier-track { display: none !important; }
   .levier--off  { display: none !important; }
+
+  // Gantt : badges de date masqués, ticks et barres s'impriment si données présentes
+  .gantt-date-btn { display: none !important; }
+
+  // Commentaire : bordure invisible, placeholder masqué si vide
+  .devis-comment {
+    border: none !important;
+    background: transparent !important;
+    padding-left: 0 !important;
+    &:empty { display: none !important; }
+    &::before { display: none !important; }
+  }
 
   // ── Compactage print — récupère ~40 px sur les pages denses (p.2 et p.3)
   // sans toucher au contenu ni aux tailles de texte visibles.
