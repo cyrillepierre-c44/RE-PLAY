@@ -514,7 +514,103 @@
     color: #555;
 
     strong { color: #1a1a2e; }
-    p { margin-bottom: 4px; }
+    p { margin-bottom: 6px; }
+
+    .cond-editable {
+      display: inline-block;
+      min-width: 1.5em;
+      border-bottom: 1.5px dashed #c9a84c;
+      color: #1a1a2e;
+      font-weight: 700;
+      cursor: text;
+      outline: none;
+      padding: 0 2px;
+      border-radius: 2px;
+      transition: background 0.15s;
+      text-align: center;
+
+      &:focus { background: #fff8e7; }
+    }
+
+    .cond-facturation {
+      margin-bottom: 6px;
+      strong { display: block; margin-bottom: 5px; }
+    }
+
+    .cond-tranches {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .cond-tranche {
+      flex: 1;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+
+      .cond-pct {
+        font-size: 11px;
+        font-weight: 700;
+        color: #1a1a2e;
+        min-width: 1.8em;
+        text-align: center;
+      }
+
+      .cond-label { color: #666; }
+
+    }
+
+    .cond-editable--date {
+      min-width: 6em;
+      font-family: monospace;
+      letter-spacing: 0.05em;
+    }
+
+    // Mode compact automatique quand 2 tranches extra sont présentes
+    &:has(.cond-tranche--extra + .cond-tranche--extra) {
+      flex-wrap: nowrap;
+      gap: 3px;
+
+      .cond-tranche        { padding: 4px 6px; }
+      .cond-pct            { font-size: 10px; min-width: 1.4em; }
+      .cond-label          { font-size: 7.5px; }
+      .cond-editable--date { min-width: 4.5em; font-size: 7.5px; }
+    }
+
+    .cond-add-btn {
+      flex: none;
+      align-self: center;
+      background: none;
+      border: 1.5px dashed #c9a84c;
+      border-radius: 6px;
+      color: #c9a84c;
+      font-size: 8px;
+      font-weight: 700;
+      padding: 4px 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+
+      &:hover { background: #fff8e7; }
+    }
+
+    .cond-remove {
+      background: none;
+      border: none;
+      color: #bbb;
+      font-size: 11px;
+      line-height: 1;
+      padding: 0 2px;
+      cursor: pointer;
+      margin-left: 2px;
+
+      &:hover { color: #e55; }
+    }
   }
 
   .signature-block {
@@ -788,6 +884,15 @@ body.paper-mode .projet-devis-wrapper {
     &:empty { display: none !important; }
     &::before { display: none !important; }
   }
+
+  // Champs éditables conditions : supprime les pointillés à l'impression
+  .cond-editable {
+    border-bottom: none !important;
+    background: transparent !important;
+    font-weight: 700;
+    color: #1a1a2e !important;
+  }
+  .cond-add-btn, .cond-remove { display: none !important; }
 
   // ── Compactage print — récupère ~40 px sur les pages denses (p.2 et p.3)
   // sans toucher au contenu ni aux tailles de texte visibles.
