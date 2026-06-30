@@ -824,9 +824,51 @@
          data-controller="devis-comment"
          data-placeholder="Commentaire libre (ex : conditions particulières, rappel contexte, note client…)"></div>
 
-    <div class="devis-conditions">
-      <p><strong>Validité du devis :</strong> 60 jours à compter de la date d'émission</p>
-      <p><strong>Facturation :</strong> 50% à la signature, 30% après 45 jours et solde de 20% en fin de module selon avancement</p>
+    <div class="devis-conditions" data-controller="devis-conditions">
+      <p>
+        <strong>Validité du devis :</strong>
+        <span class="cond-editable"
+              contenteditable="true"
+              data-devis-conditions-target="field"
+              data-key="validite">60</span> jours à compter de la date d'émission
+      </p>
+
+      <div class="cond-facturation">
+        <strong>Facturation :</strong>
+        <div class="cond-tranches" data-devis-conditions-target="tranches">
+          <div class="cond-tranche">
+            <span class="cond-pct cond-editable"
+                  contenteditable="true"
+                  data-devis-conditions-target="field"
+                  data-key="t1-pct">50</span>%
+            <span class="cond-label">à la signature</span>
+          </div>
+          <div class="cond-tranche">
+            <span class="cond-pct cond-editable"
+                  contenteditable="true"
+                  data-devis-conditions-target="field"
+                  data-key="t2-pct">30</span>%
+            <span class="cond-label">le</span>
+            <span class="cond-editable cond-editable--date"
+                  contenteditable="true"
+                  data-devis-conditions-target="field"
+                  data-key="t2-date">__/__/____</span>
+          </div>
+          <button class="cond-add-btn"
+                  type="button"
+                  data-devis-conditions-target="addBtn"
+                  data-action="click->devis-conditions#addTranche">+ tranche</button>
+          <div class="cond-tranche cond-tranche--solde">
+            <span class="cond-pct" data-devis-conditions-target="solde">20</span>%
+            <span class="cond-label">solde le</span>
+            <span class="cond-editable cond-editable--date"
+                  contenteditable="true"
+                  data-devis-conditions-target="field"
+                  data-key="fin-mission">__/__/____</span>
+          </div>
+        </div>
+      </div>
+
       <p><strong>Modalités :</strong> Pour les interventions sur site à Enjoué, planning à définir conjointement</p>
       <p><strong>TVA :</strong> TVA en sus au taux en vigueur — Devis établi hors taxes</p>
     </div>
