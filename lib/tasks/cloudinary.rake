@@ -1,14 +1,14 @@
 namespace :cloudinary do
   desc "Retraite les photos de jouets déjà stockées via la transformation d'upload (config/storage.yml) et purge les anciens fichiers"
   task recompress_photos: :environment do
-    unless ActiveStorage::Blob.service.class.name == "ActiveStorage::Service::CloudinaryService"
-      abort "Le service Active Storage courant (RAILS_ENV=#{Rails.env}) n'est pas Cloudinary. Abandon."
-    end
-
     dry_run = ActiveModel::Type::Boolean.new.cast(ENV.fetch("DRY_RUN", nil))
     limit = ENV.fetch("LIMIT", nil)&.to_i
 
-    toys = Toy.joins(:photo_attachment)
+    # Filtre par service du blob (pas par service par défaut de l'environnement) :
+    # ça permet de tester la tâche en dev sur les quelques photos qui y ont été
+    # uploadées vers Cloudinary avant la séparation dev/prod, sans toucher aux
+    # vraies photos de prod (dossier "development" isolé sur le même compte).
+    toys = Toy.joins(photo_attachment: :blob).where(active_storage_blobs: { service_name: "cloudinary" })
     toys = toys.limit(limit) if limit
     total = toys.count
 
@@ -30,11 +30,17 @@ namespace :cloudinary do
       end
 
       begin
-        old_blob.open do |file|
+        # `blob.download` (et non `blob.open`) : Cloudinary sert déjà l'ancien
+        # fichier via l'URL transformée (redimensionnée), donc les octets
+        # livrés ne correspondent plus au checksum calculé à l'upload d'origine.
+        # `open` vérifie ce checksum et lèverait IntegrityError ; `download`
+        # renvoie les octets bruts sans vérification.
+        StringIO.open(old_blob.download) do |io|
           toy.photo.attach(
-            io: file,
+            io: io,
             filename: old_blob.filename.to_s,
-            content_type: old_blob.content_type
+            content_type: old_blob.content_type,
+            service_name: old_blob.service_name
           )
         end
         old_blob.purge
