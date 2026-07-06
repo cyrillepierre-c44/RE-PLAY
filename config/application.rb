@@ -17,6 +17,12 @@ module RePlay
     config.load_defaults 8.1
     config.i18n.default_locale = :fr
 
+    # Les métadonnées extraites (largeur/hauteur) ne sont utilisées nulle part
+    # dans l'app. On désactive l'analyse auto : sur Cloudinary, la photo servie
+    # est transformée (redimensionnée) par rapport à celle uploadée, donc son
+    # téléchargement pour analyse échoue systématiquement avec IntegrityError.
+    config.active_storage.analyzers = []
+
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
     # Common ones are `templates`, `generators`, or `middleware`, for example.
