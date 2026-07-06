@@ -30,7 +30,8 @@ Rails.application.configure do
   config.cache_store = :memory_store
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :cloudinary
+  # Séparé de Cloudinary pour ne pas consommer le quota du compte de production.
+  config.active_storage.service = :local
 
   # Gmail SMTP for development testing
   config.action_mailer.delivery_method = :smtp

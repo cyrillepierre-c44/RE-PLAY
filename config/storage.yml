@@ -9,6 +9,14 @@ local:
 cloudinary:
   service: Cloudinary
   folder: <%= Rails.env %>
+  # Redimensionne la photo côté Cloudinary avant stockage (aucune image
+  # originale pleine résolution n'est conservée), ce qui réduit fortement
+  # le stockage et la bande passante consommés.
+  transformation:
+    width: 1600
+    height: 1600
+    crop: limit
+    quality: auto
 
 # Use bin/rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
 # amazon:
