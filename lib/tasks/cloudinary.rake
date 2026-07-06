@@ -55,4 +55,39 @@ namespace :cloudinary do
 
     puts "Terminé. #{processed} retraité(s), #{failed} échec(s)." unless dry_run
   end
+
+  desc "Purge les blobs Cloudinary orphelins (jouets supprimés dont la photo n'a jamais été nettoyée)"
+  task purge_orphaned_blobs: :environment do
+    dry_run = ActiveModel::Type::Boolean.new.cast(ENV.fetch("DRY_RUN", nil))
+    limit = ENV.fetch("LIMIT", nil)&.to_i
+
+    blobs = ActiveStorage::Blob.left_joins(:attachments)
+                               .where(active_storage_attachments: { id: nil })
+                               .where(service_name: "cloudinary")
+    blobs = blobs.limit(limit) if limit
+    total = blobs.count
+
+    puts "#{total} blob(s) orphelin(s) sur Cloudinary#{' (DRY_RUN, aucune modification)' if dry_run}."
+
+    purged = 0
+    failed = 0
+
+    blobs.find_each do |blob|
+      if dry_run
+        puts "[dry-run] Blob##{blob.id}: #{blob.filename} (#{blob.byte_size} octets)"
+        next
+      end
+
+      begin
+        blob.purge
+        purged += 1
+        puts "[#{purged}/#{total}] Blob##{blob.id} (#{blob.filename}) purgé."
+      rescue StandardError => e
+        failed += 1
+        warn "Blob##{blob.id}: échec (#{e.class}: #{e.message})"
+      end
+    end
+
+    puts "Terminé. #{purged} purgé(s), #{failed} échec(s)." unless dry_run
+  end
 end
