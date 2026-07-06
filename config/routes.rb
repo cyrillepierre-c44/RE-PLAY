@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     member do
       patch :disable
       patch :enable
+      patch :toggle_admin
     end
   end
   root to: "pages#home"

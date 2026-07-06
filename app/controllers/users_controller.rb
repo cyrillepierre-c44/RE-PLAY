@@ -22,6 +22,14 @@ class UsersController < ApplicationController
     redirect_to users_path, notice: "Compte réactivé.", status: :see_other
   end
 
+  def toggle_admin
+    @user = User.find(params[:id])
+    authorize @user
+    @user.update!(admin: !@user.admin?)
+    notice = @user.admin? ? "#{@user.email} est maintenant administrateur." : "Droits administrateur retirés à #{@user.email}."
+    redirect_to users_path, notice: notice, status: :see_other
+  end
+
   private
 
   def require_admin!

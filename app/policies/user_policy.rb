@@ -7,6 +7,10 @@ class UserPolicy < ApplicationPolicy
     user.admin? && record != user
   end
 
+  def toggle_admin?
+    user.admin? && record != user
+  end
+
   class Scope < ApplicationPolicy::Scope
     def resolve
       raise Pundit::NotAuthorizedError unless user.admin?
