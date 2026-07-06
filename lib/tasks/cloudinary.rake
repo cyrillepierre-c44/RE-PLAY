@@ -90,4 +90,32 @@ namespace :cloudinary do
 
     puts "Terminé. #{purged} purgé(s), #{failed} échec(s)." unless dry_run
   end
+
+  desc "Vérifie que les photos des jouets actifs (non supprimés) existent bien sur Cloudinary"
+  task check_broken_photos: :environment do
+    toys = Toy.joins(photo_attachment: :blob)
+              .where.not(status: :suppr)
+              .where(active_storage_blobs: { service_name: "cloudinary" })
+
+    toy_by_public_id = {}
+    toys.find_each do |toy|
+      blob = toy.photo.blob
+      toy_by_public_id[blob.service.public_id(blob.key)] = toy.id
+    end
+
+    puts "#{toy_by_public_id.size} jouet(s) actif(s) avec photo à vérifier."
+
+    missing = []
+    toy_by_public_id.keys.each_slice(100) do |batch|
+      response = Cloudinary::Api.resources_by_ids(batch, resource_type: "image")
+      found_ids = response["resources"].map { |r| r["public_id"] }
+      (batch - found_ids).each { |public_id| missing << toy_by_public_id[public_id] }
+    end
+
+    if missing.empty?
+      puts "Aucune photo manquante détectée."
+    else
+      puts "Jouet(s) avec photo manquante sur Cloudinary : #{missing.sort.join(', ')}"
+    end
+  end
 end
