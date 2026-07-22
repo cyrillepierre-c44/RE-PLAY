@@ -92,14 +92,38 @@
 
   <% if params[:filter].blank? && current_user.admin? && @missing_price_count.to_i.positive? %>
     <div class="mb-3">
-      <%= button_to refresh_missing_prices_toys_path,
-            method: :post,
-            data: { turbo_confirm: "Relancer le calcul du prix pour #{@missing_price_count} jouet(s) sans prix ?" },
-            class: "btn-refresh-prices" do %>
-        <i class="fa-solid fa-robot"></i>
-        <i class="fa-solid fa-arrows-rotate"></i>
-        <span>Calculer les prix manquants</span>
-        <span class="filter-count"><%= @missing_price_count %></span>
+      <% if @price_refresh_total.present? %>
+        <% done = [@price_refresh_total - @missing_price_count, 0].max %>
+        <div class="price-refresh-progress"
+             data-controller="price-refresh-progress"
+             data-price-refresh-progress-total-value="<%= @price_refresh_total %>"
+             data-price-refresh-progress-remaining-value="<%= @missing_price_count %>"
+             data-price-refresh-progress-url-value="<%= refresh_prices_status_toys_path %>">
+          <div class="price-refresh-progress-header">
+            <i class="fa-solid fa-robot fa-bounce"></i>
+            <span>Calcul des prix en cours…</span>
+            <span class="price-refresh-progress-count" data-price-refresh-progress-target="count"><%= done %> / <%= @price_refresh_total %></span>
+          </div>
+          <div class="price-refresh-progress-track">
+            <div class="price-refresh-progress-fill"
+                 data-price-refresh-progress-target="fill"
+                 style="width: <%= (done * 100.0 / [@price_refresh_total, 1].max).round %>%;"></div>
+          </div>
+          <div class="price-refresh-progress-stalled" data-price-refresh-progress-target="stalled" hidden>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Certains prix n'ont pas pu être calculés. Réessaie dans quelques minutes.</span>
+          </div>
+        </div>
+      <% else %>
+        <%= button_to refresh_missing_prices_toys_path,
+              method: :post,
+              data: { turbo_confirm: "Relancer le calcul du prix pour #{@missing_price_count} jouet(s) sans prix ?" },
+              class: "btn-refresh-prices" do %>
+          <i class="fa-solid fa-robot"></i>
+          <i class="fa-solid fa-arrows-rotate"></i>
+          <span>Calculer les prix manquants</span>
+          <span class="filter-count"><%= @missing_price_count %></span>
+        <% end %>
       <% end %>
     </div>
   <% end %>

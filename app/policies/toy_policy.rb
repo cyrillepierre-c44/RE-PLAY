@@ -74,4 +74,8 @@ class ToyPolicy < ApplicationPolicy
   def refresh_missing_prices?
     user.admin?
   end
+
+  def refresh_prices_status?
+    user.admin?
+  end
 end

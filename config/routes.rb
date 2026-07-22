@@ -33,6 +33,7 @@ Rails.application.routes.draw do
     collection do
       delete :purge_deleted
       post :refresh_missing_prices
+      get :refresh_prices_status
     end
   end
 

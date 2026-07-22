@@ -39,6 +39,12 @@ class ToysController < ApplicationController
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
     @categories = Category.all.order(:name)
     @missing_price_count = current_user.admin? ? Toy.waiting.where(price: nil).joins(:photo_attachment).count : 0
+    @price_refresh_total = session[:price_refresh_total] if current_user.admin?
+    if @price_refresh_total.present? && @missing_price_count.zero?
+      session.delete(:price_refresh_total)
+      flash.now[:notice] = "Prix recalculé pour #{@price_refresh_total} jouet(s) !"
+      @price_refresh_total = nil
+    end
   end
 
   def show
@@ -168,12 +174,18 @@ class ToysController < ApplicationController
   def refresh_missing_prices
     authorize Toy, :refresh_missing_prices?
     toys = Toy.waiting.where(price: nil).joins(:photo_attachment)
+    session[:price_refresh_total] = toys.count
     toys.find_each do |toy|
       PriceiaJob.perform_later(toy.id, french: toy.french, ce_mark: toy.ce_mark, safe: toy.safe, clean: toy.clean, complete: toy.complete, playable: toy.playable)
       Action.create!(user: current_user, actionable: toy,
                      content: "#{current_user.email} a relancé le calcul du prix du jouet J#{toy.id}")
     end
-    redirect_to toys_path, notice: "Calcul du prix relancé pour #{toys.count} jouet(s).", status: :see_other
+    redirect_to toys_path, status: :see_other
+  end
+
+  def refresh_prices_status
+    authorize Toy, :refresh_prices_status?
+    render json: { remaining: Toy.waiting.where(price: nil).joins(:photo_attachment).count }
   end
 
   def purge_deleted

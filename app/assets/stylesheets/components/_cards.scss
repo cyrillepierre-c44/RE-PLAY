@@ -620,6 +620,58 @@ a.toy-card {
   }
 }
 
+.price-refresh-progress {
+  border: 1.5px solid rgba($purple, 0.25);
+  border-radius: $border-radius-lg;
+  background: rgba($purple, 0.08);
+  padding: 0.85rem 1rem;
+
+  .price-refresh-progress-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: $purple;
+    font-weight: 700;
+    margin-bottom: 0.55rem;
+  }
+
+  .price-refresh-progress-count {
+    margin-left: auto;
+    background: $purple;
+    color: $white;
+    border-radius: 999px;
+    padding: 0.1rem 0.6rem;
+    font-size: 0.85rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .price-refresh-progress-track {
+    height: 10px;
+    border-radius: 999px;
+    background: rgba($purple, 0.15);
+    overflow: hidden;
+  }
+
+  .price-refresh-progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: $purple;
+    transition: width 0.6s ease;
+  }
+
+  .price-refresh-progress-stalled {
+    margin-top: 0.55rem;
+    color: $danger-red;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    &[hidden] { display: none; }
+  }
+}
+
 .toy-show-timeline-wrap {
   background: $white;
   border-radius: $border-radius-xl;
