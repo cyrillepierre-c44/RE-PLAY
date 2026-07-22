@@ -103,6 +103,13 @@
             <i class="fa-solid fa-robot fa-bounce"></i>
             <span>Calcul des prix en cours…</span>
             <span class="price-refresh-progress-count" data-price-refresh-progress-target="count"><%= done %> / <%= @price_refresh_total %></span>
+            <%= button_to cancel_price_refresh_toys_path,
+                  method: :post,
+                  class: "price-refresh-stop-btn",
+                  title: "Arrêter le calcul",
+                  form: { data: { turbo_confirm: "Arrêter le calcul des prix en cours ?" } } do %>
+              <i class="fa-solid fa-stop"></i>
+            <% end %>
           </div>
           <div class="price-refresh-progress-track">
             <div class="price-refresh-progress-fill"
@@ -110,8 +117,16 @@
                  style="width: <%= (done * 100.0 / [@price_refresh_total, 1].max).round %>%;"></div>
           </div>
           <div class="price-refresh-progress-stalled" data-price-refresh-progress-target="stalled" hidden>
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <span>Certains prix n'ont pas pu être calculés. Réessaie dans quelques minutes.</span>
+            <div class="price-refresh-progress-stalled-msg">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <span>Le calcul semble bloqué (limite de l'API).</span>
+            </div>
+            <%= button_to refresh_missing_prices_toys_path,
+                  method: :post,
+                  class: "price-refresh-retry-btn" do %>
+              <i class="fa-solid fa-arrows-rotate"></i>
+              <span>Relancer</span>
+            <% end %>
           </div>
         </div>
       <% else %>

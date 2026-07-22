@@ -78,4 +78,8 @@ class ToyPolicy < ApplicationPolicy
   def refresh_prices_status?
     user.admin?
   end
+
+  def cancel_price_refresh?
+    user.admin?
+  end
 end

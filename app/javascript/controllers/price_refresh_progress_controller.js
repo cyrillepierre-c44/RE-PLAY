@@ -31,6 +31,7 @@ export default class extends Controller {
     if (remaining !== this.lastRemaining) {
       this.lastRemaining = remaining
       this.lastChangeAt = Date.now()
+      this.stalledTarget.hidden = true
     }
     this.render(remaining)
 
@@ -38,7 +39,8 @@ export default class extends Controller {
       clearInterval(this.timer)
       setTimeout(() => window.location.reload(), 600)
     } else if (Date.now() - this.lastChangeAt > 90000) {
-      clearInterval(this.timer)
+      // Les retries de l'API peuvent espacer les calculs de plusieurs minutes :
+      // on prévient sans arrêter la surveillance
       this.stalledTarget.hidden = false
     }
   }

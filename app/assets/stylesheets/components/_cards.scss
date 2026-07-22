@@ -645,6 +645,22 @@ a.toy-card {
     font-variant-numeric: tabular-nums;
   }
 
+  .price-refresh-stop-btn {
+    width: 32px;
+    height: 32px;
+    border: 1.5px solid rgba($danger-red, 0.3);
+    border-radius: 50%;
+    background: rgba($danger-red, 0.1);
+    color: $danger-red;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    cursor: pointer;
+
+    &:hover { background: rgba($danger-red, 0.2); }
+  }
+
   .price-refresh-progress-track {
     height: 10px;
     border-radius: 999px;
@@ -661,14 +677,38 @@ a.toy-card {
 
   .price-refresh-progress-stalled {
     margin-top: 0.55rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+
+    &[hidden] { display: none; }
+  }
+
+  .price-refresh-progress-stalled-msg {
     color: $danger-red;
     font-weight: 600;
     font-size: 0.85rem;
     display: flex;
     align-items: center;
     gap: 0.4rem;
+  }
 
-    &[hidden] { display: none; }
+  .price-refresh-retry-btn {
+    min-height: 40px;
+    padding: 0.35rem 1rem;
+    border: none;
+    border-radius: $border-radius-lg;
+    background: $purple;
+    color: $white;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+
+    &:hover { background: darken($purple, 8%); }
   }
 }
 

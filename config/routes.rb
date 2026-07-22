@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       delete :purge_deleted
       post :refresh_missing_prices
       get :refresh_prices_status
+      post :cancel_price_refresh
     end
   end
 

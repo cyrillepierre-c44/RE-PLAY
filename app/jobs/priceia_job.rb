@@ -1,6 +1,14 @@
 class PriceiaJob < ApplicationJob
   queue_as :default
 
+  # GitHub Models n'accepte que 2 requêtes simultanées sur le compte :
+  # on exécute donc les jobs de pricing un par un
+  limits_concurrency to: 1, key: "priceia"
+
+  # et on retente avec un délai croissant si l'API rate-limite quand même
+  # (limites par minute / par jour de GitHub Models)
+  retry_on RubyLLM::RateLimitError, wait: :polynomially_longer, attempts: 8
+
   def perform(toy_id, french:, ce_mark:, safe:, clean:, complete:, playable:)
     toy = Toy.find(toy_id)
 

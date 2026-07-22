@@ -39,11 +39,19 @@ class ToysController < ApplicationController
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
     @categories = Category.all.order(:name)
     @missing_price_count = current_user.admin? ? Toy.waiting.where(price: nil).joins(:photo_attachment).count : 0
-    @price_refresh_total = session[:price_refresh_total] if current_user.admin?
-    if @price_refresh_total.present? && @missing_price_count.zero?
-      session.delete(:price_refresh_total)
-      flash.now[:notice] = "Prix recalculé pour #{@price_refresh_total} jouet(s) !"
-      @price_refresh_total = nil
+    session.delete(:price_refresh_total) # ancien format
+    refresh = session[:price_refresh]
+    if current_user.admin? && refresh.present?
+      @price_refresh_total = refresh["total"].to_i
+      if @missing_price_count.zero?
+        session.delete(:price_refresh)
+        flash.now[:notice] = "Prix recalculé pour #{@price_refresh_total} jouet(s) !"
+        @price_refresh_total = nil
+      elsif refresh["started_at"].to_i < 30.minutes.ago.to_i
+        # calcul manifestement abandonné (jobs en échec) : on rend la main
+        session.delete(:price_refresh)
+        @price_refresh_total = nil
+      end
     end
   end
 
@@ -174,7 +182,7 @@ class ToysController < ApplicationController
   def refresh_missing_prices
     authorize Toy, :refresh_missing_prices?
     toys = Toy.waiting.where(price: nil).joins(:photo_attachment)
-    session[:price_refresh_total] = toys.count
+    session[:price_refresh] = { "total" => toys.count, "started_at" => Time.current.to_i }
     toys.find_each do |toy|
       PriceiaJob.perform_later(toy.id, french: toy.french, ce_mark: toy.ce_mark, safe: toy.safe, clean: toy.clean, complete: toy.complete, playable: toy.playable)
       Action.create!(user: current_user, actionable: toy,
@@ -186,6 +194,19 @@ class ToysController < ApplicationController
   def refresh_prices_status
     authorize Toy, :refresh_prices_status?
     render json: { remaining: Toy.waiting.where(price: nil).joins(:photo_attachment).count }
+  end
+
+  def cancel_price_refresh
+    authorize Toy, :cancel_price_refresh?
+    cancelled = 0
+    SolidQueue::Job.where(class_name: "PriceiaJob", finished_at: nil).find_each do |job|
+      job.discard
+      cancelled += 1
+    rescue StandardError
+      # job déjà pris par un worker : il terminera son calcul
+    end
+    session.delete(:price_refresh)
+    redirect_to toys_path, notice: "Calcul des prix arrêté (#{cancelled} en attente annulé(s)).", status: :see_other
   end
 
   def purge_deleted
