@@ -28,9 +28,11 @@ Rails.application.routes.draw do
       patch :confirm_verify
       patch :restore
       patch :toggle_sold
+      post :refresh_price
     end
     collection do
       delete :purge_deleted
+      post :refresh_missing_prices
     end
   end
 

@@ -1,5 +1,5 @@
 class ToysController < ApplicationController
-  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore toggle_sold]
+  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore toggle_sold refresh_price]
   before_action :box_find, only: %i[new create quick_discard]
 
   # SYSTEM_PROMPT = "Tu es un expert en vente de jouet d'occasion reconditionnés issus de dons.
@@ -38,6 +38,7 @@ class ToysController < ApplicationController
     own = current_user.admin? ? Toy : Toy.where(id: Action.where(actionable_type: "Toy", user: current_user).select(:actionable_id))
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
     @categories = Category.all.order(:name)
+    @missing_price_count = current_user.admin? ? Toy.waiting.where(price: nil).joins(:photo_attachment).count : 0
   end
 
   def show
@@ -149,6 +150,30 @@ class ToysController < ApplicationController
     label = @toy.sold? ? "marqué le jouet J#{@toy.id} comme vendu" : "marqué le jouet J#{@toy.id} comme disponible"
     Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a #{label}")
     redirect_to toy_path(@toy), notice: @toy.sold? ? "Jouet J#{@toy.id} marqué comme vendu." : nil
+  end
+
+  def refresh_price
+    authorize @toy
+    unless @toy.photo.attached?
+      return redirect_to toy_path(@toy), alert: "Impossible de calculer le prix : le jouet n'a pas de photo."
+    end
+
+    @toy.update(price: nil)
+    PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
+    Action.create!(user: current_user, actionable: @toy,
+                   content: "#{current_user.email} a relancé le calcul du prix du jouet J#{@toy.id}")
+    redirect_to toy_path(@toy), notice: "Nouveau calcul du prix en cours pour le jouet J#{@toy.id}…", status: :see_other
+  end
+
+  def refresh_missing_prices
+    authorize Toy, :refresh_missing_prices?
+    toys = Toy.waiting.where(price: nil).joins(:photo_attachment)
+    toys.find_each do |toy|
+      PriceiaJob.perform_later(toy.id, french: toy.french, ce_mark: toy.ce_mark, safe: toy.safe, clean: toy.clean, complete: toy.complete, playable: toy.playable)
+      Action.create!(user: current_user, actionable: toy,
+                     content: "#{current_user.email} a relancé le calcul du prix du jouet J#{toy.id}")
+    end
+    redirect_to toys_path, notice: "Calcul du prix relancé pour #{toys.count} jouet(s).", status: :see_other
   end
 
   def purge_deleted

@@ -587,6 +587,37 @@ a.toy-card {
   &.toy-show-btn-edit    { background: rgba($navy, 0.08);        color: $navy; border: 1.5px solid rgba($navy, 0.15); }
   &.toy-show-btn-restore { background: rgba($mint, 0.18);        color: darken($mint, 20%); border: 1.5px solid rgba($mint, 0.3); }
   &.toy-show-btn-delete  { background: rgba($danger-red, 0.10);  color: $danger-red; border: 1.5px solid rgba($danger-red, 0.2); }
+  &.toy-show-btn-refresh { background: rgba($purple, 0.12);      color: $purple; border: 1.5px solid rgba($purple, 0.25); }
+}
+
+.btn-refresh-prices {
+  width: 100%;
+  min-height: 48px;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid rgba($purple, 0.25);
+  border-radius: $border-radius-lg;
+  background: rgba($purple, 0.12);
+  color: $purple;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($purple, 0.2);
+  }
+
+  .filter-count {
+    background: $purple;
+    color: $white;
+    border-radius: 999px;
+    padding: 0.1rem 0.55rem;
+    font-size: 0.85rem;
+  }
 }
 
 .toy-show-timeline-wrap {

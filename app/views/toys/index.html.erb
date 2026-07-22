@@ -90,6 +90,20 @@
     <% end %>
   </div>
 
+  <% if params[:filter].blank? && current_user.admin? && @missing_price_count.to_i.positive? %>
+    <div class="mb-3">
+      <%= button_to refresh_missing_prices_toys_path,
+            method: :post,
+            data: { turbo_confirm: "Relancer le calcul du prix pour #{@missing_price_count} jouet(s) sans prix ?" },
+            class: "btn-refresh-prices" do %>
+        <i class="fa-solid fa-robot"></i>
+        <i class="fa-solid fa-arrows-rotate"></i>
+        <span>Calculer les prix manquants</span>
+        <span class="filter-count"><%= @missing_price_count %></span>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if params[:filter] == "deleted" && current_user.admin? && @toys.any? %>
     <div class="mb-3 text-end">
       <%= button_to "Vider définitivement la corbeille",

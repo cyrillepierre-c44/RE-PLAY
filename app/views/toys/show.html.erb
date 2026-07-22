@@ -164,6 +164,16 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
               <% end %>
             <% end %>
+            <% if policy(@toy).refresh_price? && @toy.photo.attached? %>
+              <%= button_to refresh_price_toy_path(@toy),
+                    method: :post,
+                    class: "toy-show-btn toy-show-btn-refresh",
+                    title: "Recalculer le prix",
+                    form: { style: "display:inline;", data: { turbo_confirm: "Recalculer le prix de ce jouet ? Le prix actuel sera remplacé." } } do %>
+                <i class="fa-solid fa-robot"></i>
+                <i class="fa-solid fa-arrows-rotate"></i>
+              <% end %>
+            <% end %>
             <% if policy(@toy).edit? %>
               <%= link_to edit_toy_path(@toy), class: "toy-show-btn toy-show-btn-edit", title: "Modifier" do %>
                 <i class="fa-solid fa-pen"></i>

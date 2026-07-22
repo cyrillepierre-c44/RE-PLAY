@@ -66,4 +66,12 @@ class ToyPolicy < ApplicationPolicy
   def purge_deleted?
     user.admin?
   end
+
+  def refresh_price?
+    user.admin?
+  end
+
+  def refresh_missing_prices?
+    user.admin?
+  end
 end
