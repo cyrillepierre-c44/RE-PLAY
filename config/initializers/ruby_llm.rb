@@ -1,6 +1,5 @@
 RubyLLM.configure do |config|
-  config.openai_api_key = ENV["GITHUB_KEY"]
-  config.openai_api_base = "https://models.inference.ai.azure.com"
-
-  # ... see RubyLLM configuration guide for other models
+  # Mammouth expose une API compatible OpenAI (GitHub Models a fermé)
+  config.openai_api_key = ENV["MAMMOUTH_API_KEY"]
+  config.openai_api_base = "https://api.mammouth.ai/v1"
 end

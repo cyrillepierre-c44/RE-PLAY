@@ -55,13 +55,13 @@ Key authorization rules:
 ### Toy Lifecycle
 
 1. Toy is created with `location: "En attente de validation"` (scope: `Toy.waiting`)
-2. After create/update, `chat_response` calls RubyLLM with GPT-4o to suggest a price based on a French prompt + toy photo
+2. After create/update, a `PriceiaJob` calls RubyLLM to suggest a price based on a French prompt + toy photo
 3. Admin verifies the toy via `GET /toys/:id/verify` → `PATCH /toys/:id/confirm_verify`, which updates location and moves it to `Toy.validated` scope
 4. Toys index supports `?filter=validated` to toggle between waiting and validated views
 
 ### AI Pricing
 
-When a toy is created or updated, `ToysController#chat_response` calls RubyLLM with GPT-4o, passing the toy photo and a French-language prompt describing the toy's condition. The response (a number) is saved as `toy.price`. API key: `ENV["GITHUB_KEY"]` (Azure GitHub Models inference endpoint).
+When a toy is created or updated, `PriceiaJob` calls RubyLLM with `gpt-4.1-mini`, passing the toy photo and a French-language prompt describing the toy's condition. The response (a number) is saved as `toy.price`. API key: `ENV["MAMMOUTH_API_KEY"]` — Mammouth OpenAI-compatible endpoint (`https://api.mammouth.ai/v1`); GitHub Models closed in August 2026. Note: ruby_llm is pinned at 1.2.0, so only models in its internal registry work (gpt-4o, gpt-4.1 family); upgrading to ≥1.3 would unlock other Mammouth models via `assume_model_exists: true`.
 
 ### Routes
 
