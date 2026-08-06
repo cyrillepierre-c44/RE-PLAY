@@ -14,6 +14,7 @@ class UserPolicy < ApplicationPolicy
   class Scope < ApplicationPolicy::Scope
     def resolve
       raise Pundit::NotAuthorizedError unless user.admin?
+
       scope.all
     end
   end

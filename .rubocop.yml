@@ -1,5 +1,6 @@
 AllCops:
   NewCops: enable
+  SuggestExtensions: false
   Exclude:
     - 'bin/**/*'
     - 'db/**/*'
@@ -35,8 +36,22 @@ Lint/MissingSuper:
 Style/FrozenStringLiteralComment:
   Enabled: false
 Layout/LineLength:
-  Max: 120
+  # 140 : les messages utilisateur en français interpolés dépassent
+  # naturellement 120 sans que les couper aide à la lisibilité.
+  Max: 140
 Style/EmptyMethod:
   Enabled: false
 Bundler/OrderedGems:
+  Enabled: false
+# Cohérent avec AbcSize/CyclomaticComplexity déjà désactivés : les métriques
+# de taille ne sont pas un critère bloquant sur ce projet.
+Metrics/MethodLength:
+  Enabled: false
+Metrics/ClassLength:
+  Enabled: false
+Metrics/BlockLength:
+  Enabled: false
+Metrics/PerceivedComplexity:
+  Enabled: false
+Metrics/ParameterLists:
   Enabled: false

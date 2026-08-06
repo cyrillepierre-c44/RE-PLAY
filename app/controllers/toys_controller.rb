@@ -35,23 +35,28 @@ class ToysController < ApplicationController
         created_at: :desc
       )
     end
-    own = current_user.admin? ? Toy : Toy.where(id: Action.where(actionable_type: "Toy", user: current_user).select(:actionable_id))
+    own = if current_user.admin?
+            Toy
+          else
+            Toy.where(id: Action.where(actionable_type: "Toy",
+                                       user: current_user).select(:actionable_id))
+          end
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
     @categories = Category.all.order(:name)
     @missing_price_count = current_user.admin? ? Toy.waiting.where(price: nil).joins(:photo_attachment).count : 0
     session.delete(:price_refresh_total) # ancien format
     refresh = session[:price_refresh]
-    if current_user.admin? && refresh.present?
-      @price_refresh_total = refresh["total"].to_i
-      if @missing_price_count.zero?
-        session.delete(:price_refresh)
-        flash.now[:notice] = "Prix recalculé pour #{@price_refresh_total} jouet(s) !"
-        @price_refresh_total = nil
-      elsif refresh["started_at"].to_i < 30.minutes.ago.to_i
-        # calcul manifestement abandonné (jobs en échec) : on rend la main
-        session.delete(:price_refresh)
-        @price_refresh_total = nil
-      end
+    return unless current_user.admin? && refresh.present?
+
+    @price_refresh_total = refresh["total"].to_i
+    if @missing_price_count.zero?
+      session.delete(:price_refresh)
+      flash.now[:notice] = "Prix recalculé pour #{@price_refresh_total} jouet(s) !"
+      @price_refresh_total = nil
+    elsif refresh["started_at"].to_i < 30.minutes.ago.to_i
+      # calcul manifestement abandonné (jobs en échec) : on rend la main
+      session.delete(:price_refresh)
+      @price_refresh_total = nil
     end
   end
 
@@ -64,12 +69,12 @@ class ToysController < ApplicationController
     c = params[:toy] || {}
     @toy = Toy.new(
       box: @box, category: @box.category, status: :suppr,
-      french:        c[:french].to_s == "1",
-      ce_mark:       c[:ce_mark].to_s == "1",
-      safe:          c[:safe].to_s == "1",
-      clean:         c[:clean].to_s == "1",
-      complete:      c[:complete].to_s == "1",
-      playable:      c[:playable].to_s == "1",
+      french: c[:french].to_s == "1",
+      ce_mark: c[:ce_mark].to_s == "1",
+      safe: c[:safe].to_s == "1",
+      clean: c[:clean].to_s == "1",
+      complete: c[:complete].to_s == "1",
+      playable: c[:playable].to_s == "1",
       operator_note: c[:operator_note].presence
     )
     authorize @toy
@@ -77,10 +82,10 @@ class ToysController < ApplicationController
     Action.create!(user: current_user, actionable: @toy,
                    content: "#{current_user.email} a jeté directement le jouet J#{@toy.id}")
     {
-      french:   "NC:français",
-      ce_mark:  "NC:CE/marque",
-      safe:     "NC:sécurité",
-      clean:    "NC:propreté",
+      french: "NC:français",
+      ce_mark: "NC:CE/marque",
+      safe: "NC:sécurité",
+      clean: "NC:propreté",
       complete: "NC:complet",
       playable: "NC:jouable"
     }.each do |field, nc_key|
@@ -96,7 +101,8 @@ class ToysController < ApplicationController
     @toy = Toy.new(box: @box, category: @box.category)
     authorize @toy
     @toy.save(validate: false)
-    Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a débuté la création du jouet J#{@toy.id}")
+    Action.create!(user: current_user, actionable: @toy,
+                   content: "#{current_user.email} a débuté la création du jouet J#{@toy.id}")
     redirect_to edit_toy_path(@toy, new: true), status: :see_other
   end
 
@@ -107,7 +113,8 @@ class ToysController < ApplicationController
     @toy.box = @box
 
     if @toy.save
-      PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
+      PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean,
+                                        complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy, content: "#{current_user.email} a créé le jouet J#{@toy.id}")
       redirect_to box_path(@box), notice: "Jouet créé avec succès.", status: :see_other
     else
@@ -123,7 +130,8 @@ class ToysController < ApplicationController
   def update
     authorize @toy
     if @toy.update(toy_params.merge(price: nil))
-      PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
+      PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean,
+                                        complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} a modifié le jouet J#{@toy.id}")
       if params[:from_new] == "1"
@@ -168,12 +176,11 @@ class ToysController < ApplicationController
 
   def refresh_price
     authorize @toy
-    unless @toy.photo.attached?
-      return redirect_to toy_path(@toy), alert: "Impossible de calculer le prix : le jouet n'a pas de photo."
-    end
+    return redirect_to toy_path(@toy), alert: "Impossible de calculer le prix : le jouet n'a pas de photo." unless @toy.photo.attached?
 
     @toy.update(price: nil)
-    PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean, complete: @toy.complete, playable: @toy.playable)
+    PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean,
+                                      complete: @toy.complete, playable: @toy.playable)
     Action.create!(user: current_user, actionable: @toy,
                    content: "#{current_user.email} a relancé le calcul du prix du jouet J#{@toy.id}")
     redirect_to toy_path(@toy), notice: "Nouveau calcul du prix en cours pour le jouet J#{@toy.id}…", status: :see_other
@@ -184,7 +191,8 @@ class ToysController < ApplicationController
     toys = Toy.waiting.where(price: nil).joins(:photo_attachment)
     session[:price_refresh] = { "total" => toys.count, "started_at" => Time.current.to_i }
     toys.find_each do |toy|
-      PriceiaJob.perform_later(toy.id, french: toy.french, ce_mark: toy.ce_mark, safe: toy.safe, clean: toy.clean, complete: toy.complete, playable: toy.playable)
+      PriceiaJob.perform_later(toy.id, french: toy.french, ce_mark: toy.ce_mark, safe: toy.safe, clean: toy.clean,
+                                       complete: toy.complete, playable: toy.playable)
       Action.create!(user: current_user, actionable: toy,
                      content: "#{current_user.email} a relancé le calcul du prix du jouet J#{toy.id}")
     end
@@ -248,10 +256,10 @@ class ToysController < ApplicationController
 
   def log_nonconformities
     bool_nc = {
-      french:   "NC:français",
-      ce_mark:  "NC:CE/marque",
-      safe:     "NC:sécurité",
-      clean:    "NC:propreté",
+      french: "NC:français",
+      ce_mark: "NC:CE/marque",
+      safe: "NC:sécurité",
+      clean: "NC:propreté",
       complete: "NC:complet",
       playable: "NC:jouable"
     }
@@ -259,6 +267,7 @@ class ToysController < ApplicationController
       # Revaloriser : tous les critères actuellement à false sont des motifs de NC
       bool_nc.each do |attr, nc_key|
         next if @toy.send(attr)
+
         Action.create!(user: current_user, actionable: @toy,
                        content: "[#{nc_key}] #{current_user.email} a renvoyé #{nc_key.sub('NC:', '')} du jouet J#{@toy.id}")
       end
@@ -266,6 +275,7 @@ class ToysController < ApplicationController
       # Mise en vente : on logue uniquement les critères corrigés (changés)
       bool_nc.merge(category_id: "NC:catégorie").each do |attr, nc_key|
         next unless @toy.saved_change_to_attribute?(attr)
+
         Action.create!(user: current_user, actionable: @toy,
                        content: "[#{nc_key}] #{current_user.email} a corrigé #{nc_key.sub('NC:', '')} du jouet J#{@toy.id}")
       end
@@ -281,7 +291,8 @@ class ToysController < ApplicationController
   end
 
   def toy_params
-    permitted = params.require(:toy).permit(:category_id, :french, :ce_mark, :safe, :clean, :barcode, :complete, :playable, :photo, :location, :status, :operator_note)
+    permitted = params.require(:toy).permit(:category_id, :french, :ce_mark, :safe, :clean, :barcode, :complete,
+                                            :playable, :photo, :location, :status, :operator_note)
     current_user.admin? ? permitted.except(:operator_note) : permitted
   end
 

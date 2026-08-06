@@ -12,7 +12,8 @@ class PriceiaJob < ApplicationJob
     toy = Toy.find(toy_id)
 
     chat = RubyLLM.chat(model: "gpt-4.1-mini")
-    response = chat.ask(system_prompt(french, ce_mark, safe, clean, complete, playable, toy.operator_note), with: { image: toy.photo.url })
+    response = chat.ask(system_prompt(french, ce_mark, safe, clean, complete, playable, toy.operator_note),
+                        with: { image: toy.photo.url })
     toy.update(price: response.content.to_i)
   end
 
@@ -30,12 +31,12 @@ class PriceiaJob < ApplicationJob
     3. Ajuste ensuite ce prix de base selon les critères d'état et la note de l'opérateur ci-dessous.
 
     Critères d'état du jouet :
-    - Jeu en français : #{french ? 'oui' : 'non'} #{french ? '' : '(malus : moins attractif pour le marché français)'}
-    - Marquage CE ou marque connue : #{ce_mark ? 'oui' : 'non'} #{ce_mark ? '' : '(malus : moins rassurant pour les parents)'}
-    - Sécurité vérifiée : #{safe ? 'oui' : 'non'} #{safe ? '' : '(malus significatif : risque perçu élevé)'}
-    - Propreté : #{clean ? 'propre' : 'sale'} #{clean ? '' : '(malus : doit être nettoyé)'}
+    - Jeu en français : #{french ? 'oui' : 'non'} #{'(malus : moins attractif pour le marché français)' unless french}
+    - Marquage CE ou marque connue : #{ce_mark ? 'oui' : 'non'} #{'(malus : moins rassurant pour les parents)' unless ce_mark}
+    - Sécurité vérifiée : #{safe ? 'oui' : 'non'} #{'(malus significatif : risque perçu élevé)' unless safe}
+    - Propreté : #{clean ? 'propre' : 'sale'} #{'(malus : doit être nettoyé)' unless clean}
     - Complétude : #{complete ? 'complet' : 'incomplet'}
-    - Jouabilité : #{playable ? 'jouable' : 'non jouable'} #{playable ? '' : '(malus fort : jouet inutilisable)'}#{note_part}
+    - Jouabilité : #{playable ? 'jouable' : 'non jouable'} #{'(malus fort : jouet inutilisable)' unless playable}#{note_part}
 
     Réponds uniquement avec un nombre entier en euros, sans texte ni symbole. Exemple : 8"
   end

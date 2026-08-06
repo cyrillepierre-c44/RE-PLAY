@@ -1,38 +1,33 @@
 require "test_helper"
 
 class BoxesControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get boxes_index_url
+  setup do
+    @user = create_user
+    @box  = create_box
+  end
+
+  test "redirige vers la connexion sans session" do
+    get boxes_path
+    assert_redirected_to new_user_session_path
+  end
+
+  test "index accessible connecté" do
+    sign_in @user
+    get boxes_path
     assert_response :success
   end
 
-  test "should get show" do
-    get boxes_show_url
+  test "show accessible à tout utilisateur connecté" do
+    sign_in @user
+    get box_path(@box)
     assert_response :success
   end
 
-  test "should get new" do
-    get boxes_new_url
-    assert_response :success
-  end
-
-  test "should get create" do
-    get boxes_create_url
-    assert_response :success
-  end
-
-  test "should get edit" do
-    get boxes_edit_url
-    assert_response :success
-  end
-
-  test "should get update" do
-    get boxes_update_url
-    assert_response :success
-  end
-
-  test "should get destroy" do
-    get boxes_destroy_url
-    assert_response :success
+  test "création d'une caisse" do
+    sign_in @user
+    assert_difference("Box.count", 1) do
+      post boxes_path, params: { box: { category_id: default_category.id, nb_toys: 5 } }
+    end
+    assert_response :redirect
   end
 end

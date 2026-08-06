@@ -27,7 +27,7 @@ class PagesController < ApplicationController
 
   def loic_laplagne
   end
-  
+
   def export_csv
     authorize :page, :export_csv?
     @period      = params[:period].presence || "prev_day"
@@ -53,7 +53,7 @@ class PagesController < ApplicationController
         objet = "#{prefix}#{action.actionable_id}"
         csv << [
           action.created_at.strftime("%d/%m/%Y %H:%M"),
-          action.user&.email&.split("@")&.first,
+          action.user&.email.to_s.split("@").first,
           role,
           type,
           action_label,
@@ -196,28 +196,35 @@ class PagesController < ApplicationController
     @nc_total = nc_scope.count
 
     @nc_by_type = [
-      { key: "NC:français",  label: "Français",  icon: "fa-flag",       count: nc_scope.where("content LIKE ?", "%[NC:français]%").count },
-      { key: "NC:CE",        label: "CE/Marque", icon: "fa-award",      count: nc_scope.where("content LIKE ?", "%[NC:CE%").count },
-      { key: "NC:sécurité",  label: "Sécurité",  icon: "fa-lock",       count: nc_scope.where("content LIKE ?", "%[NC:sécurité]%").count },
-      { key: "NC:propreté",  label: "Propre",    icon: "fa-soap",       count: nc_scope.where("content LIKE ?", "%[NC:propr%").count },
-      { key: "NC:complet",   label: "Complet",   icon: "fa-list-check", count: nc_scope.where("content LIKE ?", "%[NC:complet]%").count },
-      { key: "NC:jouable",   label: "Jouable",   icon: "fa-gamepad",    count: nc_scope.where("content LIKE ?", "%[NC:jouable]%").count },
-      { key: "NC:catégorie", label: "Catégorie", icon: "fa-tag",        count: nc_scope.where("content LIKE ?", "%[NC:catégorie]%").count }
-    ].reject { |t| t[:count] == 0 }
+      { key: "NC:français",  label: "Français",  icon: "fa-flag",
+        count: nc_scope.where("content LIKE ?", "%[NC:français]%").count },
+      { key: "NC:CE",        label: "CE/Marque", icon: "fa-award",
+        count: nc_scope.where("content LIKE ?", "%[NC:CE%").count },
+      { key: "NC:sécurité",  label: "Sécurité",  icon: "fa-lock",
+        count: nc_scope.where("content LIKE ?", "%[NC:sécurité]%").count },
+      { key: "NC:propreté",  label: "Propre",    icon: "fa-soap",
+        count: nc_scope.where("content LIKE ?", "%[NC:propr%").count },
+      { key: "NC:complet",   label: "Complet",   icon: "fa-list-check",
+        count: nc_scope.where("content LIKE ?", "%[NC:complet]%").count },
+      { key: "NC:jouable",   label: "Jouable",   icon: "fa-gamepad",
+        count: nc_scope.where("content LIKE ?", "%[NC:jouable]%").count },
+      { key: "NC:catégorie", label: "Catégorie", icon: "fa-tag",
+        count: nc_scope.where("content LIKE ?", "%[NC:catégorie]%").count }
+    ].reject { |t| t[:count].zero? }
 
     nc_toy_ids = nc_scope.where(actionable_type: "Toy").pluck(:actionable_id).uniq
     return @nc_by_creator = [] if nc_toy_ids.empty?
 
     creator_map = Action
-      .select("DISTINCT ON (actionable_id) actionable_id, user_id")
-      .where(actionable_type: "Toy", actionable_id: nc_toy_ids)
-      .order("actionable_id, created_at ASC")
-      .each_with_object({}) { |a, h| h[a.actionable_id] = a.user_id }
+                  .select("DISTINCT ON (actionable_id) actionable_id, user_id")
+                  .where(actionable_type: "Toy", actionable_id: nc_toy_ids)
+                  .order("actionable_id, created_at ASC")
+                  .to_h { |a| [a.actionable_id, a.user_id] }
 
     nc_counts_by_toy = nc_scope
-      .where(actionable_type: "Toy", actionable_id: nc_toy_ids)
-      .group(:actionable_id)
-      .count
+                       .where(actionable_type: "Toy", actionable_id: nc_toy_ids)
+                       .group(:actionable_id)
+                       .count
 
     creator_counts = Hash.new(0)
     nc_counts_by_toy.each do |toy_id, count|
@@ -228,9 +235,9 @@ class PagesController < ApplicationController
     users = User.where(id: creator_counts.keys).index_by(&:id)
 
     @nc_by_creator = creator_counts
-      .map { |user_id, count| { user: users[user_id], count: count } }
-      .sort_by { |item| -item[:count] }
-      .first(10)
+                     .map { |user_id, count| { user: users[user_id], count: count } }
+                     .sort_by { |item| -item[:count] }
+                     .first(10)
   end
 
   def build_type_stats
