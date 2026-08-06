@@ -76,3 +76,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "sentry-ruby", "~> 6.7"
+gem "sentry-rails", "~> 6.7"
