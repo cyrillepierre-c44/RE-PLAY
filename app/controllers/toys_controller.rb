@@ -11,7 +11,9 @@ class ToysController < ApplicationController
   #   moyenne seulement. Par exemple : 10"
 
   def index
-    base_scope = policy_scope(Toy)
+    # includes/with_attached_photo : la vue lit toy.category et toy.photo pour
+    # chaque carte — sans préchargement c'est 3 requêtes par jouet (N+1).
+    base_scope = policy_scope(Toy).includes(:category).with_attached_photo
     base_scope = base_scope.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:q].present?
       num = params[:q].to_s.gsub(/\D/, '')

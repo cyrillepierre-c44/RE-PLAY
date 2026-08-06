@@ -1,6 +1,6 @@
 class ErrorsController < ApplicationController
   skip_before_action :authenticate_user!
-  skip_after_action :verify_authorized, :verify_policy_scoped
+  skip_after_action :verify_pundit_authorization
 
   def not_found
     render status: :not_found

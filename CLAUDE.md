@@ -121,4 +121,5 @@ SCSS structured as `config/` (variables, Bootstrap overrides), `components/`, an
 ### Infrastructure
 
 - PostgreSQL database (Solid Queue / Solid Cache / Solid Cable — database-backed, no Redis needed)
-- Deployed on Heroku (branch `projet` → `main`)
+- Deployed on Heroku (`git push heroku master`, app `re-play`) — the Procfile release phase runs `db:migrate` automatically. Solid Queue runs inside Puma (`SOLID_QUEUE_IN_PUMA` config var).
+- Error monitoring: Sentry (active only when `SENTRY_DSN` is set). Uptime: UptimeRobot on `GET /up`.

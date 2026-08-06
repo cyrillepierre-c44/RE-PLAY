@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_06_160658) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_06_161520) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_160658) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["actionable_type", "actionable_id"], name: "index_actions_on_actionable"
+    t.index ["created_at"], name: "index_actions_on_created_at"
     t.index ["user_id"], name: "index_actions_on_user_id"
   end
 
@@ -61,6 +62,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_160658) do
     t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_boxes_on_category_id"
+    t.index ["created_at"], name: "index_boxes_on_created_at"
+    t.index ["status"], name: "index_boxes_on_status"
   end
 
   create_table "categories", force: :cascade do |t|
@@ -68,15 +71,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_160658) do
     t.string "icon", default: "fa-tag"
     t.string "name"
     t.datetime "updated_at", null: false
-  end
-
-  create_table "pg_search_documents", force: :cascade do |t|
-    t.text "content"
-    t.datetime "created_at", null: false
-    t.bigint "searchable_id"
-    t.string "searchable_type"
-    t.datetime "updated_at", null: false
-    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable"
   end
 
   create_table "projet_leviers", force: :cascade do |t|
@@ -251,6 +245,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_160658) do
     t.datetime "updated_at", null: false
     t.index ["box_id"], name: "index_toys_on_box_id"
     t.index ["category_id"], name: "index_toys_on_category_id"
+    t.index ["created_at"], name: "index_toys_on_created_at"
+    t.index ["price"], name: "index_toys_on_price"
+    t.index ["sold"], name: "index_toys_on_sold"
+    t.index ["status"], name: "index_toys_on_status"
   end
 
   create_table "users", force: :cascade do |t|

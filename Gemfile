@@ -79,3 +79,7 @@ end
 
 gem "sentry-ruby", "~> 6.7"
 gem "sentry-rails", "~> 6.7"
+
+gem "letter_opener", "~> 1.10", group: :development
+
+gem "bullet", "~> 8.1", group: :development

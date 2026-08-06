@@ -2,7 +2,8 @@ class BoxesController < ApplicationController
   before_action :set_box, only: %i[show edit update destroy toggle_empty restore]
 
   def index
-    base_scope = policy_scope(Box)
+    # includes : la vue lit box.category pour chaque carte (N+1 sinon).
+    base_scope = policy_scope(Box).includes(:category)
     base_scope = base_scope.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:q].present?
       num = params[:q].to_s.gsub(/\D/, '')

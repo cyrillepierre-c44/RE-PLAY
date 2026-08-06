@@ -33,18 +33,19 @@ Rails.application.configure do
   # Séparé de Cloudinary pour ne pas consommer le quota du compte de production.
   config.active_storage.service = :local
 
-  # Gmail SMTP for development testing
-  config.action_mailer.delivery_method = :smtp
+  # Bullet : signale les requêtes N+1 dans les logs et la barre du navigateur.
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.bullet_logger = true
+    Bullet.rails_logger = true
+    Bullet.add_footer = true
+  end
+
+  # letter_opener : les mails s'ouvrent dans le navigateur au lieu de partir
+  # par le vrai SMTP Gmail (risque d'envois réels depuis le poste de dev).
+  config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.perform_caching = false
-  config.action_mailer.smtp_settings = {
-    user_name: ENV["GMAIL_USERNAME"],
-    password: ENV["GMAIL_PASSWORD"],
-    address: "smtp.gmail.com",
-    port: 587,
-    authentication: :plain,
-    enable_starttls_auto: true
-  }
 
   # Set localhost to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
