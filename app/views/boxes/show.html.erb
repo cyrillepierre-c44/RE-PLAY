@@ -106,13 +106,13 @@
     <div class="col-12 col-md-8 col-lg-9">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <h2 class="toy-show-title" style="font-size:1.4rem;">
-          <%= toys_icon(html_class: "me-2") %><%= @box.toys.count %> jouet<%= 's' if @box.toys.count > 1 %>
+          <%= toys_icon(html_class: "me-2") %><%= @toys.count %> jouet<%= 's' if @toys.count > 1 %>
         </h2>
       </div>
 
-      <% unless @box.toys.empty? %>
+      <% unless @toys.empty? %>
         <div class="row g-3">
-          <% @box.toys.order(created_at: :desc).each do |toy| %>
+          <% @toys.order(created_at: :desc).each do |toy| %>
             <div class="col-12 col-sm-6 col-xl-4">
               <%= link_to toy_path(toy), class: "toy-card d-block text-decoration-none #{'toy-card--sold' if toy.sold?}" do %>
                 <div class="toy-card-photo-wrap">
@@ -177,7 +177,7 @@
   </div>
 
   <%# ── Polling prix IA ── %>
-  <% if @box.toys.any? { |t| t.photo.attached? && t.price.nil? } %>
+  <% if @toys.any? { |t| t.photo.attached? && t.price.nil? } %>
     <script>
       var key = "box_reload_<%= @box.id %>";
       var count = parseInt(sessionStorage.getItem(key) || "0");

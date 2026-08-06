@@ -291,8 +291,10 @@ class ToysController < ApplicationController
   end
 
   def toy_params
+    # :status volontairement exclu — le cycle de vie (pending/market/suppr/review)
+    # ne passe que par les actions dédiées (verify, destroy…), jamais par le formulaire.
     permitted = params.require(:toy).permit(:category_id, :french, :ce_mark, :safe, :clean, :barcode, :complete,
-                                            :playable, :photo, :location, :status, :operator_note)
+                                            :playable, :photo, :location, :operator_note)
     current_user.admin? ? permitted.except(:operator_note) : permitted
   end
 

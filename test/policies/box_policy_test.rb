@@ -33,4 +33,24 @@ class BoxPolicyTest < ActiveSupport::TestCase
     assert BoxPolicy.new(@toucher, @box).restore?
     assert_not BoxPolicy.new(@stranger, @box).restore?
   end
+
+  test "toggle_empty : admin, ou dernier utilisateur à avoir créé un jouet de la caisse" do
+    first_creator = create_user
+    last_creator  = create_user
+
+    first_toy = create_toy(box: @box)
+    touch(first_toy, first_creator)
+    last_toy = create_toy(box: @box)
+    touch(last_toy, last_creator)
+
+    assert BoxPolicy.new(@admin, @box).toggle_empty?
+    assert BoxPolicy.new(last_creator, @box).toggle_empty?, "le dernier créateur peut corriger une fausse manip"
+    assert_not BoxPolicy.new(first_creator, @box).toggle_empty?, "un créateur antérieur ne peut plus"
+    assert_not BoxPolicy.new(@stranger, @box).toggle_empty?
+  end
+
+  test "toggle_empty : refusé à un non-admin sur une caisse sans jouet" do
+    assert_not BoxPolicy.new(@stranger, @box).toggle_empty?
+    assert BoxPolicy.new(@admin, @box).toggle_empty?
+  end
 end

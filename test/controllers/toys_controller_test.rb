@@ -24,9 +24,11 @@ class ToysControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "show refusé à un utilisateur étranger au jouet" do
+  test "show refusé à un utilisateur étranger au jouet (redirection, pas de 500)" do
     sign_in create_user
-    assert_raises(Pundit::NotAuthorizedError) { get toy_path(@toy) }
+    get toy_path(@toy)
+    assert_redirected_to root_path
+    assert_equal "Vous n'êtes pas autorisé à effectuer cette action.", flash[:alert]
   end
 
   test "verify réservé à l'admin" do
@@ -35,8 +37,16 @@ class ToysControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "verify refusé à un employé" do
+  test "verify refusé à un employé (redirection, pas de 500)" do
     sign_in @user
-    assert_raises(Pundit::NotAuthorizedError) { get verify_toy_path(@toy) }
+    get verify_toy_path(@toy)
+    assert_redirected_to root_path
+    assert flash[:alert].present?
+  end
+
+  test "un employé ne peut pas forcer le statut market via le formulaire" do
+    sign_in @user
+    patch toy_path(@toy), params: { toy: { status: "market", location: "Rayon A" } }
+    assert_not_equal "market", @toy.reload.status
   end
 end

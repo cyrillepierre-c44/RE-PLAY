@@ -32,9 +32,11 @@ class BoxesController < ApplicationController
 
   def show
     authorize @box
-    toys = @box.toys
+    # Tout le monde voit toutes les caisses, mais un employé ne voit que les
+    # jouets qu'il a créés dedans (l'admin voit tout) — idem pour la timeline.
+    @toys = policy_scope(@box.toys)
     @timeline = Action.where(actionable: @box)
-                      .or(Action.where(actionable: toys))
+                      .or(Action.where(actionable: @toys))
                       .includes(:user)
                       .order(created_at: :desc)
   end
@@ -103,6 +105,8 @@ class BoxesController < ApplicationController
 
   def toggle_empty
     authorize @box
+    return redirect_to box_path(@box), alert: "Impossible : la caisse C#{@box.id} est supprimée." if @box.suppr?
+
     new_status = @box.empty? ? :pending : :empty
     @box.update(status: new_status)
     label = new_status == :empty ? "marqué la caisse C#{@box.id} comme vide" : "marqué la caisse C#{@box.id} comme non vide"
@@ -117,6 +121,7 @@ class BoxesController < ApplicationController
   end
 
   def box_params
-    params.require(:box).permit(:category_id, :electronic, :status, :nb_toys)
+    # :status volontairement exclu — le cycle de vie passe par toggle_empty/destroy/restore.
+    params.require(:box).permit(:category_id, :electronic, :nb_toys)
   end
 end

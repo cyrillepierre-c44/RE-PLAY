@@ -17,9 +17,11 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "dashboard refusé à un employé" do
+  test "dashboard refusé à un employé (redirection, pas de 500)" do
     sign_in create_user
-    assert_raises(Pundit::NotAuthorizedError) { get dashboard_path }
+    get dashboard_path
+    assert_redirected_to root_path
+    assert flash[:alert].present?
   end
 
   test "projet réservé à l'admin (et crée les leviers A-D à la volée)" do
@@ -30,8 +32,10 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, ProjetLevier.where(module_code: "D").count
   end
 
-  test "projet refusé à un employé" do
+  test "projet refusé à un employé (redirection, pas de 500)" do
     sign_in create_user
-    assert_raises(Pundit::NotAuthorizedError) { get projet_path }
+    get projet_path
+    assert_redirected_to root_path
+    assert flash[:alert].present?
   end
 end

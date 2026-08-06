@@ -39,8 +39,14 @@ class BoxPolicy < ApplicationPolicy
     user.admin? || record.actions.where(user: user).any?
   end
 
+  # Règle métier : celui qui vient de vider la caisse (dernier à avoir créé
+  # un jouet depuis celle-ci) peut la marquer vide, ou la remettre en cours
+  # en cas de fausse manip. L'admin peut toujours.
   def toggle_empty?
-    true
+    return true if user.admin?
+
+    last_toy = record.toys.order(created_at: :desc).first
+    last_toy.present? && last_toy.actions.exists?(user: user)
   end
 
   def restore?

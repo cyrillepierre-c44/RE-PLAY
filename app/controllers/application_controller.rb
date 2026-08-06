@@ -7,7 +7,14 @@ class ApplicationController < ActionController::Base
   # en test — le dispatch se fait donc dans la méthode.
   after_action :verify_pundit_authorization, unless: :skip_pundit?
 
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
   private
+
+  def user_not_authorized
+    flash[:alert] = "Vous n'êtes pas autorisé à effectuer cette action."
+    redirect_to(request.referer || root_path)
+  end
 
   def verify_pundit_authorization
     if action_name == "index"

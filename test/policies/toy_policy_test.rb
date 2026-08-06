@@ -29,7 +29,9 @@ class ToyPolicyTest < ActiveSupport::TestCase
     assert_not ToyPolicy.new(@stranger, @toy).show?
   end
 
-  test "update/destroy : le créateur oui, un étranger non" do
+  test "update/destroy : admin et créateur oui, un étranger non" do
+    assert ToyPolicy.new(@admin, @toy).update?
+    assert ToyPolicy.new(@admin, @toy).destroy?
     assert ToyPolicy.new(@creator, @toy).update?
     assert ToyPolicy.new(@creator, @toy).destroy?
     assert_not ToyPolicy.new(@stranger, @toy).update?
