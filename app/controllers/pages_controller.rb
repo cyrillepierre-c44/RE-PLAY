@@ -72,8 +72,8 @@ class PagesController < ApplicationController
   def projet
     authorize :page, :projet?
     @leviers = ProjetLevier.all.index_by { |l| [l.module_code, l.numero] }
-    %w[A B C].each do |mod|
-      (1..5).each do |num|
+    { "A" => 1..5, "B" => 1..5, "C" => 1..5, "D" => 1..2 }.each do |mod, nums|
+      nums.each do |num|
         unless @leviers[[mod, num]]
           lev = ProjetLevier.create!(module_code: mod, numero: num)
           @leviers[[mod, num]] = lev

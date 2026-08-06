@@ -1,6 +1,7 @@
 <% content_for :title, "Projet RE-PLAY V2 · Devis" %>
 
 <div class="devis-toolbar">
+  <span class="toolbar-hint">Pour un PDF : choisir la destination « Fichier PDF » / « Enregistrer au format PDF » — éviter « Microsoft Print to PDF », qui déforme certaines lettres</span>
   <button class="toolbar-btn" id="btn-papier">🖨 Version papier</button>
   <button class="toolbar-btn" id="btn-print">⎙ Imprimer</button>
   <button class="toolbar-btn" id="btn-share">⤴ Partager</button>
@@ -887,6 +888,112 @@
     <div class="devis-footer">
       <div>Cyrille PIERRE — Consultant Excellence Opérationnelle</div>
       <div>Devis N° 2026-RPV2-01 — Page 7</div>
+    </div>
+  </div>
+
+  <!-- PAGE 8 — MODULE D : FORMATION -->
+  <div class="devis-page">
+    <div class="devis-header">
+      <div class="header-left">
+        <div class="brand">Cyrille PIERRE</div>
+        <div class="subtitle">Consultant Excellence Opérationnelle — Lean Manufacturing &amp; Innovation Digitale</div>
+      </div>
+      <div class="header-right">
+        <div class="devis-num">Devis N° 2026-RPV2-01</div>
+        <div>Client : Enjoué</div>
+      </div>
+    </div>
+
+    <div class="section-title">8. <span>Formation au Déploiement — Conduite du Changement &amp; Logiciel RE-PLAY</span></div>
+
+    <div class="module-header">
+      <div>
+        <div class="mod-title">MODULE D — Formation des Équipes au Déploiement de RE-PLAY</div>
+        <div class="mod-period">Présentiel — 5 groupes de 10 personnes — planning à définir conjointement</div>
+      </div>
+      <div class="mod-total">
+        <div class="h">5 × ½ j</div>
+        <div class="e">2 500 € HT</div>
+      </div>
+    </div>
+
+    <p style="font-size:9px; color:#555; margin-bottom:10px;">Former l'ensemble des équipes au logiciel RE-PLAY et accompagner les changements opérationnels qu'il embarque. Chaque groupe de 10 personnes suit une demi-journée combinant les deux thématiques, en situation réelle de travail (Learning by Doing). Prestation finançable au titre de la formation professionnelle — budget distinct du cœur du projet V2.</p>
+
+    <div class="leviers">
+      <% lev = @leviers[['D', 1]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="D"
+           data-levier-tracker-numero-value="1">
+        <div class="levier-num">1</div>
+        <div class="levier-body">
+          <div class="levier-top">
+            <div class="levier-title">Accompagnement du changement</div>
+            <div class="levier-tag">Tous les groupes</div>
+          </div>
+          <div class="levier-sub">Adhésion aux nouveaux modes de fonctionnement</div>
+          <ul>
+            <li>Donner du sens : pourquoi des standards, une traçabilité et un suivi qualité au quotidien</li>
+            <li>Ce qui change concrètement au poste pour chaque opérateur — lever les freins et les craintes</li>
+            <li>Le « fait / pas fait » comme outil de valorisation du travail accompli, pas de surveillance</li>
+            <li>Ancrer les améliorations d'organisation et de qualité dans les gestes quotidiens</li>
+          </ul>
+          <%= render 'levier_gantt', lev: lev %>
+          <%= render 'levier_track', lev: lev %>
+        </div>
+      </div>
+      <% lev = @leviers[['D', 2]] %>
+      <div class="levier <%= 'levier--off' unless lev&.actif %>"
+           data-controller="levier-tracker"
+           data-levier-tracker-id-value="<%= lev&.id %>"
+           data-levier-tracker-actif-value="<%= lev&.actif %>"
+           data-levier-tracker-module-value="D"
+           data-levier-tracker-numero-value="2">
+        <div class="levier-num">2</div>
+        <div class="levier-body">
+          <div class="levier-top">
+            <div class="levier-title">Formation au logiciel RE-PLAY — théorie &amp; pratique</div>
+            <div class="levier-tag">Tous les groupes</div>
+          </div>
+          <div class="levier-sub">Prise en main sur les postes de travail réels</div>
+          <ul>
+            <li>Respecter les standards définis dans l'application</li>
+            <li>Renseigner ce qui est fait et ce qui n'est pas fait</li>
+            <li>Suivre les en-cours et la qualité en temps réel</li>
+            <li>Mise en pratique immédiate sur les postes, avec les cas concrets de l'atelier</li>
+          </ul>
+          <%= render 'levier_gantt', lev: lev %>
+          <%= render 'levier_track', lev: lev %>
+        </div>
+      </div>
+    </div>
+
+    <div class="mecenat-grid" style="grid-template-columns:1fr;">
+      <div class="mecenat-item">
+        <div class="m-title">Une prestation intégrale et indissociable</div>
+        <p>Les changements accompagnés ici ne sont pas génériques : ce sont les améliorations d'organisation, de qualité et de suivi issues de la démarche Lean menée dans l'atelier, volontairement digitalisées dans RE-PLAY. La conduite du changement et la formation au logiciel portent donc sur un seul et même contenu — les confier à deux intervenants distincts ferait perdre la cohérence entre le discours porté aux équipes et l'outil qu'elles utilisent. La prestation est ainsi assurée intégralement par le concepteur des changements opérationnels et du logiciel qui les incarne.</p>
+      </div>
+    </div>
+
+    <table class="recap-table">
+      <thead>
+        <tr><th>Session</th><th>Format</th><th>Budget HT</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Formation présentielle — Groupe 1 (10 personnes)</td><td>½ journée</td><td>500 €</td></tr>
+        <tr><td>2. Formation présentielle — Groupe 2 (10 personnes)</td><td>½ journée</td><td>500 €</td></tr>
+        <tr><td>3. Formation présentielle — Groupe 3 (10 personnes)</td><td>½ journée</td><td>500 €</td></tr>
+        <tr><td>4. Formation présentielle — Groupe 4 (10 personnes)</td><td>½ journée</td><td>500 €</td></tr>
+        <tr><td>5. Formation présentielle — Groupe 5 (10 personnes)</td><td>½ journée</td><td>500 €</td></tr>
+        <tr class="total-row"><td>TOTAL MODULE D — 50 personnes formées</td><td>5 demi-journées</td><td>2 500 € HT</td></tr>
+      </tbody>
+    </table>
+
+    <div class="devis-footer">
+      <div>Cyrille PIERRE — Consultant Excellence Opérationnelle</div>
+      <div>Devis N° 2026-RPV2-01 — Page 8</div>
     </div>
   </div>
 
