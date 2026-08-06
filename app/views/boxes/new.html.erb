@@ -2,9 +2,9 @@
 
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <%= link_to boxes_path, class: "btn-back-boxes" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-boxes-stacked btn-back-context-icon"></i>
+    <%= link_to boxes_path, class: "btn-back-boxes", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-boxes-stacked btn-back-context-icon" aria-hidden="true"></i>
     <% end %>
   </div>
 
@@ -19,7 +19,7 @@
     <%= simple_form_for @box do |f| %>
       <%= hidden_field_tag :new_flow, true %>
 
-      <div style="font-size:0.9rem; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;">Catégorie de jouets</div>
+      <div style="font-size:0.9rem; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;">Catégorie de jouets</div>
       <div class="mb-4">
         <%= f.association :category,
             label: false,
@@ -28,8 +28,8 @@
       </div>
 
       <div class="d-grid">
-        <button type="submit" class="btn btn-primary btn-lg">
-          <i class="fa-solid fa-arrow-right" style="font-size:1.5rem; color:white;"></i>
+        <button type="submit" class="btn btn-primary btn-lg" aria-label="Créer la caisse">
+          <i class="fa-solid fa-arrow-right" style="font-size:1.5rem; color:white;" aria-hidden="true"></i>
         </button>
       </div>
     <% end %>

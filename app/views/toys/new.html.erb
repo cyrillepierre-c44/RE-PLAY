@@ -2,9 +2,9 @@
 
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <%= link_to box_path(@box), class: "btn-back-boxes" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-box btn-back-context-icon"></i>
+    <%= link_to box_path(@box), class: "btn-back-boxes", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-box btn-back-context-icon" aria-hidden="true"></i>
     <% end %>
     <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-box me-1"></i>C<%= @box.id %></span>
   </div>

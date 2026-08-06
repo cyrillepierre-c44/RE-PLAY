@@ -2,14 +2,14 @@
 
 <div class="container py-4">
   <% if params[:new] %>
-    <%= link_to box_path(@toy.box), class: "btn-back-boxes mb-3 d-inline-block" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-box btn-back-context-icon"></i>
+    <%= link_to box_path(@toy.box), class: "btn-back-boxes mb-3 d-inline-block", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-box btn-back-context-icon" aria-hidden="true"></i>
     <% end %>
   <% else %>
-    <%= link_to toy_path(@toy), class: "btn-back-boxes mb-3 d-inline-block" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-gift btn-back-context-icon"></i>
+    <%= link_to toy_path(@toy), class: "btn-back-boxes mb-3 d-inline-block", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-gift btn-back-context-icon" aria-hidden="true"></i>
     <% end %>
   <% end %>
 

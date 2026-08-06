@@ -171,7 +171,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  color: #9CA3AF;
+  color: $gray;
   text-decoration: none;
   font-size: 0.78rem;
   font-weight: 600;
@@ -184,11 +184,16 @@
   }
 
   &.active {
-    color: $coral;
+    color: $coral-text;
   }
 
   &:hover {
     color: $coral;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $navy;
+    outline-offset: 2px;
   }
 }
 

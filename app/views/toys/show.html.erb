@@ -11,14 +11,14 @@
 <% end %>
 <div class="container py-4">
   <% if params[:back_box].present? %>
-    <%= link_to box_path(params[:back_box]), class: "btn-back-boxes mb-3 d-inline-block" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-box btn-back-context-icon"></i>
+    <%= link_to box_path(params[:back_box]), class: "btn-back-boxes mb-3 d-inline-block", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-box btn-back-context-icon" aria-hidden="true"></i>
     <% end %>
   <% else %>
     <% back_filter = params[:back_filter].presence || (@toy.sold? ? "sold" : (@toy.market? ? "validated" : nil)) %>
-    <%= link_to toys_path(filter: back_filter), class: "btn-back-boxes mb-3 d-inline-block" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
+    <%= link_to toys_path(filter: back_filter), class: "btn-back-boxes mb-3 d-inline-block", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
       <%= toys_icon(html_class: "btn-back-context-icon") %>
     <% end %>
   <% end %>
@@ -27,7 +27,7 @@
     <div class="col-12 col-md-5">
       <div class="toy-show-photo-wrap">
         <% if @toy.photo.attached? %>
-          <%= image_tag @toy.photo, class: "detail-card-photo" %>
+          <%= image_tag @toy.photo, alt: "Photo du jouet J#{@toy.id}", class: "detail-card-photo" %>
         <% else %>
           <div class="detail-card-no-photo"><i class="fa-solid fa-image"></i></div>
         <% end %>
@@ -40,10 +40,13 @@
         <% end %>
         <% if @toy.suppr? %>
           <span class="status-dot status-dot-deleted toy-card-status-dot" title="Jeté"></span>
+          <span class="visually-hidden">Jeté</span>
         <% elsif @toy.market? %>
           <span class="status-dot status-dot-validated toy-card-status-dot" title="Validé"></span>
+          <span class="visually-hidden">Validé</span>
         <% else %>
           <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente"></span>
+          <span class="visually-hidden">En attente</span>
         <% end %>
       </div>
     </div>

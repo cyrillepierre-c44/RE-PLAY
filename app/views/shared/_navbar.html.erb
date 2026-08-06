@@ -46,7 +46,7 @@
               <%= current_user.email[0].upcase %>
             </div>
             <span class="d-none d-lg-inline"><%= current_user.email.split('@').first %></span>
-            <i class="fa-solid fa-chevron-down" style="font-size:0.65rem; color:#9CA3AF;"></i>
+            <i class="fa-solid fa-chevron-down" style="font-size:0.65rem; color:#6B7280;"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
             <li class="dropdown-header-info">
@@ -55,9 +55,9 @@
               </div>
               <div>
                 <div style="font-weight:700; color:#1A2B4A; font-size:0.95rem;"><%= current_user.email.split('@').first %></div>
-                <div style="font-size:0.75rem; color:#9CA3AF;"><%= current_user.email %></div>
+                <div style="font-size:0.75rem; color:#6B7280;"><%= current_user.email %></div>
                 <% if current_user.admin %>
-                  <span style="font-size:0.7rem; font-weight:700; background:rgba(255,107,53,0.12); color:#FF6B35; padding:0.1em 0.5em; border-radius:50rem;">Admin</span>
+                  <span style="font-size:0.7rem; font-weight:700; background:rgba(255,107,53,0.12); color:#C24A12; padding:0.1em 0.5em; border-radius:50rem;">Admin</span>
                 <% end %>
               </div>
             </li>

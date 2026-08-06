@@ -33,12 +33,12 @@
          class="custom-date-panel mb-3 <%= 'd-none' unless @period == 'custom' %>">
       <div class="d-flex gap-3 flex-wrap">
         <div>
-          <label class="filter-label">Du</label>
+          <label class="filter-label" for="start_date">Du</label>
           <%= f.date_field :start_date, value: @start_date, class: "form-control form-control-sm date-input",
                 data: { action: "change->date-range#dateChange" } %>
         </div>
         <div>
-          <label class="filter-label">Au</label>
+          <label class="filter-label" for="end_date">Au</label>
           <%= f.date_field :end_date, value: @end_date, class: "form-control form-control-sm date-input",
                 data: { action: "change->date-range#dateChange" } %>
         </div>
@@ -49,7 +49,7 @@
     <div id="filtres-secondaires" class="d-flex flex-column gap-2 mb-3">
       <div class="d-flex gap-2">
         <div class="flex-fill">
-          <label class="filter-label"><i class="fa-solid fa-filter me-1"></i>Type</label>
+          <label class="filter-label" for="type"><i class="fa-solid fa-filter me-1"></i>Type</label>
           <%= f.select :type,
             [["Tous", ""], ["Jouets", "toys"], ["Caisses", "boxes"]],
             { selected: @type_filter.to_s },
@@ -57,7 +57,7 @@
             data: { action: "change->date-range#autoSubmit" } %>
         </div>
         <div class="flex-fill">
-          <label class="filter-label"><i class="fa-regular fa-user me-1"></i>Utilisateur</label>
+          <label class="filter-label" for="user_id"><i class="fa-regular fa-user me-1"></i>Utilisateur</label>
           <%= f.select :user_id,
             [["Tous", ""]] + @users.map { |u| ["#{u.email.split('@').first}#{u.admin ? ' (admin)' : ''}", u.id] },
             { selected: @user_id.to_s },
@@ -66,7 +66,7 @@
         </div>
       </div>
       <div>
-        <label class="filter-label"><i class="fa-solid fa-tag me-1"></i>Catégorie</label>
+        <label class="filter-label" for="category_id"><i class="fa-solid fa-tag me-1"></i>Catégorie</label>
         <%= f.select :category_id,
           [["Toutes", ""]] + @categories.map { |c| [c.name, c.id] },
           { selected: @category_id.to_s },
@@ -317,7 +317,7 @@
         <div class="col-12 col-md-6">
           <p class="kpi-group-label mb-2"><i class="fa-regular fa-user me-1"></i>Par créateur du jouet</p>
           <% if @nc_by_creator.empty? %>
-            <p style="color:#9CA3AF; font-size:0.85rem;">Aucun créateur identifié.</p>
+            <p style="color:#6B7280; font-size:0.85rem;">Aucun créateur identifié.</p>
           <% else %>
             <% max_c = @nc_by_creator.first[:count].to_f %>
             <div class="rework-chart">

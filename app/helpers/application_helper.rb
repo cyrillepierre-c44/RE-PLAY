@@ -5,9 +5,9 @@ module ApplicationHelper
     span_style = "display:inline-block;position:relative;width:1.2em;height:1.1em;vertical-align:middle;"
     span_style += style if style
     content_tag(:span, style: span_style, class: html_class) do
-      tag.i(class: "fa-solid fa-gift",
+      tag.i(class: "fa-solid fa-gift", aria: { hidden: true },
             style: "position:absolute;font-size:0.7em;top:0;left:0;") +
-        tag.i(class: "fa-solid fa-gift",
+        tag.i(class: "fa-solid fa-gift", aria: { hidden: true },
               style: "position:absolute;font-size:0.7em;bottom:0;right:0;")
     end
   end

@@ -357,6 +357,11 @@
       background: rgba($coral, 0.05);
     }
 
+    &:focus-visible {
+      outline: 2px solid $navy;
+      outline-offset: 2px;
+    }
+
     // Pastilles inactives — couleur du point correspondant
     &.filter-tab-waiting    .filter-count { background: rgba($yellow, 0.30);      color: darken($yellow, 35%); }
     &.filter-tab-validated  .filter-count { background: rgba($mint, 0.20);        color: darken($mint, 20%); }

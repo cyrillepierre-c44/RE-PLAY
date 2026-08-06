@@ -2,9 +2,9 @@
 
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <%= link_to toy_path(@toy), class: "btn-back-boxes" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-gift btn-back-context-icon"></i>
+    <%= link_to toy_path(@toy), class: "btn-back-boxes", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-gift btn-back-context-icon" aria-hidden="true"></i>
     <% end %>
     <span class="toy-show-category-badge" style="font-size:2rem; max-width:none;"><i class="fa-solid fa-gift me-1"></i>J<%= @toy.id %></span>
   </div>
@@ -23,7 +23,7 @@
       <div class="col-12 col-md-4">
         <div class="verify-photo-wrap">
           <% if @toy.photo.attached? %>
-            <%= image_tag @toy.photo, class: "verify-photo", id: "photo-preview-img" %>
+            <%= image_tag @toy.photo, alt: "Photo du jouet J#{@toy.id}", class: "verify-photo", id: "photo-preview-img" %>
           <% else %>
             <div class="verify-no-photo" id="photo-preview-img">
               <i class="fa-solid fa-image"></i>
@@ -91,14 +91,14 @@
         <%# Barcode + Prix côte à côte %>
         <div class="row g-2 mb-1">
           <div class="col-6">
-            <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Facultatif</div>
+            <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">Facultatif</div>
             <%= f.input :barcode,
                 label: false,
                 placeholder: "Code-barres",
                 input_html: { class: "form-control verify-input" } %>
           </div>
           <div class="col-6">
-            <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;"><i class="fa-solid fa-robot" style="font-size:0.7rem;"></i> Suggéré par IA</div>
+            <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;"><i class="fa-solid fa-robot" style="font-size:0.7rem;"></i> Suggéré par IA</div>
             <%= f.input :price,
                 label: false,
                 as: :string,
@@ -109,7 +109,7 @@
 
         <%# Emplacement %>
         <div class="mb-3" style="margin-top:-0.5rem;">
-          <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">Obligatoire</div>
+          <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">Obligatoire</div>
           <%= f.input :location,
               label: false,
               required: true,
@@ -120,7 +120,7 @@
         <%# Note vocale opérateur — lecture seule %>
         <% if @toy.operator_note.present? %>
           <div class="mb-3">
-            <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">
+            <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">
               <i class="fa-solid fa-microphone me-1" style="color:#FF6B35;"></i>Note de l'opérateur
             </div>
             <div class="vocal-readonly-box"><%= @toy.operator_note %></div>
@@ -129,7 +129,7 @@
 
         <%# Commentaire qualité %>
         <div class="mb-3">
-          <div style="font-size:0.75rem; color:#9CA3AF; margin-bottom:0.2rem;">
+          <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">
             <i class="fa-solid fa-shield-halved me-1" style="color:#FF6B35;"></i>Commentaire qualité (facultatif)
           </div>
           <%= f.input :admin_comment,
@@ -144,7 +144,7 @@
                 id: "admin_comment_field",
                 oninput: "document.getElementById('admin-comment-remaining').textContent = 255 - this.value.length"
               } %>
-          <div style="font-size:0.7rem; color:#9CA3AF; text-align:right; margin-top:0.2rem;">
+          <div style="font-size:0.7rem; color:#6B7280; text-align:right; margin-top:0.2rem;">
             <span id="admin-comment-remaining">255</span> caractères restants
           </div>
         </div>

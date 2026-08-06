@@ -2,9 +2,9 @@
 
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <%= link_to users_path, class: "btn-back-boxes" do %>
-      <i class="fa-solid fa-circle-arrow-left"></i>
-      <i class="fa-solid fa-users btn-back-context-icon"></i>
+    <%= link_to users_path, class: "btn-back-boxes", "aria-label": "Retour" do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-users btn-back-context-icon" aria-hidden="true"></i>
     <% end %>
   </div>
 
@@ -15,7 +15,7 @@
       </div>
       <div>
         <h1 class="toy-show-title" style="font-size:1.5rem; margin-bottom:0;">Nouvel employé</h1>
-        <div style="font-size:0.85rem; color:#9CA3AF; margin-top:0.15rem;">Créer un accès à RE-PLAY</div>
+        <div style="font-size:0.85rem; color:#6B7280; margin-top:0.15rem;">Créer un accès à RE-PLAY</div>
       </div>
     </div>
 
@@ -32,8 +32,8 @@
           label_html: { class: "form-label" } %>
       </div>
       <div class="d-grid">
-        <button type="submit" class="btn btn-primary btn-lg">
-          <i class="fa-solid fa-check" style="font-size:1.5rem;"></i>
+        <button type="submit" class="btn btn-primary btn-lg" aria-label="Créer le compte">
+          <i class="fa-solid fa-check" style="font-size:1.5rem;" aria-hidden="true"></i>
         </button>
       </div>
     <% end %>

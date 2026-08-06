@@ -1,9 +1,9 @@
 <% content_for :title, "Caisse C#{@box.id} · RE-PLAY" %>
 
 <div class="container py-4">
-  <%= link_to boxes_path(filter: params[:back_filter]), class: "btn-back-boxes mb-3 d-inline-block" do %>
-    <i class="fa-solid fa-circle-arrow-left"></i>
-    <i class="fa-solid fa-boxes-stacked btn-back-context-icon"></i>
+  <%= link_to boxes_path(filter: params[:back_filter]), class: "btn-back-boxes mb-3 d-inline-block", "aria-label": "Retour" do %>
+    <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+    <i class="fa-solid fa-boxes-stacked btn-back-context-icon" aria-hidden="true"></i>
   <% end %>
 
   <div class="row g-4">
@@ -117,7 +117,7 @@
               <%= link_to toy_path(toy), class: "toy-card d-block text-decoration-none #{'toy-card--sold' if toy.sold?}" do %>
                 <div class="toy-card-photo-wrap">
                   <% if toy.photo.attached? %>
-                    <%= image_tag toy.photo, class: "toy-card-img" %>
+                    <%= image_tag toy.photo, alt: "Photo du jouet J#{toy.id}", class: "toy-card-img" %>
                   <% else %>
                     <div class="toy-card-no-img"><i class="fa-solid fa-image"></i></div>
                   <% end %>
@@ -126,15 +126,19 @@
                   <% end %>
                   <% if toy.suppr? %>
                     <span class="status-dot status-dot-deleted toy-card-status-dot" title="Jeté"></span>
+                    <span class="visually-hidden">Jeté</span>
                   <% elsif toy.market? %>
                     <span class="status-dot status-dot-validated toy-card-status-dot" title="Validé"></span>
+                    <span class="visually-hidden">Validé</span>
                   <% elsif toy.review? %>
                     <span class="status-dot status-dot-review toy-card-status-dot" title="Contrôle qualité refusé"></span>
+                    <span class="visually-hidden">Contrôle qualité refusé</span>
                     <div class="toy-card-review-badge">
                       <i class="fa-solid fa-triangle-exclamation"></i> CQ refusé
                     </div>
                   <% else %>
                     <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente"></span>
+                    <span class="visually-hidden">En attente</span>
                   <% end %>
                   <% if toy.sold? %>
                     <div class="toy-card-sold-badge">

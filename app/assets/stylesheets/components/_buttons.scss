@@ -9,6 +9,12 @@
   &:active {
     transform: translateY(0);
   }
+
+  // Indicateur de focus clavier distinct du hover
+  &:focus-visible {
+    outline: 2px solid $navy;
+    outline-offset: 2px;
+  }
 }
 
 .btn-coral {
@@ -193,6 +199,11 @@
     color: $white;
     transform: scale(1.08);
     box-shadow: 0 4px 12px rgba($coral, 0.5);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $navy;
+    outline-offset: 2px;
   }
 }
 

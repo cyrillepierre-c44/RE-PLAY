@@ -20,6 +20,11 @@ a.toy-card {
     box-shadow: $box-shadow-lg;
   }
 
+  &:focus-visible {
+    outline: 2px solid $navy;
+    outline-offset: 2px;
+  }
+
   .toy-card-photo-wrap {
     position: relative;
   }
@@ -153,6 +158,11 @@ a.toy-card {
     color: inherit;
   }
 
+  &:focus-visible {
+    outline: 2px solid $navy;
+    outline-offset: 2px;
+  }
+
   .box-card-header {
     display: flex;
     align-items: center;
@@ -272,7 +282,20 @@ a.toy-card {
   margin-bottom: 0.75rem;
 }
 
-.condition-toggle-input { display: none; }
+// Masquée visuellement mais focusable au clavier (technique visually-hidden)
+.condition-toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
+
+.condition-toggle-input:focus-visible + .condition-toggle-label {
+  outline: 2px solid $navy;
+  outline-offset: 2px;
+}
 
 .condition-toggle-label {
   display: flex;
@@ -578,6 +601,11 @@ a.toy-card {
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $navy;
+    outline-offset: 2px;
   }
 
   form { margin: 0; }

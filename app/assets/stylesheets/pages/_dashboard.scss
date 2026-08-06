@@ -215,7 +215,7 @@
 }
 
 .text-sky    { color: $sky !important; }
-.text-coral  { color: $coral !important; }
+.text-coral  { color: $coral-text !important; }
 .text-purple { color: $purple !important; }
 .text-mint   { color: $mint !important; }
 
@@ -662,7 +662,7 @@
   .cumul-label {
     display: block;
     font-size: 0.68rem;
-    color: #9CA3AF;
+    color: $gray;
     text-transform: uppercase;
     letter-spacing: 0.04em;
     margin-top: 0.15rem;

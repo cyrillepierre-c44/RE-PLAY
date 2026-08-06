@@ -92,6 +92,11 @@
     border-color: rgba($coral, 0.2);
   }
 
+  &:focus-visible {
+    outline: 2px solid $navy;
+    outline-offset: 2px;
+  }
+
   .quick-action-icon {
     width: 60px;
     height: 60px;
