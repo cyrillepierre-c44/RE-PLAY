@@ -10,6 +10,10 @@ AllCops:
     - 'support/**/*'
     - 'tmp/**/*'
     - 'test/**/*'
+    # Redéfinir Exclude écrase la liste par défaut de RuboCop : vendor/ doit
+    # être re-listé, sinon la CI (gems dans vendor/bundle) linte tout Rails.
+    - 'vendor/**/*'
+    - '.git/**/*'
 
 Style/ConditionalAssignment:
   Enabled: false
