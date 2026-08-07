@@ -1,0 +1,61 @@
+<% content_for :title, "Aide & contact · RE-PLAY" %>
+
+<div class="container py-4 legal-page">
+  <h1 class="legal-title">Aide &amp; contact</h1>
+  <p class="legal-intro">
+    Un souci avec RE-PLAY ? Les réponses aux questions les plus fréquentes sont
+    ci-dessous — et si ça ne suffit pas, écrivez-nous, on répond vite.
+  </p>
+
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Questions fréquentes</h2>
+  </div>
+
+  <div class="detail-card p-4 mb-3">
+    <h3 class="legal-faq-q"><i class="fa-solid fa-key me-2" aria-hidden="true"></i>Mot de passe oublié ?</h3>
+    <p class="mb-0">Sur la page de connexion, cliquez sur « Mot de passe oublié ? » :
+      un lien de réinitialisation est envoyé sur votre e-mail (valable 6 heures).
+      Pensez à vérifier vos spams.</p>
+  </div>
+
+  <div class="detail-card p-4 mb-3">
+    <h3 class="legal-faq-q"><i class="fa-solid fa-lock me-2" aria-hidden="true"></i>Compte bloqué après plusieurs essais ?</h3>
+    <p class="mb-0">Par sécurité, le compte se verrouille après 10 tentatives
+      échouées. Attendez 15 minutes puis réessayez — ou réinitialisez votre mot de
+      passe entre-temps.</p>
+  </div>
+
+  <div class="detail-card p-4 mb-3">
+    <h3 class="legal-faq-q"><i class="fa-solid fa-user-plus me-2" aria-hidden="true"></i>Besoin d'un compte ?</h3>
+    <p class="mb-0">Les comptes sont créés par les administrateurs de l'atelier :
+      adressez-vous à votre encadrant Enjoué, qui vous enverra une invitation par
+      e-mail.</p>
+  </div>
+
+  <div class="detail-card p-4 mb-3">
+    <h3 class="legal-faq-q"><i class="fa-solid fa-euro-sign me-2" aria-hidden="true"></i>Le prix suggéré d'un jouet n'apparaît pas ?</h3>
+    <p class="mb-0">La suggestion de prix demande une photo nette du jouet et
+      quelques secondes de calcul. Si le prix ne s'affiche toujours pas, un
+      administrateur peut relancer le calcul depuis la fiche du jouet.</p>
+  </div>
+
+  <div class="detail-card p-4 mb-4">
+    <h3 class="legal-faq-q"><i class="fa-solid fa-graduation-cap me-2" aria-hidden="true"></i>Comment fonctionne l'atelier dans RE-PLAY ?</h3>
+    <p class="mb-0">Le parcours complet (réception, tri, contrôle qualité, mise en
+      vente) est présenté pas à pas dans le <%= link_to "mode d'emploi", onboarding_path %>.</p>
+  </div>
+
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Nous contacter</h2>
+  </div>
+  <div class="detail-card p-4 mb-4 text-center">
+    <p>Décrivez votre problème (ce que vous faisiez, ce qui s'est passé, si possible
+      une capture d'écran) — vous recevrez une réponse par e-mail.</p>
+    <%= mail_to "centaurbike.gestion@gmail.com", subject: "[RE-PLAY] Demande d'assistance",
+          class: "btn btn-primary" do %>
+      <i class="fa-solid fa-envelope me-2" aria-hidden="true"></i>Ouvrir une demande d'assistance
+    <% end %>
+  </div>
+</div>

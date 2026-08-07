@@ -44,6 +44,17 @@
       <%= yield %>
     </main>
 
+    <footer class="site-footer">
+      <nav aria-label="Liens légaux et aide">
+        <%= link_to "Mode d'emploi", onboarding_path %>
+        <%= link_to "Aide & contact", aide_path %>
+        <%= link_to "Mentions légales", mentions_legales_path %>
+        <%= link_to "Confidentialité", confidentialite_path %>
+        <%= link_to "CGU", cgu_path %>
+      </nav>
+      <div class="site-footer-copy">RE-PLAY × Enjoué — © <%= Date.current.year %></div>
+    </footer>
+
     <%= render "shared/flashes" %>
   </body>
 </html>

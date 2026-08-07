@@ -1,0 +1,72 @@
+// Footer global : liens légaux et aide + pages légales (.legal-page)
+
+.site-footer {
+  margin-top: 3rem;
+  padding: 1.25rem 1rem 1.5rem;
+  border-top: 1px solid rgba($navy, 0.08);
+  text-align: center;
+  font-size: 0.8rem;
+
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem 1.25rem;
+    margin-bottom: 0.5rem;
+
+    a {
+      color: $gray;
+      text-decoration: none;
+
+      &:hover { color: $coral-text; text-decoration: underline; }
+
+      &:focus-visible {
+        outline: 2px solid $navy;
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  .site-footer-copy {
+    color: rgba($navy, 0.45);
+    font-size: 0.72rem;
+  }
+}
+
+.legal-page {
+  max-width: 820px;
+
+  .legal-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: $navy;
+    margin-bottom: 0.75rem;
+  }
+
+  .legal-intro {
+    color: $gray;
+    margin-bottom: 1.5rem;
+  }
+
+  .legal-list {
+    padding-left: 1.1rem;
+    margin-bottom: 0.75rem;
+
+    li { margin-bottom: 0.45rem; }
+  }
+
+  .legal-faq-q {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $navy;
+    margin-bottom: 0.4rem;
+  }
+
+  .legal-updated {
+    color: rgba($navy, 0.45);
+    font-size: 0.78rem;
+    text-align: right;
+  }
+
+  p:last-child { margin-bottom: 0; }
+}

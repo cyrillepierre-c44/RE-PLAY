@@ -42,6 +42,12 @@ Rails.application.routes.draw do
   get "onboarding", to: "pages#onboarding"
   get "enjoue", to: "pages#enjoue"
 
+  # Pages légales et support — publiques (accessibles sans compte)
+  get "mentions-legales", to: "pages#mentions_legales", as: :mentions_legales
+  get "confidentialite", to: "pages#confidentialite"
+  get "cgu", to: "pages#cgu"
+  get "aide", to: "pages#aide"
+
   get "equipe/cyrille-pierre", to: "pages#cyrille_pierre", as: :cyrille_pierre
   get "equipe/marc-thomas", to: "pages#marc_thomas", as: :marc_thomas
   get "equipe/loic-laplagne", to: "pages#loic_laplagne", as: :loic_laplagne

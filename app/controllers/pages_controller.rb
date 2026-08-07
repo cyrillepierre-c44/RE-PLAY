@@ -3,7 +3,8 @@ require "csv"
 class PagesController < ApplicationController
   include DashboardPareto
 
-  skip_before_action :authenticate_user!, only: [:home]
+  skip_before_action :authenticate_user!,
+                     only: %i[home mentions_legales confidentialite cgu aide]
 
   def home
   end
@@ -26,6 +27,18 @@ class PagesController < ApplicationController
   end
 
   def loic_laplagne
+  end
+
+  def mentions_legales
+  end
+
+  def confidentialite
+  end
+
+  def cgu
+  end
+
+  def aide
   end
 
   def export_csv

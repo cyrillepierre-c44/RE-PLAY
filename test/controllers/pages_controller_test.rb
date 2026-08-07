@@ -11,6 +11,18 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "les pages légales et l'aide sont publiques" do
+    [ mentions_legales_path, confidentialite_path, cgu_path, aide_path ].each do |path|
+      get path
+      assert_response :success, "#{path} devrait répondre 200 sans authentification"
+    end
+  end
+
+  test "le footer expose les liens légaux" do
+    get root_path
+    assert_select "footer nav a", minimum: 5
+  end
+
   test "dashboard réservé à l'admin" do
     sign_in create_user(admin: true)
     get dashboard_path

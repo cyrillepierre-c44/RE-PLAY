@@ -1,0 +1,93 @@
+<% content_for :title, "Politique de confidentialité · RE-PLAY" %>
+
+<div class="container py-4 legal-page">
+  <h1 class="legal-title">Politique de confidentialité</h1>
+  <p class="legal-intro">
+    RE-PLAY est l'outil de gestion de l'atelier de valorisation de jouets de
+    l'association Enjoué. Cette page explique quelles données personnelles y sont
+    traitées, pourquoi, et quels sont vos droits.
+  </p>
+
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Qui est responsable ?</h2>
+  </div>
+  <div class="detail-card p-4 mb-4">
+    <p>
+      L'<strong>association Enjoué</strong> est responsable du traitement des données
+      de ses salariés et membres utilisateurs de l'outil.
+      <strong>Cyrille PIERRE</strong>, éditeur de RE-PLAY, intervient comme
+      sous-traitant : il héberge et maintient l'application pour le compte de
+      l'association.
+    </p>
+  </div>
+
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Quelles données, pour quoi faire ?</h2>
+  </div>
+  <div class="detail-card p-4 mb-4">
+    <ul class="legal-list">
+      <li><strong>Compte utilisateur</strong> : adresse e-mail professionnelle (fournie
+        par Enjoué) et mot de passe (stocké chiffré, jamais lisible). Finalité :
+        accéder à l'outil. Les comptes sont créés par les administrateurs — il n'y a
+        pas d'inscription publique.</li>
+      <li><strong>Journal d'activité</strong> : les créations et modifications de
+        caisses et de jouets sont horodatées et associées au compte qui les réalise.
+        Finalités : traçabilité du travail de valorisation et statistiques d'activité
+        de l'atelier (tableau de bord accessible aux administrateurs). Les salariés
+        en sont informés par l'association.</li>
+      <li><strong>Photos de jouets</strong> : prises pour documenter chaque jouet et
+        estimer son prix. Elles ne doivent contenir aucune personne.</li>
+    </ul>
+    <p>
+      Base légale : l'intérêt légitime de l'association à organiser et tracer
+      l'activité de son atelier. Les données sont conservées pendant la durée
+      d'utilisation de l'outil ; un compte désactivé ne peut plus se connecter et
+      peut être supprimé sur demande.
+    </p>
+  </div>
+
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Qui a accès aux données ?</h2>
+  </div>
+  <div class="detail-card p-4 mb-4">
+    <p>Les données ne sont ni vendues ni partagées à des fins commerciales.
+      Elles transitent uniquement par les prestataires techniques nécessaires :</p>
+    <ul class="legal-list">
+      <li><strong>Heroku</strong> (Salesforce, Inc.) — hébergement de l'application et de la base de données ;</li>
+      <li><strong>Cloudinary</strong> — stockage des photos de jouets ;</li>
+      <li><strong>Mammouth.ai</strong> — analyse des photos de jouets pour la suggestion de prix (aucune donnée personnelle transmise) ;</li>
+      <li><strong>Sentry</strong> — surveillance des erreurs techniques, configurée pour ne recevoir aucune donnée personnelle.</li>
+    </ul>
+  </div>
+
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Cookies</h2>
+  </div>
+  <div class="detail-card p-4 mb-4">
+    <p>
+      RE-PLAY utilise uniquement les cookies strictement nécessaires à la connexion
+      (session et « se souvenir de moi »). Aucun cookie publicitaire, aucun traceur,
+      aucune mesure d'audience — c'est pourquoi aucun bandeau de consentement n'est
+      affiché.
+    </p>
+  </div>
+
+  <div class="onb-section-title">
+    <span class="onb-section-bar"></span>
+    <h2>Vos droits</h2>
+  </div>
+  <div class="detail-card p-4 mb-4">
+    <p>
+      Conformément au RGPD, vous pouvez accéder à vos données, les faire rectifier
+      ou supprimer, ou vous opposer à un traitement. Adressez-vous à votre référent
+      Enjoué ou écrivez à <%= mail_to "centaurbike.gestion@gmail.com" %>.
+      Vous pouvez aussi saisir la CNIL (<a href="https://www.cnil.fr" rel="noopener">cnil.fr</a>).
+    </p>
+  </div>
+
+  <p class="legal-updated">Dernière mise à jour : août 2026</p>
+</div>
