@@ -19,6 +19,7 @@
 12. [Pérennité Technique & Veille](#12-pérennité-technique--veille)
 13. [Checklist Finale — La Route du Pro](#13-checklist-finale--la-route-du-pro)
 14. [Retours d'Expérience Production](#14-retours-dexpérience-production)
+15. [Pages Obligatoires & Conformité Légale (France)](#15-pages-obligatoires--conformité-légale-france)
 
 ---
 
@@ -1130,6 +1131,65 @@ certains glyphes sortent doublés/en gras (les « l » notamment), **quelle que 
 police** — bug Chromium/Windows 11, l'aperçu est correct, seul le PDF final est touché.
 Solution à communiquer aux utilisateurs : choisir la destination **« Fichier PDF » /
 « Enregistrer au format PDF »** (moteur interne de Chrome). Aucun correctif CSS possible.
+
+---
+
+## 15. Pages Obligatoires & Conformité Légale (France)
+
+> Toute application web accessible en ligne — même un outil interne à 50
+> utilisateurs — doit embarquer certaines pages. Les oublier expose l'éditeur
+> à des sanctions (LCEN, RGPD) ; les ajouter prend une demi-journée.
+
+### ⚖️ Obligatoire
+
+**Mentions légales (LCEN — loi pour la confiance dans l'économie numérique)**
+```
+☐ Identité de l'éditeur : nom/raison sociale, statut, SIRET, adresse, contact
+☐ Directeur de la publication
+☐ Hébergeur(s) : nom et adresse (ex. Heroku/Salesforce ; ajouter Cloudinary
+  si les fichiers utilisateurs y sont stockés)
+```
+
+**Politique de confidentialité (RGPD)** — dès qu'il y a des données personnelles
+(un simple compte email suffit ; un journal d'actions nominatif encore plus) :
+```
+☐ Qui est responsable de traitement, qui est sous-traitant
+  (éditeur du logiciel ≠ employeur des utilisateurs : clarifier les rôles)
+☐ Données collectées et finalités (compte, journal d'activité, photos…)
+☐ Base légale de chaque traitement
+☐ Durées de conservation
+☐ Sous-traitants techniques et localisation (hébergeur, stockage fichiers,
+  monitoring — configurer Sentry avec send_default_pii = false et le citer)
+☐ Droits des personnes (accès, rectification, effacement…) et contact
+☐ Cookies : si session uniquement (Devise) → exemptés de consentement,
+  pas de bandeau ; le dire explicitement
+```
+
+⚠️ Cas particulier outil métier : si l'app **journalise l'activité des
+salariés** (qui a fait quoi, quand — dashboards de productivité), l'employeur
+doit en informer les salariés (transparence RGPD + code du travail). La
+politique de confidentialité est le support naturel de cette information.
+
+### 📋 Fortement recommandé
+
+```
+☐ Conditions d'utilisation (CGU) : règles d'usage, création/suppression des
+  comptes, responsabilités, disponibilité du service
+☐ Mode d'emploi / page d'aide : réduire le support en documentant les
+  parcours clés (une page d'onboarding par rôle est un bon début)
+☐ Aide & contact : un canal de support identifié. Pour une petite app, un
+  mailto avec objet pré-rempli suffit ; un système de tickets viendra si le
+  volume le justifie
+```
+
+### 🔗 Intégration
+
+- Toutes ces pages dans le **footer** (landmark `<footer>` — bon pour le
+  RGPD *et* pour WCAG), accessibles sans authentification pour les pages
+  légales.
+- Les pages légales sont des pages statiques : les exclure du `sitemap` si le
+  site est `noindex`, et les couvrir d'un smoke test (elles doivent répondre
+  200 en permanence).
 
 ---
 
