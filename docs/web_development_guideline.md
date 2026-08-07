@@ -18,6 +18,7 @@
 11. [Responsivité & Design System](#11-responsivité--design-system)
 12. [Pérennité Technique & Veille](#12-pérennité-technique--veille)
 13. [Checklist Finale — La Route du Pro](#13-checklist-finale--la-route-du-pro)
+14. [Retours d'Expérience Production](#14-retours-dexpérience-production)
 
 ---
 
@@ -1023,4 +1024,113 @@ IA               → GitHub Copilot, ChatGPT, Claude
 
 ---
 
-*Dernière mise à jour : 2025 | Maintenu avec ❤️ par et pour les développeurs qui font du bon travail.*
+## 14. Retours d'Expérience Production
+
+> Section alimentée par les audits et migrations réels des projets (RE-PLAY, COSTLY).
+> Ce sont les pièges rencontrés **en vrai**, avec leur solution vérifiée.
+
+### 🌐 Domaines & HTTPS — Migration DNS vers Cloudflare (août 2026, costly.fr)
+
+**Le problème** : chez OVH, le domaine nu (`monsite.fr` sans `www`) ne peut pas pointer
+vers Heroku (pas d'enregistrement ALIAS à l'apex). La « redirection visible » d'OVH
+fonctionne en HTTP mais **n'a pas de certificat SSL** → `https://monsite.fr` est en
+erreur pour tout visiteur qui tape le domaine nu (les navigateurs tentent HTTPS d'abord).
+
+**La solution** : déléguer les DNS à Cloudflare (plan Free) qui sert le HTTPS de l'apex
+et redirige vers `www`. Runbook vérifié :
+
+1. **Inventaire complet de la zone** avant tout : MX, SPF/TXT, CNAME mail
+   (`imap`, `smtp`, `pop3`, `autoconfig`, `autodiscover`), SRV. Oublier les MX = plus d'emails.
+2. Créer le site dans Cloudflare (plan Free) → il scanne et importe la zone. **Vérifier
+   l'import contre l'inventaire.**
+3. **Proxy status** : nuage gris (DNS only) sur tous les CNAME mail (le proxy Cloudflare
+   ne parle que HTTP — proxifier `imap`/`smtp` casse les clients mail) et sur `www` si
+   Heroku gère déjà son certificat. Nuage orange (Proxied) uniquement sur l'apex.
+4. **SSL/TLS → Full (strict)** ; règle de redirection via le template
+   **« Redirect from Root to WWW »** (301, cocher *Preserve query string*).
+5. **⚠️ DNSSEC — LE piège qui met tout par terre** : OVH l'active par défaut sur les
+   `.fr`. Changer les serveurs DNS sans l'avoir désactivé = domaine entier en panne
+   (SERVFAIL chez tous les résolveurs validants), web **et** emails. Ordre impératif :
+   désactiver DNSSEC chez OVH → **attendre la purge du DS au registre** (vérifiable en
+   interrogeant les serveurs AFNIC, ex. `d.nic.fr` ; de quelques minutes à ~1 h) →
+   seulement ensuite changer les serveurs de noms.
+6. Basculer les serveurs de noms chez OVH → « Check nameservers now » dans Cloudflare
+   → vérifier `https://apex` (301 → www), les MX, et le monitor d'uptime.
+7. **Après 48 h de propagation** : réactiver DNSSEC (côté Cloudflare cette fois, puis
+   recopier le DS chez OVH via l'onglet « DS Records ») et résilier les options DNS
+   payantes OVH devenues inutiles (Anycast).
+
+### 🚀 Spécificités Heroku (Rails 8)
+
+- **Release phase obligatoire** dans le `Procfile`, sinon les migrations sont manuelles
+  (et un jour oubliées) :
+  ```
+  web: bin/rails server -p ${PORT:-5000} -e $RAILS_ENV
+  release: bin/rails db:migrate
+  ```
+- **`config.assume_ssl` doit rester `false` sur Heroku** : le routeur transmet
+  correctement `X-Forwarded-Proto`. L'activer fait croire à Rails que les requêtes HTTP
+  en clair sont déjà en HTTPS → **la redirection de `force_ssl` ne se déclenche plus**
+  (vécu : site servi en clair alors que `force_ssl = true`).
+- **Healthcheck** : vérifier que `get "up" => "rails/health#show"` existe bien dans
+  `routes.rb` (facile à supprimer par erreur en nettoyant le template — la config
+  `silence_healthcheck_path` orpheline ne préviendra pas). C'est le point d'entrée
+  d'UptimeRobot.
+- **Sentry + releases** : activer `heroku labs:enable runtime-dyno-metadata` pour que
+  Sentry associe les erreurs à la version déployée.
+
+### 📡 Monitoring minimal viable (gratuit, validé de bout en bout)
+
+- **Sentry** : initializer conditionné à `ENV["SENTRY_DSN"]` (rien ne part en
+  dev/test/CI), `send_default_pii = false` (RGPD), `traces_sample_rate` 0.1,
+  exclure `ActionController::RoutingError` (bruit des bots).
+- **UptimeRobot** : monitor HTTP(S) sur `/up` toutes les 5 min.
+- **Valider la chaîne complète** : déclencher une erreur volontaire en prod
+  (`heroku run rails runner 'Sentry.capture_exception(StandardError.new("test"))'`)
+  et vérifier la réception de l'**email**. Un monitoring non testé n'existe pas.
+
+### 🧪 Pièges CI (GitHub Actions + Rails)
+
+- **RuboCop** : redéfinir `AllCops.Exclude` **écrase** la liste par défaut. En CI les
+  gems sont vendorées dans `vendor/bundle` → sans re-lister `vendor/**/*`, RuboCop
+  linte tout Rails (des milliers de fausses offenses qui n'apparaissent pas en local).
+- **Eager loading** : la CI exporte `CI=1` → Rails eager-load tout en test. Des erreurs
+  invisibles en local (ex. un `skip_after_action` référençant un callback renommé)
+  n'explosent **que** sur GitHub. Reproduire avec `CI=1 bin/rails test` avant de pousser.
+- **Tests système** : après `click_button` (connexion), **attendre la redirection**
+  (`assert_current_path`) avant tout `visit` suivant, sinon course entre les deux
+  navigations → échec intermittent.
+- **Pannes GitHub Actions** : un incident peut faire échouer des jobs en masse
+  (« Service Unavailable ») ou **perdre silencieusement l'événement de push** (aucun
+  run créé). Avant de déboguer son code : vérifier qu'un run existe pour le bon SHA,
+  et relancer au besoin avec un commit vide.
+
+### 🔐 Pundit — câblage global robuste
+
+`after_action :verify_authorized, except: :index` + `verify_policy_scoped, only: :index`
+casse dès qu'un controller n'a pas d'action `index` (avec
+`raise_on_missing_callback_actions` activé en test). Préférer un callback unique sans
+`only:`/`except:` qui dispatch sur `action_name` :
+
+```ruby
+after_action :verify_pundit_authorization, unless: :skip_pundit?
+
+def verify_pundit_authorization
+  action_name == "index" ? verify_policy_scoped : verify_authorized
+end
+```
+
+Et toujours un `rescue_from Pundit::NotAuthorizedError` → redirection + alerte
+(sinon : erreur 500 pour un simple accès refusé).
+
+### 🖨️ Piège navigateur — impression PDF sous Windows 11
+
+Chrome/Edge + imprimante virtuelle Windows (« Microsoft Print to PDF », OneNote) :
+certains glyphes sortent doublés/en gras (les « l » notamment), **quelle que soit la
+police** — bug Chromium/Windows 11, l'aperçu est correct, seul le PDF final est touché.
+Solution à communiquer aux utilisateurs : choisir la destination **« Fichier PDF » /
+« Enregistrer au format PDF »** (moteur interne de Chrome). Aucun correctif CSS possible.
+
+---
+
+*Dernière mise à jour : août 2026 | Maintenu avec ❤️ par et pour les développeurs qui font du bon travail.*
