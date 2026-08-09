@@ -1059,7 +1059,29 @@ et redirige vers `www`. Runbook vérifié :
    → vérifier `https://apex` (301 → www), les MX, et le monitor d'uptime.
 7. **Après 48 h de propagation** : réactiver DNSSEC (côté Cloudflare cette fois, puis
    recopier le DS chez OVH via l'onglet « DS Records ») et résilier les options DNS
-   payantes OVH devenues inutiles (Anycast).
+   payantes OVH devenues inutiles (Anycast — **uniquement** cette option : l'hébergement
+   OVH reste l'origine de l'apex derrière le proxy Cloudflare).
+
+**Vérifié sur costly.fr le 09/08/2026, pièges rencontrés à l'étape 7 :**
+
+- **Toujours activer « Always Use HTTPS »** (SSL/TLS → Edge Certificates). Sans ça, la règle
+  Root→WWW ne se déclenche qu'en https : `http://domaine` part à l'origine et sert encore la
+  page « Site en construction » d'OVH. Tester `curl -sSI http://domaine`, pas seulement https.
+- **Format du DS selon le registrar** : OVH demande une **DNSKEY** (Key Tag / Flag 257 /
+  Algorithme 13 / **clé publique**), Namecheap demande le **DS** (Key Tag / Algorithme /
+  Digest Type / **digest**). Coller le digest dans un formulaire qui attend la clé publique
+  met le domaine entier en SERVFAIL.
+- **Deux faux positifs après publication du DS** (~8 min chez OVH → AFNIC) : un SERVFAIL
+  transitoire le temps que les caches pré-signature expirent, et `www` en `AD=false` parce
+  que le CNAME pointe vers `herokudns.com`, zone non signée. Ce sont l'apex et les MX qui
+  doivent afficher `AD=true`.
+- **DMARC** : `rua=` doit être une adresse **du domaine**. Vers un Gmail, la RFC 7489 §7.1
+  exige une autorisation publiée dans la zone du destinataire — impossible, donc aucun
+  rapport n'arrive. Relire la valeur via le DNS, pas dans le panneau : une coquille
+  `@domaine.f` y est invisible (colonne tronquée).
+- **CAA** : plutôt s'abstenir. Le limiter à Let's Encrypt + Google Trust Services casse un
+  renouvellement Cloudflare des mois plus tard sans alerte (leurs AC tournent), et
+  `issuewild ";"` bloque l'Universal SSL qui couvre `*.domaine`.
 
 ### 🚀 Spécificités Heroku (Rails 8)
 
