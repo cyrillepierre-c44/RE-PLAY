@@ -8,6 +8,16 @@ class PriceiaJob < ApplicationJob
   # et on retente avec un délai croissant si l'API rate-limite quand même
   retry_on RubyLLM::RateLimitError, wait: :polynomially_longer, attempts: 8
 
+  # Une image refusée par le filtre de sécurité du fournisseur (400 « content safety ») le sera à
+  # chaque essai : on ne réessaie pas, on le dit à l'opérateur sur la fiche du jouet et on prévient
+  # Sentry en simple avertissement — ce n'est pas une panne, c'est un jouet à tarifer à la main.
+  discard_on RubyLLM::BadRequestError do |job, error|
+    toy_id = job.arguments.first
+    Toy.find_by(id: toy_id)&.mark_pricing_blocked!
+    Rails.logger.warn("PriceiaJob : estimation refusée pour le jouet #{toy_id} — #{error.message}")
+    Sentry.capture_message("PriceiaJob : image refusée par le fournisseur (jouet #{toy_id}) — #{error.message.to_s.first(300)}", level: :warning) if defined?(Sentry) && Sentry.initialized?
+  end
+
   def perform(toy_id, french:, ce_mark:, safe:, clean:, complete:, playable:)
     toy = Toy.find(toy_id)
 
