@@ -122,4 +122,4 @@ SCSS structured as `config/` (variables, Bootstrap overrides), `components/`, an
 
 - PostgreSQL database (Solid Queue / Solid Cache / Solid Cable — database-backed, no Redis needed)
 - Deployed on Heroku (`git push heroku master`, app `re-play`) — the Procfile release phase runs `db:migrate` automatically. Solid Queue runs inside Puma (`SOLID_QUEUE_IN_PUMA` config var).
-- Error monitoring: Sentry (active only when `SENTRY_DSN` is set). Uptime: UptimeRobot on `GET /up`.
+- Error monitoring: Sentry (active only when `SENTRY_DSN` is set, and never in `rails runner` / `rails console` processes: a `heroku run` dyno gets the production env, so a failing throwaway script would show up as a production crash — locked by `test/initializers/sentry_initializer_test.rb`). Uptime: UptimeRobot on `GET /up`.
