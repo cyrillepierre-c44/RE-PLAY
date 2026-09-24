@@ -19,7 +19,8 @@ class Toy < ApplicationRecord
 
   def mark_pricing_blocked!
     return if pricing_blocked?
-    note = [ admin_comment.presence, PRICING_BLOCKED_NOTE ].compact.join(" — ").first(255)
+
+    note = [admin_comment.presence, PRICING_BLOCKED_NOTE].compact.join(" — ").first(255)
     update_columns(admin_comment: note, updated_at: Time.current)
   end
   after_initialize :set_default_status, if: :new_record?

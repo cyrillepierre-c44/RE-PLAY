@@ -4,7 +4,8 @@ class PriceiaJobTest < ActiveJob::TestCase
   # Faux client : la passerelle refuse l'image (400 « content safety »).
   class RefusingChat
     def ask(*)
-      raise RubyLLM::BadRequestError.new(nil, "litellm.ContentPolicyViolationError: Your input image may contain content that is not allowed")
+      raise RubyLLM::BadRequestError.new(nil,
+                                         "litellm.ContentPolicyViolationError: Your input image may contain content that is not allowed")
     end
   end
 
@@ -13,7 +14,7 @@ class PriceiaJobTest < ActiveJob::TestCase
   end
 
   setup do
-    ActiveStorage::Current.url_options = { host: "localhost", port: 3000 }   # le service Disk exige un hôte pour photo.url
+    ActiveStorage::Current.url_options = { host: "localhost", port: 3000 } # le service Disk exige un hôte pour photo.url
     @toy = create_toy(admin_comment: "poupée ancienne")
     @toy.photo.attach(io: StringIO.new("fake"), filename: "jouet.jpg", content_type: "image/jpeg")
   end

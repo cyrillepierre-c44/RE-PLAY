@@ -15,7 +15,10 @@ class PriceiaJob < ApplicationJob
     toy_id = job.arguments.first
     Toy.find_by(id: toy_id)&.mark_pricing_blocked!
     Rails.logger.warn("PriceiaJob : estimation refusée pour le jouet #{toy_id} — #{error.message}")
-    Sentry.capture_message("PriceiaJob : image refusée par le fournisseur (jouet #{toy_id}) — #{error.message.to_s.first(300)}", level: :warning) if defined?(Sentry) && Sentry.initialized?
+    if defined?(Sentry) && Sentry.initialized?
+      Sentry.capture_message("PriceiaJob : image refusée par le fournisseur (jouet #{toy_id}) — #{error.message.to_s.first(300)}",
+                             level: :warning)
+    end
   end
 
   def perform(toy_id, french:, ce_mark:, safe:, clean:, complete:, playable:)
