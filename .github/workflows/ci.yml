@@ -22,7 +22,9 @@ jobs:
         run: bin/brakeman --no-pager
       
       - name: Scan for known security vulnerabilities in gems used
-        run: bin/bundler-audit
+        # 24/09/2026 : CVE-2026-67991 (ReDoS dans ruby_llm 1.2.0, corrigée en 2.0.0) ignorée le temps de faire
+        # la montée de version majeure à froid ; l'app n'envoie à la gem que ses propres textes et une URL Cloudinary.
+        run: bin/bundler-audit --ignore CVE-2026-67991
       
   scan_js:
     runs-on: ubuntu-latest
