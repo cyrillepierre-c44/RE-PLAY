@@ -9,6 +9,14 @@ class PriceiaJobTest < ActiveJob::TestCase
     end
   end
 
+  # Faux client : la passerelle est momentanément injoignable (503).
+  class UnavailableChat
+    def ask(*)
+      raise RubyLLM::ServiceUnavailableError.new(nil,
+                                                 "upstream connect error or disconnect/reset before headers")
+    end
+  end
+
   class PricingChat
     def ask(*) = Struct.new(:content).new("12")
   end
@@ -47,5 +55,13 @@ class PriceiaJobTest < ActiveJob::TestCase
   test "réponse normale : le prix est écrit" do
     perform(PricingChat.new)
     assert_equal 12, @toy.reload.price.to_i
+  end
+
+  test "passerelle momentanément indisponible : le job est reprogrammé, la fiche n'est pas marquée" do
+    perform(UnavailableChat.new)
+    @toy.reload
+    assert_nil @toy.price
+    assert_not @toy.pricing_blocked?
+    assert_enqueued_jobs 1, only: PriceiaJob
   end
 end

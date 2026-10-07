@@ -8,6 +8,13 @@ class PriceiaJob < ApplicationJob
   # et on retente avec un délai croissant si l'API rate-limite quand même
   retry_on RubyLLM::RateLimitError, wait: :polynomially_longer, attempts: 8
 
+  # Les pannes passagères de la passerelle (502/503 « upstream connect error », 500, 529, coupures
+  # réseau) sont déjà retentées 3 fois par ruby_llm, mais à quelques dixièmes de seconde d'écart :
+  # on laisse au fournisseur le temps de revenir avant de lever une vraie erreur pour Sentry.
+  retry_on RubyLLM::ServerError, RubyLLM::ServiceUnavailableError, RubyLLM::OverloadedError,
+           Faraday::TimeoutError, Faraday::ConnectionFailed,
+           wait: :polynomially_longer, attempts: 5
+
   # Une image refusée par le filtre de sécurité du fournisseur (400 « content safety ») le sera à
   # chaque essai : on ne réessaie pas, on le dit à l'opérateur sur la fiche du jouet et on prévient
   # Sentry en simple avertissement — ce n'est pas une panne, c'est un jouet à tarifer à la main.
