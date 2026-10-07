@@ -63,6 +63,13 @@ Key authorization rules:
 
 When a toy is created or updated, `PriceiaJob` calls RubyLLM with `gpt-4.1-mini`, passing the toy photo and a French-language prompt describing the toy's condition. The response (a number) is saved as `toy.price`. API key: `ENV["MAMMOUTH_API_KEY"]` — Mammouth OpenAI-compatible endpoint (`https://api.mammouth.ai/v1`); GitHub Models closed in August 2026. Note: ruby_llm is pinned at 1.2.0, so only models in its internal registry work (gpt-4o, gpt-4.1 family); upgrading to ≥1.3 would unlock other Mammouth models via `assume_model_exists: true`.
 
+**Pannes passagères de la passerelle (502/503 « upstream connect error », 500, 529, coupures réseau)** : `PriceiaJob` les retente 5 fois avec un délai croissant (~7 min au total). Sentry ne remonte `RubyLLM::ServiceUnavailableError` (ou ses voisines) que si la panne dure plus longtemps ; le jouet reste alors sans prix, à relancer via le bandeau violet. Un seul incident connu (30/09/2026). Si Sentry le remonte à nouveau, plan prévu (non fait, jugé disproportionné après un seul cas) :
+1. Retries épuisés → le jouet passe « en attente de reprise IA » (colonne dédiée, par ex. `pricing_waiting_since`) au lieu d'échouer ; avertissement Sentry seulement.
+2. Job récurrent (`config/recurring.yml`, toutes les 10 min) : s'il y a des jouets en attente, il fait **un** vrai mini-appel de chat sur `gpt-4.1-mini` (pas un ping `/v1/models` : « upstream connect error » vient d'Envoy, donc la passerelle peut répondre alors que le chat est en panne) ; si ça marche, il relance `PriceiaJob` pour eux ; au-delà de 24 h de panne, erreur Sentry.
+3. Fiche jouet : icône « en attente » au lieu du robot qui tourne.
+4. En option, un disjoncteur (clé Solid Cache) seulement si beaucoup de jouets sont saisis pendant une panne.
+Modèle de secours non-OpenAI via Mammouth : à faire **pendant la montée en ruby_llm ≥1.3/2.0** (impossible en 1.2.0) — en cas d'erreur passagère, un seul essai sur le modèle de secours ; chaque nouveau job réessaie OpenAI d'abord, donc le retour sur OpenAI se fait tout seul. Limites : inutile si c'est Mammouth lui-même qui est en panne (cas probable du 30/09), et les prix diffèrent d'un modèle à l'autre (le signaler sur la fiche).
+
 ### Routes
 
 ```
