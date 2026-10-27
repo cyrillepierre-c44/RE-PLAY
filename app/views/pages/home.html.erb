@@ -9,6 +9,10 @@
     <% end %>
   </h1>
 
+  <% unless user_signed_in? %>
+    <p class="hero-subtitle">L'outil d'atelier&nbsp;: du tri des jouets à la mise en rayon, prix proposé par l'IA</p>
+  <% end %>
+
   <%= image_tag "ENJOUE_RVB_2022.png", class: "home-hero-logo", alt: "Enjoué" %>
 </div>
 
