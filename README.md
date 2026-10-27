@@ -1,8 +1,8 @@
 # RE-PLAY
 
-Application de gestion d'atelier de revalorisation de jouets (association Enjoué) :
+Application de gestion d'atelier de revalorisation de jouets (société Enjoué) :
 réception des caisses, tri et fiche par jouet (photo, critères qualité, prix suggéré
-par IA), contrôle qualité admin, mise en rayon et suivi d'activité (dashboard, export CSV).
+par IA), contrôle qualité admin, mise en stock et suivi d'activité (dashboard, export CSV).
 
 Stack : Rails 8.1 · PostgreSQL · Hotwire (Turbo/Stimulus) · Bootstrap 5.3 ·
 Solid Queue/Cache/Cable · Devise + Pundit · Cloudinary (photos) · Mammouth.ai (prix IA).
