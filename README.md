@@ -5,7 +5,7 @@ réception des caisses, tri et fiche par jouet (photo, critères qualité, prix 
 par IA), contrôle qualité admin, mise en stock et suivi d'activité (dashboard, export CSV).
 
 Stack : Rails 8.1 · PostgreSQL · Hotwire (Turbo/Stimulus) · Bootstrap 5.3 ·
-Solid Queue/Cache/Cable · Devise + Pundit · Cloudinary (photos) · Mammouth.ai (prix IA).
+Solid Queue/Cache/Cable · Devise + Pundit · Cloudinary (photos) · API Claude d'Anthropic (prix IA).
 
 ## Setup
 
@@ -20,7 +20,7 @@ Variables d'environnement (fichier `.env`, non committé) :
 | Variable | Rôle |
 |---|---|
 | `CLOUDINARY_URL` | Stockage des photos (production ; en dev le disque local est utilisé) |
-| `MAMMOUTH_API_KEY` | API LLM pour la suggestion de prix (`PriceiaJob`) |
+| `ANTHROPIC_API_KEY` | API Claude (Haiku 5.5) pour la suggestion de prix (`PriceiaJob`) |
 | `GMAIL_USERNAME` / `GMAIL_PASSWORD` | SMTP production (en dev, letter_opener ouvre les mails dans le navigateur) |
 | `SENTRY_DSN` | Monitoring d'erreurs (production uniquement, optionnel ailleurs) |
 

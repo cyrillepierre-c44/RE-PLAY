@@ -1,24 +1,30 @@
 class PriceiaJob < ApplicationJob
   queue_as :default
 
+  MODEL = "claude-haiku-5-5".freeze
+
+  # Le modèle a refusé de répondre (stop_reason « refusal ») : traité comme une image refusée.
+  class PricingRefused < StandardError; end
+
   # On exécute les jobs de pricing un par un pour rester sous les limites
-  # de débit de l'API Mammouth
+  # de débit de l'API Claude
   limits_concurrency to: 1, key: "priceia"
 
   # et on retente avec un délai croissant si l'API rate-limite quand même
-  retry_on RubyLLM::RateLimitError, wait: :polynomially_longer, attempts: 8
+  retry_on Anthropic::Errors::RateLimitError, wait: :polynomially_longer, attempts: 8
 
-  # Les pannes passagères de la passerelle (502/503 « upstream connect error », 500, 529, coupures
-  # réseau) sont déjà retentées 3 fois par ruby_llm, mais à quelques dixièmes de seconde d'écart :
-  # on laisse au fournisseur le temps de revenir avant de lever une vraie erreur pour Sentry.
-  retry_on RubyLLM::ServerError, RubyLLM::ServiceUnavailableError, RubyLLM::OverloadedError,
-           Faraday::TimeoutError, Faraday::ConnectionFailed,
+  # Les pannes passagères de l'API (500, 529 « overloaded », coupures réseau, délais dépassés) sont
+  # déjà retentées 2 fois par la gem anthropic, mais à quelques secondes d'écart : on laisse au
+  # fournisseur le temps de revenir avant de lever une vraie erreur pour Sentry.
+  # (APITimeoutError hérite d'APIConnectionError.)
+  retry_on Anthropic::Errors::InternalServerError, Anthropic::Errors::APIConnectionError,
            wait: :polynomially_longer, attempts: 5
 
-  # Une image refusée par le filtre de sécurité du fournisseur (400 « content safety ») le sera à
+  # Une image refusée par l'API (400 : image illisible ou introuvable, contenu refusé) le sera à
   # chaque essai : on ne réessaie pas, on le dit à l'opérateur sur la fiche du jouet et on prévient
   # Sentry en simple avertissement — ce n'est pas une panne, c'est un jouet à tarifer à la main.
-  discard_on RubyLLM::BadRequestError do |job, error|
+  # Même traitement quand le modèle refuse de répondre (stop_reason « refusal », voir #perform).
+  discard_on Anthropic::Errors::BadRequestError, PricingRefused do |job, error|
     toy_id = job.arguments.first
     Toy.find_by(id: toy_id)&.mark_pricing_blocked!
     Rails.logger.warn("PriceiaJob : estimation refusée pour le jouet #{toy_id} — #{error.message}")
@@ -28,13 +34,38 @@ class PriceiaJob < ApplicationJob
     end
   end
 
+  # Client de l'API Claude (clé lue dans ENV["ANTHROPIC_API_KEY"]) ; redéfini dans les tests.
+  def self.client
+    @client ||= Anthropic::Client.new
+  end
+
   def perform(toy_id, french:, ce_mark:, safe:, clean:, complete:, playable:)
     toy = Toy.find(toy_id)
 
-    chat = RubyLLM.chat(model: "gpt-4.1-mini")
-    response = chat.ask(system_prompt(french, ce_mark, safe, clean, complete, playable, toy.operator_note),
-                        with: { image: toy.photo.url })
-    toy.update(price: response.content.to_i)
+    message = self.class.client.messages.create(
+      model: MODEL,
+      # la réflexion du modèle compte dans max_tokens : on laisse de la marge pour un prix d'un mot
+      max_tokens: 2048,
+      # effort bas : tâche courte, on limite la réflexion (et donc le coût)
+      output_config: { effort: :low },
+      messages: [{
+        role: "user",
+        content: [
+          { type: "image", source: { type: "url", url: toy.photo.url } },
+          { type: "text", text: system_prompt(french, ce_mark, safe, clean, complete, playable, toy.operator_note) }
+        ]
+      }]
+    )
+    raise PricingRefused, "refus du modèle (#{message.stop_details&.category || 'sans catégorie'})" if message.stop_reason == :refusal
+
+    # la réponse peut commencer par des blocs de réflexion : on ne lit que le texte
+    answer = message.content.select { |block| block.type == :text }.map(&:text).join
+    price = answer[/\d+/]
+    if price
+      toy.update(price: price.to_i)
+    else
+      Rails.logger.warn("PriceiaJob : réponse sans prix pour le jouet #{toy_id} — #{answer.first(200).inspect}")
+    end
   end
 
   private

@@ -1,7 +1,7 @@
 # RE-PLAY Project Memory
 
 ## Stack
-Rails 8.1, PostgreSQL, Devise, Pundit, Bootstrap 5, Hotwire/Turbo/Stimulus, importmap (no Node/webpack), Active Storage + Cloudinary, Solid Queue/Cache/Cable, ruby_llm gem (GPT-4o pour pricing IA).
+Rails 8.1, PostgreSQL, Devise, Pundit, Bootstrap 5, Hotwire/Turbo/Stimulus, importmap (no Node/webpack), Active Storage + Cloudinary, Solid Queue/Cache/Cable, gem anthropic (Claude Haiku 5.5 pour pricing IA).
 
 ## Design System (post-redesign)
 - Primary font: Fredoka One (titres) + Nunito (corps) — Google Fonts importés dans `_fonts.scss`
@@ -32,4 +32,4 @@ pages/_auth.scss          ← dotted background
 - Category → Box → Toy (polymorphic Action pour audit log)
 - User.admin? booléen pour droits verify/confirm_verify sur Toy
 - Toy.waiting = location "En attente de validation", Toy.validated = le reste
-- chat_response appelle GPT-4o via ruby_llm après create/update d'un Toy
+- PriceiaJob appelle Claude Haiku 5.5 via la gem anthropic après create/update d'un Toy
