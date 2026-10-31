@@ -21,12 +21,13 @@ class PriceiaJobTest < ActiveJob::TestCase
   end
 
   Block = Struct.new(:type, :text)
-  Message = Struct.new(:content, :stop_reason, :stop_details)
+  Message = Struct.new(:content, :stop_reason, :stop_details, :usage)
+  Usage = Struct.new(:input_tokens, :output_tokens)
 
   def answer(text, thinking: false)
     blocks = [Block.new(:text, text)]
     blocks.unshift(Block.new(:thinking, nil)) if thinking
-    FakeClient.new { Message.new(blocks, :end_turn, nil) }
+    FakeClient.new { Message.new(blocks, :end_turn, nil, Usage.new(2480, 210)) }
   end
 
   def refusing_api
@@ -50,10 +51,11 @@ class PriceiaJobTest < ActiveJob::TestCase
   end
 
   # Minitest 6 n'a plus minitest/mock : on redéfinit PriceiaJob.client le temps du test.
-  def perform(client)
+  def perform(client, **criteria)
     original = PriceiaJob.method(:client)
     PriceiaJob.define_singleton_method(:client) { client }
-    PriceiaJob.perform_now(@toy.id, french: true, ce_mark: true, safe: true, clean: true, complete: true, playable: true)
+    PriceiaJob.perform_now(@toy.id, french: true, ce_mark: true, safe: true, clean: true, complete: true, playable: true,
+                                    **criteria)
   ensure
     PriceiaJob.define_singleton_method(:client, original)
   end
@@ -89,6 +91,21 @@ class PriceiaJobTest < ActiveJob::TestCase
     assert_equal "url", request[:messages].first[:content].first[:source][:type]
   end
 
+  test "chaque calcul est journalisé avec le prix, les critères en malus et le coût" do
+    logs = capture_logs { perform(answer("5"), clean: false, complete: false) }
+    assert_match "PriceiaJob : J#{@toy.id} → 5 € (sale, incomplet) — 2480 + 210 jetons, ≈0.00035 $", logs
+  end
+
+  test "jouet sans défaut : « parfait état » dans le log" do
+    assert_match "(parfait état)", capture_logs { perform(answer("12")) }
+  end
+
+  test "le prompt signale le malus quand le jouet est incomplet" do
+    client = answer("5")
+    perform(client, complete: false)
+    assert_match "malus fort : pièces manquantes", client.requests.first[:messages].first[:content].last[:text]
+  end
+
   test "la réponse commence par un bloc de réflexion : seul le texte compte" do
     perform(answer("15 €", thinking: true))
     assert_equal 15, @toy.reload.price.to_i
@@ -100,5 +117,17 @@ class PriceiaJobTest < ActiveJob::TestCase
     assert_nil @toy.price
     assert_not @toy.pricing_blocked?
     assert_enqueued_jobs 1, only: PriceiaJob
+  end
+
+  private
+
+  def capture_logs
+    io = StringIO.new
+    original = Rails.logger
+    Rails.logger = ActiveSupport::Logger.new(io)
+    yield
+    io.string
+  ensure
+    Rails.logger = original
   end
 end

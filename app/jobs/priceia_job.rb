@@ -2,6 +2,10 @@ class PriceiaJob < ApplicationJob
   queue_as :default
 
   MODEL = "claude-haiku-5-5".freeze
+  # Tarif Claude Haiku 5.5 (prompts ≤ 100K jetons), en $ par million de jetons : sert
+  # uniquement à afficher le coût estimé de chaque calcul dans les logs.
+  INPUT_PRICE_PER_MTOK = 0.10
+  OUTPUT_PRICE_PER_MTOK = 0.50
 
   # Le modèle a refusé de répondre (stop_reason « refusal ») : traité comme une image refusée.
   class PricingRefused < StandardError; end
@@ -61,14 +65,33 @@ class PriceiaJob < ApplicationJob
     # la réponse peut commencer par des blocs de réflexion : on ne lit que le texte
     answer = message.content.select { |block| block.type == :text }.map(&:text).join
     price = answer[/\d+/]
+    criteria = criteria_summary(french, ce_mark, safe, clean, complete, playable)
     if price
       toy.update(price: price.to_i)
+      Rails.logger.info("PriceiaJob : J#{toy_id} → #{price.to_i} € (#{criteria}) — #{usage_summary(message.usage)}")
     else
-      Rails.logger.warn("PriceiaJob : réponse sans prix pour le jouet #{toy_id} — #{answer.first(200).inspect}")
+      Rails.logger.warn("PriceiaJob : J#{toy_id} réponse sans prix (#{criteria}) — #{answer.first(200).inspect} — " \
+                        "#{usage_summary(message.usage)}")
     end
   end
 
   private
+
+  # Critères qui font baisser le prix, pour lire les logs d'un coup d'œil ; « parfait état » sinon.
+  def criteria_summary(french, ce_mark, safe, clean, complete, playable)
+    maluses = { "pas en français" => french, "sans CE ni marque" => ce_mark, "sécurité non vérifiée" => safe,
+                "sale" => clean, "incomplet" => complete, "non jouable" => playable }
+              .reject { |_label, ok| ok }.keys
+    maluses.any? ? maluses.join(", ") : "parfait état"
+  end
+
+  # Jetons consommés (réflexion du modèle incluse dans la sortie) et coût estimé.
+  def usage_summary(usage)
+    return "consommation inconnue" unless usage
+
+    cost = ((usage.input_tokens * INPUT_PRICE_PER_MTOK) + (usage.output_tokens * OUTPUT_PRICE_PER_MTOK)) / 1_000_000
+    "#{usage.input_tokens} + #{usage.output_tokens} jetons, ≈#{format('%.5f', cost)} $"
+  end
 
   def system_prompt(french, ce_mark, safe, clean, complete, playable, operator_note = nil)
     note_part = operator_note.present? ? "\n    Note de l'opérateur (à prendre en compte pour ajuster le prix) : \"#{operator_note}\"." : ""
@@ -86,7 +109,7 @@ class PriceiaJob < ApplicationJob
     - Marquage CE ou marque connue : #{ce_mark ? 'oui' : 'non'} #{'(malus : moins rassurant pour les parents)' unless ce_mark}
     - Sécurité vérifiée : #{safe ? 'oui' : 'non'} #{'(malus significatif : risque perçu élevé)' unless safe}
     - Propreté : #{clean ? 'propre' : 'sale'} #{'(malus : doit être nettoyé)' unless clean}
-    - Complétude : #{complete ? 'complet' : 'incomplet'}
+    - Complétude : #{complete ? 'complet' : 'incomplet'} #{'(malus fort : pièces manquantes, beaucoup moins vendable)' unless complete}
     - Jouabilité : #{playable ? 'jouable' : 'non jouable'} #{'(malus fort : jouet inutilisable)' unless playable}#{note_part}
 
     Réponds uniquement avec un nombre entier en euros, sans texte ni symbole. Exemple : 8"
