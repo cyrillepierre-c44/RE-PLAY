@@ -65,6 +65,10 @@ When a toy is created or updated, `PriceiaJob` calls the Claude API (official `a
 
 400 errors (image unreadable/refused) and `stop_reason: :refusal` → toy marked « prix à saisir » (`mark_pricing_blocked!`), Sentry warning only, no retry.
 
+**Logs** : chaque calcul écrit une ligne `PriceiaJob : J5491 → 10 € (sale) — 2901 + 150 jetons, ≈0.00037 $` (critères en malus, ou « parfait état » ; coût calculé avec `INPUT_/OUTPUT_PRICE_PER_MTOK`, à mettre à jour si le modèle change). Lire avec `heroku logs -a re-play -n 300 | grep "PriceiaJob :"`.
+
+**Prompt** : chaque critère défavorable porte un malus explicite (« incomplet » ajouté le 31/10/2026). **Variabilité** : sans température réglable, une même photo varie d'environ ±2 € (J5491 : 5/12 € puis 6/10 € en incomplet/complet). À revoir à l'usage début novembre 2026 ; piste en attente : faire choisir le prix dans une grille de prix ronds (2, 3, 5, 8, 10, 12, 15, 20 €…).
+
 **Pannes passagères de l'API (500, 529 « overloaded », coupures réseau, timeouts)** : `PriceiaJob` les retente 5 fois avec un délai croissant (~7 min au total), en plus des 2 essais rapides de la gem. Sentry ne remonte `Anthropic::Errors::InternalServerError` / `APIConnectionError` que si la panne dure plus longtemps ; le jouet reste alors sans prix, à relancer via le bandeau violet. Un seul incident connu (30/09/2026, encore chez Mammouth). Si Sentry le remonte à nouveau, plan prévu (non fait, jugé disproportionné après un seul cas) :
 1. Retries épuisés → le jouet passe « en attente de reprise IA » (colonne dédiée, par ex. `pricing_waiting_since`) au lieu d'échouer ; avertissement Sentry seulement.
 2. Job récurrent (`config/recurring.yml`, toutes les 10 min) : s'il y a des jouets en attente, il fait **un** vrai mini-appel `messages.create` sur `PriceiaJob::MODEL` (pas un ping `/v1/models` : « upstream connect error » vient d'Envoy, donc la passerelle peut répondre alors que le chat est en panne) ; si ça marche, il relance `PriceiaJob` pour eux ; au-delà de 24 h de panne, erreur Sentry.
@@ -122,6 +126,9 @@ Admin-only page at `/projet` displaying a 7-page consulting quote (devis N° 202
 ### File Storage
 
 Active Storage + Cloudinary for toy photos. Requires `CLOUDINARY_URL` in the environment.
+
+- Stored/served size: `config/storage.yml` applies `c_limit,w_1600,h_1600,q_auto` (~88 Ko/photo) — used on the toy page and the verify screen.
+- **List cards** (`toys/index`, `boxes/show`) must use `toy_thumb_tag(toy)` (`ApplicationHelper`), never `image_tag toy.photo`: Cloudinary thumbnail 720×400 `c_fill,g_center,q_auto,f_auto` (~24 Ko WebP) + `loading="lazy"`. Falls back to the original photo outside Cloudinary (dev Disk, tests). Reason: on 30/10/2026 bandwidth hit 4.2 Go/day (23 Go in October, ~29 Cloudinary credits with storage + transformations) because lists load every waiting toy at 1600 px and the admin returns to the full list after each `confirm_verify`. Check the Cloudinary bandwidth curve after the v99 deploy (31/10/2026).
 
 ### Stylesheets
 
