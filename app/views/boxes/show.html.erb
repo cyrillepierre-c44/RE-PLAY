@@ -117,7 +117,7 @@
               <%= link_to toy_path(toy), class: "toy-card d-block text-decoration-none #{'toy-card--sold' if toy.sold?}" do %>
                 <div class="toy-card-photo-wrap">
                   <% if toy.photo.attached? %>
-                    <%= image_tag toy.photo, alt: "Photo du jouet J#{toy.id}", class: "toy-card-img" %>
+                    <%= toy_thumb_tag(toy) %>
                   <% else %>
                     <div class="toy-card-no-img"><i class="fa-solid fa-image"></i></div>
                   <% end %>
