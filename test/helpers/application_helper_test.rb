@@ -15,7 +15,7 @@ class ApplicationHelperTest < ActionView::TestCase
   end
 
   test "vignette Cloudinary : recadrée 720×400, format et qualité automatiques" do
-    url = Cloudinary::Utils.cloudinary_url("dev/abc", transformation: TOY_THUMB_TRANSFORMATION.dup)
+    url = Cloudinary::Utils.cloudinary_url("dev/abc", cloud_name: "demo", transformation: TOY_THUMB_TRANSFORMATION.dup)
     assert_includes url, "c_fill,f_auto,g_center,h_400,q_auto,w_720"
   end
 end
