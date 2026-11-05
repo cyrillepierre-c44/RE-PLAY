@@ -51,6 +51,7 @@ Key authorization rules:
 - **Destroy Toy / Verify Toy**: admin only (`user.admin?`)
 - **Destroy Box**: the creator (via actions)
 - **Projet / ProjetLeviers**: admin only (`user.admin?`) — via `PagePolicy#projet?`
+- **Mon profil** (`Users::RegistrationsController#update_resource`): only the password can be changed (current password required). The e-mail is assigned by Enjoué and used as the identifier in the action history, so it is not editable and any `email` param is dropped — a change is done in the database by Cyrille. Reason: on 05/11/2026 a colleague on a shared, still-logged-in device replaced another account's e-mail with her own, making that account "disappear" from the list.
 
 ### Toy Lifecycle
 
