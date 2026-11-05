@@ -23,11 +23,14 @@ module Users
 
     protected
 
-    # Le mot de passe actuel est exigé pour changer le mot de passe ou l'e-mail.
-    # Sans cela, un collègue utilisant un appareil partagé encore connecté peut
-    # remplacer l'adresse d'un autre compte (incident du 05/11/2026).
+    # L'adresse e-mail est attribuée par Enjoué et sert d'identifiant dans tout
+    # l'historique des actions : elle n'est pas modifiable depuis « Mon profil »
+    # (un changement se fait en base, par Cyrille). Le 05/11/2026, une collègue
+    # sur un appareil partagé avait remplacé l'e-mail d'un autre compte par le
+    # sien, faisant « disparaître » ce compte.
     def update_resource(resource, params)
-      if params[:password].blank? && !email_changed?(resource, params)
+      params.delete(:email)
+      if params[:password].blank?
         params.delete(:current_password)
         params.delete(:password)
         params.delete(:password_confirmation)
@@ -35,10 +38,6 @@ module Users
       else
         resource.update_with_password(params)
       end
-    end
-
-    def email_changed?(resource, params)
-      params[:email].present? && params[:email].to_s.strip.casecmp(resource.email) != 0
     end
 
     private
