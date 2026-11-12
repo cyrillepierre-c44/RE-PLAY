@@ -2,7 +2,14 @@
 
 <div class="container py-4">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <% if params[:new] %>
+    <% if @box.draft? %>
+      <%# Retour pendant la création = fausse manip : le brouillon est supprimé (numéro perdu). %>
+      <%= button_to box_path(@box), method: :delete, class: "btn-back-boxes d-flex align-items-center gap-2", "aria-label": "Retour" do %>
+        <i class="fa-solid fa-circle-arrow-left" style="font-size:1.8rem;" aria-hidden="true"></i>
+        <i class="fa-solid fa-boxes-stacked btn-back-context-icon" style="font-size:1.8rem;" aria-hidden="true"></i>
+        <span class="toy-show-title" style="font-size:1.4rem; margin:0;">Nouvelle caisse</span>
+      <% end %>
+    <% elsif params[:new] %>
       <%= link_to boxes_path, class: "btn-back-boxes d-flex align-items-center gap-2" do %>
         <i class="fa-solid fa-circle-arrow-left" style="font-size:1.8rem;" aria-hidden="true"></i>
         <i class="fa-solid fa-boxes-stacked btn-back-context-icon" style="font-size:1.8rem;" aria-hidden="true"></i>

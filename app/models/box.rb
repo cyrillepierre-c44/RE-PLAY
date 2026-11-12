@@ -3,7 +3,9 @@ class Box < ApplicationRecord
   has_many :actions, as: :actionable
   has_many :toys, dependent: :destroy
 
-  enum :status, { pending: "pending", empty: "empty", suppr: "suppr" }
+  enum :status, { pending: "pending", empty: "empty", suppr: "suppr", draft: "draft" }
+  include Draftable
+
   after_initialize :set_default_status, if: :new_record?
 
   validates :status, presence: true

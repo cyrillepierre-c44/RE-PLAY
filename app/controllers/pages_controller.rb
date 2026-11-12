@@ -181,9 +181,9 @@ class PagesController < ApplicationController
     @box_actions_count = @actions.where(actionable_type: "Box").count
     @box_ids           = @actions.where(actionable_type: "Box").pluck(:actionable_id).uniq
     @toy_ids           = @actions.where(actionable_type: "Toy").pluck(:actionable_id).uniq
-    @boxes_toys_count          = Toy.where(box_id: @box_ids).count
-    @boxes_toys_electronic     = Toy.joins(:box).where(boxes: { id: @box_ids, electronic: true }).count
-    @boxes_toys_non_electronic = Toy.joins(:box).where(boxes: { id: @box_ids, electronic: false }).count
+    @boxes_toys_count          = Toy.not_draft.where(box_id: @box_ids).count
+    @boxes_toys_electronic     = Toy.not_draft.joins(:box).where(boxes: { id: @box_ids, electronic: true }).count
+    @boxes_toys_non_electronic = Toy.not_draft.joins(:box).where(boxes: { id: @box_ids, electronic: false }).count
     elec_base     = Toy.joins(:box).where(boxes: { id: @box_ids, electronic: true })
     non_elec_base = Toy.joins(:box).where(boxes: { id: @box_ids, electronic: false })
     @elec_waiting      = elec_base.waiting.count

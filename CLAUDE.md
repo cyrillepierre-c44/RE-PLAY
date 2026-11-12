@@ -55,7 +55,8 @@ Key authorization rules:
 
 ### Toy Lifecycle
 
-1. Toy is created with `location: "En attente de validation"` (scope: `Toy.waiting`)
+0. **Brouillon (`status: draft`, concern `Draftable`, jouets *et* caisses)** — the J/C number is reserved as soon as creation starts (`toys#new` saves the toy; `boxes#create` with `new_flow`), because several people label toys/boxes in parallel. The record stays `draft` until the form is saved once (`toys#update` / `boxes#update` → `pending`). A draft counts nowhere (`not_draft` in lists, dashboard, box deletion check, `toggle_empty?`), has no show page (redirects to `edit?new=true`), and is only shown to its creator and admins in the dashed « À terminer » strip (`shared/_drafts`) with resume + trash. The in-app back arrow of the creation form is a `DELETE` that hard-deletes the draft and its actions (`discard_draft!`, "fausse manip" — the number is lost, gaps in numbering are expected); browser back / closed tab leaves the draft, and `PurgeDraftsJob` (`config/recurring.yml`, daily) removes drafts older than 7 days. Decided with Cyrille on 12/11/2026: no confirmation screen on the back arrow — to keep a number, press ✓. Toys/boxes abandoned before that date were left as `pending` (not converted).
+1. Once saved, the toy is `pending` with `location: "En attente de validation"` (scope: `Toy.waiting`)
 2. After create/update, a `PriceiaJob` calls the Claude API (Haiku 5.5) to suggest a price based on a French prompt + toy photo
 3. Admin verifies the toy via `GET /toys/:id/verify` → `PATCH /toys/:id/confirm_verify`, which updates location and moves it to `Toy.validated` scope
 4. Toys index supports `?filter=validated` to toggle between waiting and validated views

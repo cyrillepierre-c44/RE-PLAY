@@ -1,7 +1,14 @@
 <% content_for :title, "#{new_flow? ? 'Nouveau' : 'Modifier'} jouet J#{@toy.id} · RE-PLAY" %>
 
 <div class="container py-4">
-  <% if new_flow? %>
+  <% if @toy.draft? %>
+    <%# Retour pendant la création = fausse manip : le brouillon est supprimé (numéro perdu). %>
+    <%= button_to toy_path(@toy), method: :delete, class: "btn-back-boxes mb-3", "aria-label": "Retour",
+          form: { class: "d-inline-block" } do %>
+      <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <i class="fa-solid fa-box btn-back-context-icon" aria-hidden="true"></i>
+    <% end %>
+  <% elsif new_flow? %>
     <%= link_to box_path(@toy.box), class: "btn-back-boxes mb-3 d-inline-block", "aria-label": "Retour" do %>
       <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
       <i class="fa-solid fa-box btn-back-context-icon" aria-hidden="true"></i>

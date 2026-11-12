@@ -14,7 +14,7 @@ class ToysController < ApplicationController
   def index
     # includes/with_attached_photo : la vue lit toy.category et toy.photo pour
     # chaque carte — sans préchargement c'est 3 requêtes par jouet (N+1).
-    base_scope = policy_scope(Toy).includes(:category).with_attached_photo
+    base_scope = policy_scope(Toy).not_draft.includes(:category).with_attached_photo
     base_scope = base_scope.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:q].present?
       num = params[:q].to_s.gsub(/\D/, '')
@@ -46,6 +46,7 @@ class ToysController < ApplicationController
           end
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
     @categories = Category.for_toys.order(:name)
+    @drafts = policy_scope(Toy).draft.order(:id)
     @missing_price_count = current_user.admin? ? Toy.waiting.where(price: nil).joins(:photo_attachment).count : 0
     session.delete(:price_refresh_total) # ancien format
     refresh = session[:price_refresh]
@@ -65,6 +66,9 @@ class ToysController < ApplicationController
 
   def show
     authorize @toy
+    # Un brouillon n'a pas de fiche : on reprend sa création là où elle s'est arrêtée.
+    return redirect_to edit_toy_path(@toy, new: true) if @toy.draft?
+
     @timeline = Action.where(actionable: @toy).includes(:user).order(created_at: :desc)
   end
 
@@ -101,7 +105,9 @@ class ToysController < ApplicationController
   end
 
   def new
-    @toy = Toy.new(box: @box, category: @box.toy_category)
+    # Brouillon : le numéro J est réservé tout de suite, la fiche ne devient un vrai
+    # jouet « en attente » qu'au premier enregistrement du formulaire (cf. Draftable).
+    @toy = Toy.new(box: @box, category: @box.toy_category, status: :draft)
     authorize @toy
     @toy.save(validate: false)
     Action.create!(user: current_user, actionable: @toy,
@@ -132,6 +138,8 @@ class ToysController < ApplicationController
 
   def update
     authorize @toy
+    was_draft = @toy.draft?
+    @toy.status = :pending if was_draft
     if @toy.update(toy_params.merge(price: nil))
       PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean,
                                         complete: @toy.complete, playable: @toy.playable)
@@ -143,12 +151,22 @@ class ToysController < ApplicationController
         redirect_to toy_path(@toy), status: :see_other, notice: "modifié avec succès"
       end
     else
+      @toy.status = :draft if was_draft
+      @box = @toy.box
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
     authorize @toy
+    # Brouillon (flèche retour du formulaire de création, ou poubelle « à terminer ») :
+    # suppression définitive, sans passer par la corbeille.
+    if @toy.draft?
+      box = @toy.box
+      @toy.discard_draft!
+      return redirect_to box_path(box), status: :see_other
+    end
+
     if @toy.update(status: :suppr)
       Action.create!(user: current_user, actionable: @toy,
                      content: "#{current_user.email} a supprimé le jouet J#{@toy.id}")
@@ -261,7 +279,7 @@ class ToysController < ApplicationController
   # formulaire est réaffiché après une erreur : seul le champ caché from_new
   # revient alors, et sans lui la page basculait en « Modifier le jouet ».
   def new_flow?
-    params[:new].present? || params[:from_new] == "1"
+    params[:new].present? || params[:from_new] == "1" || @toy&.draft?
   end
 
   def log_nonconformities

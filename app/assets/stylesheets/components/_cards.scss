@@ -887,3 +887,63 @@ a.toy-card {
     margin-top: 0.1rem;
   }
 }
+
+// ── Brouillons « à terminer » (numéro réservé, formulaire jamais enregistré) ──
+.drafts-strip {
+  border: 2px dashed rgba($coral, 0.4);
+  border-radius: 1rem;
+  padding: 0.75rem;
+  background: rgba($coral, 0.05);
+}
+
+.drafts-strip-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  color: #6B7280;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.drafts-strip-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.draft-chip {
+  display: inline-flex;
+  align-items: stretch;
+  background: $white;
+  border-radius: 0.75rem;
+  box-shadow: $card-box-shadow;
+  overflow: hidden;
+}
+
+.draft-chip-resume {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 48px;
+  padding: 0 0.9rem;
+  color: #1A2B4A;
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-decoration: none;
+
+  i { color: $coral; }
+}
+
+.draft-chip-delete {
+  min-width: 48px;
+  height: 100%;
+  min-height: 48px;
+  border: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(230, 57, 70, 0.1);
+  color: #E63946;
+  font-size: 1.05rem;
+}

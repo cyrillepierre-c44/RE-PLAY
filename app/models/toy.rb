@@ -8,7 +8,8 @@ class Toy < ApplicationRecord
   # `:destroy` supprime seulement la ligne d'attachement et laissait le fichier
   # orphelin sur Cloudinary.
   has_one_attached :photo, dependent: :purge_later
-  enum :status, { pending: "pending", market: "market", suppr: "suppr", review: "review" }
+  enum :status, { pending: "pending", market: "market", suppr: "suppr", review: "review", draft: "draft" }
+  include Draftable
 
   # Message posé dans admin_comment quand l'estimation IA est impossible (image refusée par
   # le filtre de sécurité du fournisseur) : la fiche affiche alors « prix à saisir » au lieu

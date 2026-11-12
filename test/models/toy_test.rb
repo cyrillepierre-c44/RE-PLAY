@@ -23,6 +23,26 @@ class ToyTest < ActiveSupport::TestCase
     assert_includes toy.errors.attribute_names, :category
   end
 
+  test "purge des brouillons : seuls ceux de plus de 7 jours, jouets et caisses" do
+    box = create_box
+    old_toy    = create_toy(box: box, status: "draft", created_at: 8.days.ago)
+    recent_toy = create_toy(box: box, status: "draft", created_at: 6.days.ago)
+    old_real   = create_toy(box: box, created_at: 8.days.ago)
+    old_box    = Box.create!(category: default_category, status: "draft", created_at: 8.days.ago)
+    touch(old_toy, create_user)
+
+    assert_difference("Action.count", -1) { PurgeDraftsJob.perform_now }
+
+    assert_not Toy.exists?(old_toy.id)
+    assert_not Box.exists?(old_box.id)
+    assert Toy.exists?(recent_toy.id)
+    assert Toy.exists?(old_real.id)
+  end
+
+  test "discard_draft! refuse un jouet qui n'est pas un brouillon" do
+    assert_raises(ArgumentError) { create_toy.discard_draft! }
+  end
+
   test "scope waiting couvre pending et review, validated couvre market, deleted couvre suppr" do
     pending_toy = create_toy
     review_toy  = create_toy(status: "review")

@@ -110,6 +110,8 @@
         </h2>
       </div>
 
+      <%= render "shared/drafts", drafts: @drafts, kind: :toy %>
+
       <% unless @toys.empty? %>
         <div class="row g-3">
           <% @toys.order(created_at: :desc).each do |toy| %>

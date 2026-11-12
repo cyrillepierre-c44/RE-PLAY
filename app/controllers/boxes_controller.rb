@@ -3,7 +3,7 @@ class BoxesController < ApplicationController
 
   def index
     # includes : la vue lit box.category pour chaque carte (N+1 sinon).
-    base_scope = policy_scope(Box).includes(:category)
+    base_scope = policy_scope(Box).not_draft.includes(:category)
     base_scope = base_scope.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:q].present?
       num = params[:q].to_s.gsub(/\D/, '')
@@ -29,13 +29,20 @@ class BoxesController < ApplicationController
           end
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
     @categories = Category.all.order(:name)
+    @drafts = own.draft.order(:id)
   end
 
   def show
     authorize @box
+    # Une caisse en brouillon n'a pas de fiche : son créateur reprend la création.
+    if @box.draft?
+      return redirect_to(policy(@box).update? ? edit_box_path(@box, new: true) : boxes_path)
+    end
+
     # Tout le monde voit toutes les caisses, mais un employé ne voit que les
     # jouets qu'il a créés dedans (l'admin voit tout) — idem pour la timeline.
-    @toys = policy_scope(@box.toys)
+    @toys = policy_scope(@box.toys).not_draft
+    @drafts = policy_scope(@box.toys).draft.order(:id)
     @timeline = Action.where(actionable: @box)
                       .or(Action.where(actionable: @toys))
                       .includes(:user)
@@ -49,6 +56,8 @@ class BoxesController < ApplicationController
 
   def create
     @box = Box.new(box_params)
+    # Création en deux étapes : brouillon jusqu'à l'enregistrement de l'étape 2 (cf. Draftable).
+    @box.status = :draft if params[:new_flow]
     authorize @box
     if @box.save
       Action.create!(user: current_user, actionable: @box,
@@ -69,6 +78,7 @@ class BoxesController < ApplicationController
 
   def update
     authorize @box
+    @box.status = :pending if @box.draft?
     @box.update(box_params)
     Action.create!(user: current_user, actionable: @box,
                    content: "#{current_user.email} a modifié la caisse C#{@box.id}")
@@ -77,11 +87,17 @@ class BoxesController < ApplicationController
 
   def destroy
     authorize @box
-    if @box.toys.where.not(status: :suppr).any?
+    # Brouillon (flèche retour de l'étape 2, ou poubelle « à terminer ») : suppression définitive.
+    if @box.draft?
+      @box.discard_draft!
+      return redirect_to boxes_path, status: :see_other
+    end
+    if @box.toys.where.not(status: %i[suppr draft]).any?
       redirect_to box_path(@box), alert: "Impossible de supprimer une caisse qui contient encore des jouets."
       return
     end
     if @box.update(status: :suppr)
+      @box.toys.draft.find_each(&:discard_draft!)
       Action.create!(
         user: current_user,
         actionable: @box,

@@ -109,6 +109,93 @@ class ToysControllerTest < ActionDispatch::IntegrationTest
     assert Toy.last.suppr?
   end
 
+  # ── Brouillons ──────────────────────────────────────────────────────────
+
+  test "nouveau jouet : le numéro est réservé en brouillon, invisible ailleurs que dans « à terminer »" do
+    sign_in @user
+    box = create_box
+    get new_box_toy_path(box)
+    draft = Toy.last
+    assert draft.draft?
+    assert_redirected_to edit_toy_path(draft, new: true)
+    assert_not_includes Toy.waiting, draft
+
+    get box_path(box)
+    assert_select ".toy-card", count: 0
+    assert_select ".draft-chip-id", text: "J#{draft.id}"
+    get toys_path
+    assert_select ".draft-chip-id", text: "J#{draft.id}"
+    assert_select "a.toy-card[href*='/toys/#{draft.id}']", count: 0
+
+    # la fiche d'un brouillon renvoie vers la suite de sa création
+    get toy_path(draft)
+    assert_redirected_to edit_toy_path(draft, new: true)
+  end
+
+  test "un brouillon n'est visible que par son créateur et l'admin" do
+    sign_in @user
+    box = create_box
+    get new_box_toy_path(box)
+    sign_out @user
+
+    sign_in create_user
+    get box_path(box)
+    assert_select ".draft-chip", count: 0
+    get toys_path
+    assert_select ".draft-chip", count: 0
+    sign_out :user
+
+    sign_in create_user(admin: true)
+    get box_path(box)
+    assert_select ".draft-chip", count: 1
+  end
+
+  test "le premier enregistrement transforme le brouillon en jouet en attente" do
+    sign_in @user
+    get new_box_toy_path(create_box)
+    draft = Toy.last
+    patch toy_path(draft), params: { from_new: "1", toy: { clean: "1" } }
+    assert_redirected_to toy_path(draft, back_box: draft.box_id)
+    assert draft.reload.pending?
+  end
+
+  test "un enregistrement refusé laisse le jouet en brouillon, flèche retour comprise" do
+    sign_in @user
+    get new_box_toy_path(create_box(category: mixed_category))
+    draft = Toy.last
+    patch toy_path(draft), params: { from_new: "1", toy: { category_id: "" } }
+    assert_response :unprocessable_entity
+    assert draft.reload.draft?
+    assert_select "form[action='#{toy_path(draft)}'] input[name=_method][value=delete]"
+  end
+
+  test "la flèche retour du formulaire supprime le brouillon et son historique" do
+    sign_in @user
+    box = create_box
+    get new_box_toy_path(box)
+    draft = Toy.last
+    follow_redirect!
+    assert_select "form[action='#{toy_path(draft)}'] input[name=_method][value=delete]"
+
+    assert_difference(["Toy.count", "Action.count"], -1) { delete toy_path(draft) }
+    assert_redirected_to box_path(box)
+  end
+
+  test "supprimer un vrai jouet passe toujours par la corbeille" do
+    sign_in @user
+    assert_no_difference("Toy.count") { delete toy_path(@toy) }
+    assert @toy.reload.suppr?
+  end
+
+  test "un brouillon ne peut pas être supprimé par un autre employé" do
+    sign_in @user
+    get new_box_toy_path(create_box)
+    draft = Toy.last
+    sign_out @user
+    sign_in create_user
+    assert_no_difference("Toy.count") { delete toy_path(draft) }
+  end
+
   test "un employé ne peut pas forcer le statut market via le formulaire" do
     sign_in @user
     patch toy_path(@toy), params: { toy: { status: "market", location: "Rayon A" } }

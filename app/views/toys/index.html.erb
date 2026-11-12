@@ -156,6 +156,8 @@
     </div>
   <% end %>
 
+  <%= render "shared/drafts", drafts: @drafts, kind: :toy if params[:filter].blank? && params[:q].blank? %>
+
   <% if @toys.empty? %>
     <div class="text-center py-5">
       <div style="font-size: 4rem; color: rgba(255,107,53,0.2); margin-bottom: 1rem;">

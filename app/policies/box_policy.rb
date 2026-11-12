@@ -45,7 +45,7 @@ class BoxPolicy < ApplicationPolicy
   def toggle_empty?
     return true if user.admin?
 
-    last_toy = record.toys.order(created_at: :desc).first
+    last_toy = record.toys.not_draft.order(created_at: :desc).first
     last_toy.present? && last_toy.actions.exists?(user: user)
   end
 
