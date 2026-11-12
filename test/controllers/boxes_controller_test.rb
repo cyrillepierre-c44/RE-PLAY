@@ -30,4 +30,22 @@ class BoxesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :redirect
   end
+
+  test "création d'une caisse Grosses pièces" do
+    sign_in @user
+    assert_difference("Box.count", 1) do
+      post boxes_path, params: { box: { category_id: mixed_category.id } }
+    end
+    assert_equal mixed_category, Box.last.category
+  end
+
+  test "show d'une caisse Grosses pièces avec un jouet sans catégorie" do
+    box = create_box(category: mixed_category)
+    toy = Toy.new(box: box)
+    toy.save(validate: false)
+    sign_in create_user(admin: true)
+    get box_path(box)
+    assert_response :success
+    assert_includes response.body, "À choisir"
+  end
 end

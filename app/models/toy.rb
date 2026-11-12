@@ -26,12 +26,18 @@ class Toy < ApplicationRecord
   after_initialize :set_default_status, if: :new_record?
 
   validates :status, presence: true
+  validate :category_is_a_toy_category
   scope :waiting, -> { where(status: %i[pending review]) }
   scope :validated, -> { where(status: :market) }
   scope :deleted, -> { where(status: :suppr) }
   scope :sold, -> { where(sold: true) }
   scope :available, -> { where(sold: false) }
   private
+
+  # « Grosses pièces » décrit une caisse, pas un jouet.
+  def category_is_a_toy_category
+    errors.add(:category, "doit être la catégorie du jouet") if category&.mixed?
+  end
 
   def set_default_status
     self.status ||= :pending

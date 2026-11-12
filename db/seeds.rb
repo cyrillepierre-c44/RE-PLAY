@@ -24,7 +24,9 @@ categories = [
   { name: "Jeux de construction",                                  icon: "fa-hammer" },
   { name: "Figurines et mini monde",                               icon: "fa-chess-pawn" },
   { name: "Imitation",                                             icon: "fa-masks-theater" },
-  { name: "Déguisements",                                          icon: "fa-hat-wizard" }
+  { name: "Déguisements",                                          icon: "fa-hat-wizard" },
+  # Caisse mélangée (roll de jouets encombrants) : pour les caisses, pas pour les jouets.
+  { name: "Grosses pièces",                                        icon: "fa-dolly", mixed: true }
 ]
 
 categories.each do |attrs|

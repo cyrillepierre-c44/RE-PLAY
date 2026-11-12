@@ -85,6 +85,7 @@
           <%= f.association :category,
               label: false,
               prompt: "Catégorie…",
+              collection: Category.for_toys,
               input_html: { class: "form-select verify-select" } %>
         </div>
 

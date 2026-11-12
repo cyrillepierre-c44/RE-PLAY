@@ -13,6 +13,7 @@ fr:
   errors:
     messages:
       taken: "est déjà utilisé"
+      required: "doit être choisie"
 
   activerecord:
     models:
@@ -21,3 +22,8 @@ fr:
       category: "Catégorie"
       user: "Utilisateur"
       action: "Action"
+    attributes:
+      toy:
+        category: "La catégorie"
+      box:
+        category: "La catégorie"

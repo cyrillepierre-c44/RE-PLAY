@@ -20,6 +20,10 @@ module ActiveSupport
       @default_category ||= Category.find_or_create_by!(name: "Peluches")
     end
 
+    def mixed_category
+      @mixed_category ||= Category.find_or_create_by!(name: "Grosses pièces") { |c| c.mixed = true }
+    end
+
     def create_box(category: default_category, status: "pending")
       Box.create!(category: category, status: status)
     end

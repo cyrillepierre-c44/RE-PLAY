@@ -1,4 +1,17 @@
 module ApplicationHelper
+  # Un jouet peut ne pas (encore) avoir de catégorie : créé depuis une caisse
+  # « Grosses pièces », il n'hérite pas de celle de la caisse et attend le choix
+  # de l'opérateur. Les badges affichent alors un point d'interrogation.
+  def category_icon(category)
+    return "fa-circle-question" unless category
+
+    category.icon.presence || "fa-tag"
+  end
+
+  def category_name(category)
+    category&.name || "À choisir"
+  end
+
   # Double gift icon representing a collection of toys (jouets).
   # Use single fa-gift for a specific toy, this helper for lists/counts.
   def toys_icon(html_class: nil, style: nil)

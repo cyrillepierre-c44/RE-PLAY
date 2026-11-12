@@ -17,6 +17,12 @@ class ToyTest < ActiveSupport::TestCase
     assert_includes toy.errors.attribute_names, :category
   end
 
+  test "refuse la catégorie Grosses pièces, réservée aux caisses" do
+    toy = Toy.new(box: create_box, category: mixed_category)
+    assert_not toy.valid?
+    assert_includes toy.errors.attribute_names, :category
+  end
+
   test "scope waiting couvre pending et review, validated couvre market, deleted couvre suppr" do
     pending_toy = create_toy
     review_toy  = create_toy(status: "review")

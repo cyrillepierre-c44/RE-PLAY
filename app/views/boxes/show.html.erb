@@ -149,7 +149,7 @@
                 <div class="toy-card-body">
                   <div class="toy-card-title"><i class="fa-solid fa-gift me-1"></i>J<%= toy.id %></div>
                   <div class="toy-card-meta">
-                    <span class="toy-card-category"><i class="fa-solid <%= toy.category.icon.presence || 'fa-tag' %> me-1"></i><%= truncate(toy.category.name, length: 14) %></span>
+                    <span class="toy-card-category"><i class="fa-solid <%= category_icon(toy.category) %> me-1"></i><%= truncate(category_name(toy.category), length: 14) %></span>
                     <div class="toy-card-conditions">
                       <span class="condition-icon <%= toy.french? ? 'ok' : 'ko' %>" title="<%= toy.french? ? 'Français' : 'Pas en français' %>">
                         <i class="fa-solid fa-flag"></i>

@@ -74,7 +74,7 @@
                 </div>
               <% end %>
             <% end %>
-            <span class="toy-show-category-badge"><i class="fa-solid <%= @toy.category.icon.presence || 'fa-tag' %> me-1"></i><%= truncate(@toy.category.name, length: 18) %></span>
+            <span class="toy-show-category-badge"><i class="fa-solid <%= category_icon(@toy.category) %> me-1"></i><%= truncate(category_name(@toy.category), length: 18) %></span>
           </div>
         </div>
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_06_161520) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -69,6 +69,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_161520) do
   create_table "categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "icon", default: "fa-tag"
+    t.boolean "mixed", default: false, null: false
     t.string "name"
     t.datetime "updated_at", null: false
   end
@@ -229,7 +230,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_161520) do
     t.string "admin_comment", limit: 255
     t.string "barcode"
     t.bigint "box_id", null: false
-    t.bigint "category_id", null: false
+    t.bigint "category_id"
     t.boolean "ce_mark", default: false
     t.boolean "clean"
     t.boolean "complete"

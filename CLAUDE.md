@@ -35,7 +35,7 @@ Rails 8.1.2 app (Ruby 3.3.5) bootstrapped from the Le Wagon template. PostgreSQL
 
 The app manages donated/refurbished toy inventory for a French resale operation:
 
-- **Category** — top-level grouping (e.g. puzzle, jeu de société)
+- **Category** — top-level grouping (e.g. puzzle, jeu de société). `mixed` (boolean) flags a box-only category: **« Grosses pièces »** = a 2 m roll mixing bulky toys of different categories. Such a category can be picked for a Box, never for a Toy (`Category.for_toys`, validation on Toy), and a toy created from that box inherits **no** category (`Box#toy_category` → nil, `toys.category_id` is nullable): the operator must choose it in the form; until then badges show « À choisir » (`category_icon` / `category_name` helpers — never call `toy.category.name` directly).
 - **Box** — a physical donation box, belongs to a Category, has weight and electronic flag
 - **Toy** — individual toy, belongs to a Box and Category. Has condition fields (`clean`, `complete`, `playable`), `location` (defaults to "En attente de validation"), `price` (AI-suggested), `barcode`, and an attached `photo`
 - **Action** — polymorphic audit log; records every user action on a Box or Toy with a `content` string. Also used to determine ownership for authorization.

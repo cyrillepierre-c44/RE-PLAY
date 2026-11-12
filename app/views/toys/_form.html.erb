@@ -1,5 +1,5 @@
 <%= simple_form_for @toy.persisted? ? @toy : [@box, @toy] do |f| %>
-  <% if params[:new] %>
+  <% if new_flow? %>
     <%= hidden_field_tag :from_new, "1" %>
   <% end %>
 
@@ -52,8 +52,10 @@
 
   <%# Catégorie %>
   <div class="mb-2">
+    <%# Caisse « Grosses pièces » : rien de présélectionné, l'opérateur choisit. %>
     <%= f.association :category, label: false, prompt: "Catégorie…",
-        selected: @toy.category&.id || @box&.category&.id,
+        collection: Category.for_toys,
+        selected: @toy.category_id || @box&.toy_category&.id,
         input_html: { class: "form-select verify-select" } %>
   </div>
 

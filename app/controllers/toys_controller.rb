@@ -1,6 +1,7 @@
 class ToysController < ApplicationController
   before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore toggle_sold refresh_price]
   before_action :box_find, only: %i[new create quick_discard]
+  helper_method :new_flow?
 
   # SYSTEM_PROMPT = "Tu es un expert en vente de jouet d'occasion reconditionnés issus de dons.
   #   Je travaille pour une entreprise Française, dans la zone euros, qui vend des jouets d'occasion et je souhaiterais
@@ -44,7 +45,7 @@ class ToysController < ApplicationController
                                        user: current_user).select(:actionable_id))
           end
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
-    @categories = Category.all.order(:name)
+    @categories = Category.for_toys.order(:name)
     @missing_price_count = current_user.admin? ? Toy.waiting.where(price: nil).joins(:photo_attachment).count : 0
     session.delete(:price_refresh_total) # ancien format
     refresh = session[:price_refresh]
@@ -70,7 +71,7 @@ class ToysController < ApplicationController
   def quick_discard
     c = params[:toy] || {}
     @toy = Toy.new(
-      box: @box, category: @box.category, status: :suppr,
+      box: @box, category: @box.toy_category, status: :suppr,
       french: c[:french].to_s == "1",
       ce_mark: c[:ce_mark].to_s == "1",
       safe: c[:safe].to_s == "1",
@@ -100,7 +101,7 @@ class ToysController < ApplicationController
   end
 
   def new
-    @toy = Toy.new(box: @box, category: @box.category)
+    @toy = Toy.new(box: @box, category: @box.toy_category)
     authorize @toy
     @toy.save(validate: false)
     Action.create!(user: current_user, actionable: @toy,
@@ -255,6 +256,13 @@ class ToysController < ApplicationController
   end
 
   private
+
+  # Vrai pendant la création d'un jouet (new → edit?new=true), y compris quand le
+  # formulaire est réaffiché après une erreur : seul le champ caché from_new
+  # revient alors, et sans lui la page basculait en « Modifier le jouet ».
+  def new_flow?
+    params[:new].present? || params[:from_new] == "1"
+  end
 
   def log_nonconformities
     bool_nc = {
