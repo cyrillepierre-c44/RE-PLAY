@@ -73,7 +73,7 @@
             <div class="quality-split mt-2" role="img" aria-label="Bon du premier coup <%= card[:value] %> %, objectif <%= card[:target] %> %">
               <div class="quality-split-ok" style="width: <%= card[:value] %>%;"><% if card[:value] >= 25 %><%= card[:value] %> %<% end %></div>
               <% if card[:value] < 100 %>
-                <div class="quality-split-ko" style="width: <%= 100 - card[:value] %>%;"><% if card[:value] <= 88 %><%= card[:bad] %> <%= 100 - card[:value] %> %<% end %></div>
+                <div class="quality-split-ko" style="width: <%= 100 - card[:value] %>%;"><% if card[:value] <= 86 %><%= 100 - card[:value] %> %<% end %></div>
               <% end %>
               <div class="quality-split-target" style="left: <%= card[:target] %>%;"></div>
             </div>
@@ -282,9 +282,9 @@
               <thead>
                 <tr>
                   <th scope="col">Responsable</th>
-                  <th scope="col" style="width:40%;">Bon du 1er coup</th>
-                  <th scope="col" class="text-end">Sortis des caisses</th>
-                  <th scope="col" class="text-end">Jetés (TRI)</th>
+                  <th scope="col" style="width:38%;">Bon du 1er coup</th>
+                  <th scope="col" class="text-end">Sortis</th>
+                  <th scope="col" class="text-end">Écartés</th>
                 </tr>
               </thead>
               <tbody>

@@ -9,6 +9,10 @@
     <span class="procedure-num">1</span>
     <div>
       <h2>L'écran de contrôle</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/cq-premier-tour.jpg", alt: "Écran de contrôle au 1er tour : note de l'opérateur, onze causes à cocher, commentaire et boutons de décision", loading: "lazy" %>
+        <figcaption>1er tour</figcaption>
+      </figure>
       <p>Depuis la liste des jouets, ouvrez un jouet puis touchez la loupe <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>. Sous les critères, la catégorie, le prix et l'emplacement, vous trouvez maintenant :</p>
       <ul class="procedure-list">
         <li><strong>Les tours précédents</strong>, dans un cadre gris en lecture seule : causes, note de l'opérateur et commentaire du contrôle.</li>
@@ -52,6 +56,10 @@
     <span class="procedure-num">4</span>
     <div>
       <h2>Le 2<sup>e</sup> tour</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/cq-deuxieme-tour.jpg", alt: "Écran de contrôle au 2e tour : le 1er tour en gris, la nouvelle note de l'opérateur, le commentaire obligatoire", loading: "lazy" %>
+        <figcaption>2e tour : le 1er reste lisible, en gris</figcaption>
+      </figure>
       <p>Quand l'opérateur a retraité le jouet, celui-ci revient dans « Attente ». L'écran de contrôle indique alors <strong>« 2e tour »</strong> et affiche le 1<sup>er</sup> tour en gris.</p>
       <ul class="procedure-list">
         <li>Le commentaire est <strong>obligatoire dans tous les cas</strong>, même pour mettre en vente : il confirme que la revalorisation s'est bien passée.</li>
@@ -64,6 +72,10 @@
     <span class="procedure-num">5</span>
     <div>
       <h2>Arbitrer un jouet refusé deux fois</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/cq-arbitrage.jpg", alt: "Arbitrage : commentaire obligatoire puis vendre en l'état, vrac, don ou jeter", loading: "lazy" %>
+        <figcaption>Arbitrage</figcaption>
+      </figure>
       <p>L'onglet <span class="procedure-pill procedure-pill--orange"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> À arbitrer</span> de la liste des jouets regroupe ces jouets. Ouvrez-en un, touchez la loupe et choisissez sa destination, avec un commentaire :</p>
       <ul class="procedure-list">
         <li><strong>Vendre en l'état</strong> : mise en vente, en ajustant le prix si besoin.</li>
@@ -77,6 +89,10 @@
     <span class="procedure-num">6</span>
     <div>
       <h2>Suivre les jouets refusés</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/cq-onglets.jpg", alt: "Liste des jouets : onglet « À reprendre » en rouge, puis les onglets Prêts, Vendus, Jetés, À arbitrer, Vrac et Dons", loading: "lazy" %>
+        <figcaption>L'onglet « À reprendre » et les nouveaux onglets</figcaption>
+      </figure>
       <p>L'onglet <span class="procedure-pill procedure-pill--orange"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> À reprendre</span> vous montre tous les jouets refusés de l'atelier, du plus ancien au plus récent. Chaque opérateur, lui, n'y voit que les siens et y arrive dès sa connexion.</p>
       <p><span class="procedure-banner procedure-banner--orange">CQ refusé · 2 j</span> Dans les temps.
          <span class="procedure-banner procedure-banner--red">CQ refusé · <%= red_after + 1 %> j · en retard</span> Plus de <%= red_after %> jours ouvrés sans retraitement. L'onglet passe lui aussi au rouge.</p>
@@ -88,6 +104,10 @@
     <span class="procedure-num">7</span>
     <div>
       <h2>Confier un jouet à un autre opérateur</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/cq-confier.jpg", alt: "Bloc « Confier ce jouet à » sous les boutons de la fiche", loading: "lazy" %>
+        <figcaption>En bas de la fiche du jouet</figcaption>
+      </figure>
       <p>Quand un opérateur est absent, vous pouvez confier ses jouets un par un. Le bloc <strong>« Confier ce jouet à »</strong> <i class="fa-solid fa-people-arrows" aria-hidden="true"></i> se trouve en bas de la fiche du jouet et de l'écran de contrôle, pour un jouet refusé, en attente ou non terminé.</p>
       <ul class="procedure-list">
         <li>Le nouvel opérateur voit le jouet dans sa liste et peut le traiter.</li>

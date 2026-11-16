@@ -22,6 +22,10 @@
     <span class="procedure-num">2</span>
     <div>
       <h2>Les couleurs du bandeau</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/op-a-reprendre.jpg", alt: "Liste « À reprendre » sur téléphone : un jouet en rouge, en retard, et un jouet en orange", loading: "lazy" %>
+        <figcaption>Ma liste « À reprendre »</figcaption>
+      </figure>
       <p><span class="procedure-banner procedure-banner--orange"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> CQ refusé · 2 j</span> <strong>Orange</strong> : le jouet est à reprendre. Le chiffre est le nombre de jours depuis le refus.</p>
       <p><span class="procedure-banner procedure-banner--red"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> CQ refusé · <%= red_after + 1 %> j · en retard</span> <strong>Rouge</strong> : le jouet attend depuis plus de <%= red_after %> jours. C'est urgent.</p>
       <p>Le samedi et le dimanche ne comptent pas.</p>
@@ -33,6 +37,10 @@
     <span class="procedure-num">3</span>
     <div>
       <h2>Reprendre un jouet refusé</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/op-reprise.jpg", alt: "Fiche d'un jouet refusé : cadre gris avec les problèmes et le commentaire du contrôle, puis ma note et le bouton orange", loading: "lazy" %>
+        <figcaption>Le cadre gris, ma note, le bouton</figcaption>
+      </figure>
       <ol class="procedure-list">
         <li>Je touche la carte du jouet, puis le <strong>crayon</strong> <i class="fa-solid fa-pen" aria-hidden="true"></i>.</li>
         <li>Je lis le <strong>cadre gris</strong> : les images montrent les problèmes, et le contrôle qualité a écrit un commentaire.</li>
@@ -60,6 +68,10 @@
     <span class="procedure-num">5</span>
     <div>
       <h2>Écarter un jouet tout de suite</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/op-ecarter.jpg", alt: "Fenêtre « Écarter un jouet » : les images des raisons, puis poubelle, don ou vrac", loading: "lazy" %>
+        <figcaption>Pourquoi ? Où va-t-il ?</figcaption>
+      </figure>
       <p>Dans une caisse, le bouton rouge <span class="procedure-pill procedure-pill--red"><i class="fa-solid fa-minus" aria-hidden="true"></i></span> sert quand un jouet ne peut pas être valorisé.</p>
       <ol class="procedure-list">
         <li><strong>Pourquoi ?</strong> Je touche une ou plusieurs images. Il en faut au moins une.</li>
@@ -79,6 +91,10 @@
     <span class="procedure-num">6</span>
     <div>
       <h2>Un jouet commencé mais pas fini</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/op-a-terminer.jpg", alt: "Cadre « À terminer » dans une caisse, avec le crayon et la poubelle", loading: "lazy" %>
+        <figcaption>Le cadre « À terminer »</figcaption>
+      </figure>
       <p>Quand j'appuie sur « nouveau jouet », son numéro est réservé pour moi.</p>
       <p><i class="fa-solid fa-check text-coral" aria-hidden="true"></i> <strong>Bouton ✓</strong> : le jouet est enregistré. Je garde le numéro, même si je finis plus tard.</p>
       <p><i class="fa-solid fa-circle-arrow-left text-coral" aria-hidden="true"></i> <strong>Flèche retour</strong> : le jouet est effacé. Le numéro est perdu.</p>
@@ -101,6 +117,22 @@
     <div>
       <h2>Les images pour écarter un jouet</h2>
       <%= render "pages/procedures/causes", causes: QualityCause::DISCARD %>
+    </div>
+  </section>
+
+  <%# 2e page imprimée : les écrans en images (à l'écran, les captures sont déjà dans les étapes). %>
+  <section class="procedure-gallery" aria-hidden="true">
+    <h2>Les écrans en images</h2>
+    <div class="procedure-gallery-grid">
+      <% [["op-a-reprendre", "2 · Ma liste « À reprendre » : rouge = en retard, orange = à reprendre."],
+          ["op-reprise", "3 · Le cadre gris dit quoi corriger. Le bouton orange renvoie le jouet au contrôle."],
+          ["op-ecarter", "5 · Écarter un jouet : je touche la raison, puis poubelle, don ou vrac."],
+          ["op-a-terminer", "6 · « À terminer » : le crayon pour continuer, la poubelle pour effacer."]].each do |name, caption| %>
+        <figure>
+          <%= image_tag "procedures/#{name}.jpg", alt: "" %>
+          <figcaption><%= caption %></figcaption>
+        </figure>
+      <% end %>
     </div>
   </section>
 </div>

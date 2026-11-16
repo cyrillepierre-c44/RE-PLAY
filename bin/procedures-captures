@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Refait les captures d'écran des procédures (/procedures) à partir d'une base
+# de démonstration : comptes et jouets fictifs, aucune vraie donnée.
+#
+#   bin/procedures-captures            # tout refaire
+#   bin/procedures-captures tb-        # seulement les captures dont le nom contient « tb- »
+#
+# Il faut : PostgreSQL local, Docker (Chrome sans écran) et Node 22+.
+# Résultat : app/assets/images/procedures/*.jpg — à relire avant de commiter.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+export DATABASE_URL="postgres:///re_play_demo"
+APP_PORT=3010
+CHROME_PORT=9333
+OUT=app/assets/images/procedures
+
+cleanup() {
+  [ -f tmp/pids/demo.pid ] && kill "$(cat tmp/pids/demo.pid)" 2>/dev/null || true
+  docker rm -f replay-captures >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+
+dropdb --if-exists re_play_demo 2>/dev/null
+createdb re_play_demo
+bin/rails db:schema:load >/dev/null
+bin/rails procedures:seed_demo
+
+bin/rails server -p "$APP_PORT" -b 127.0.0.1 -P tmp/pids/demo.pid >tmp/procedures-captures.log 2>&1 &
+docker run -d --rm --name replay-captures --network host chromedp/headless-shell:latest \
+  --no-sandbox --disable-gpu --remote-debugging-port="$CHROME_PORT" >/dev/null
+for _ in $(seq 1 60); do curl -sf "http://127.0.0.1:$APP_PORT/up" >/dev/null && break; sleep 1; done
+
+mkdir -p "$OUT"
+node lib/demo/captures.mjs "http://127.0.0.1:$APP_PORT" "$CHROME_PORT" "$OUT" "${1:-}"
