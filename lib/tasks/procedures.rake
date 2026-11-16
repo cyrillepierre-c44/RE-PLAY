@@ -44,7 +44,8 @@ namespace :procedures do
     operators = [camille, nadia, karim, lucas]
 
     box = lambda do |category, creator, at|
-      record = Box.create!(category: category, status: "pending", nb_toys: rng.rand(8..20), created_at: at, updated_at: at)
+      record = Box.create!(category: category, status: "pending", nb_toys: rng.rand(8..20), created_at: at, updated_at: at,
+                           tri_checks: QualityCause::TRI_CHECK_KEYS)
       Action.create!(user: creator, actionable: record, content: "#{creator.email} a créé la caisse C#{record.id}", created_at: at)
       record
     end

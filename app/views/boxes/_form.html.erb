@@ -8,17 +8,6 @@
       label_html: { class: "form-label" } %>
   </div>
 
-  <div class="mb-3">
-    <label class="form-label">Type de contenu</label>
-    <div class="form-check-custom">
-      <%= f.check_box :electronic, class: "form-check-input", id: "box_electronic" %>
-      <%= f.label :electronic, class: "form-check-label", for: "box_electronic" do %>
-        <i class="fa-solid fa-microchip" style="color:#FF6B35;"></i>
-        Caisse de jouets électroniques uniquement
-      <% end %>
-    </div>
-  </div>
-
   <div class="mb-4">
     <%= f.input :nb_toys,
       label: "Nombre de jouets",

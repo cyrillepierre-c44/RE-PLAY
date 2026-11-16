@@ -9,6 +9,10 @@ class Box < ApplicationRecord
   after_initialize :set_default_status, if: :new_record?
 
   validates :status, presence: true
+  validate :tri_checks_are_known
+
+  # Les neuf vérifications du TRI ont-elles toutes été cochées ?
+  def tri_checked? = (QualityCause::TRI_CHECK_KEYS - tri_checks).empty?
   scope :active, -> { where(status: :pending) }
   scope :deleted, -> { where(status: :suppr) }
 
@@ -20,6 +24,11 @@ class Box < ApplicationRecord
   end
 
   private
+
+  def tri_checks_are_known
+    unknown = Array(tri_checks) - QualityCause::TRI_CHECK_KEYS
+    errors.add(:tri_checks, "inconnues : #{unknown.join(', ')}") if unknown.any?
+  end
 
   def set_default_status
     self.status ||= :pending

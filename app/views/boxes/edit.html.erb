@@ -44,7 +44,13 @@
     <% end %>
     <p style="font-size:1.15rem; font-weight:700; color:#1A2B4A; margin-bottom:1rem;"><%= @box.category.name %></p>
 
-    <%= simple_form_for @box do |f| %>
+    <%= simple_form_for @box, html: { data: { controller: "tri-checklist", tri_checklist_required_value: @box.draft? } } do |f| %>
+
+      <% if @box.errors.any? %>
+        <div class="alert alert-danger" role="alert">
+          <i class="fa-solid fa-triangle-exclamation me-1" aria-hidden="true"></i><%= @box.errors.full_messages.to_sentence %>
+        </div>
+      <% end %>
 
       <%# Catégorie — visible uniquement en edit classique %>
       <% unless params[:new] %>
@@ -56,13 +62,34 @@
         </div>
       <% end %>
 
-      <%# Électronique %>
-      <div class="verify-conditions mb-2">
-        <%= f.check_box :electronic, class: "condition-toggle-input", id: "box_electronic" %>
-        <%= f.label :electronic, class: "condition-toggle-label", for: "box_electronic" do %>
-          <i class="fa-solid fa-microchip"></i>
-          <span>Électronique</span>
-        <% end %>
+      <%# Vérifications du TRI : rouges tant qu'elles ne sont pas cochées, vertes ensuite (comme les
+          critères du valoriste). À la création, il faut les neuf pour enregistrer. %>
+      <div class="tri-checklist mb-3">
+        <div class="tri-checklist-head">
+          <span><i class="fa-solid fa-clipboard-check me-1" aria-hidden="true"></i>J'ai vérifié ma caisse</span>
+          <strong data-tri-checklist-target="count"><%= @box.tri_checks.size %> / <%= QualityCause::TRI_CHECKS.size %></strong>
+        </div>
+        <div class="tri-checklist-track"><div class="tri-checklist-fill" data-tri-checklist-target="fill"></div></div>
+        <input type="hidden" name="box[tri_checks][]" value="">
+        <div class="tri-checklist-grid">
+          <% QualityCause::TRI_CHECKS.each do |check| %>
+            <input type="checkbox" name="box[tri_checks][]" value="<%= check.key %>" id="tri_check_<%= check.key %>"
+                   class="condition-toggle-input" data-tri-checklist-target="check" data-action="change->tri-checklist#refresh"
+                   <%= 'checked' if @box.tri_checks.include?(check.key) %>>
+            <label for="tri_check_<%= check.key %>" class="condition-toggle-label" title="<%= check.help %>">
+              <i class="fa-solid <%= check.icon %>" aria-hidden="true"></i>
+              <span><%= check.label %></span>
+            </label>
+          <% end %>
+        </div>
+        <details class="cause-legend">
+          <summary><i class="fa-solid fa-circle-question" aria-hidden="true"></i> <span>Que veulent dire les images ?</span></summary>
+          <ul>
+            <% QualityCause::TRI_CHECKS.each do |check| %>
+              <li><i class="fa-solid <%= check.icon %>" aria-hidden="true"></i><span><strong><%= check.label %></strong> : <%= check.help %></span></li>
+            <% end %>
+          </ul>
+        </details>
       </div>
 
       <%# Nombre de jouets %>
@@ -72,7 +99,10 @@
       </div>
 
       <div class="d-grid">
-        <button type="submit" class="btn btn-primary btn-lg" aria-label="Enregistrer la caisse">
+        <p class="tri-checklist-hint" data-tri-checklist-target="hint" hidden>
+          <i class="fa-solid fa-lock me-1" aria-hidden="true"></i>Je coche les <%= QualityCause::TRI_CHECKS.size %> vérifications pour pouvoir enregistrer.
+        </p>
+        <button type="submit" class="btn btn-primary btn-lg" aria-label="Enregistrer la caisse" data-tri-checklist-target="submit">
           <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;" aria-hidden="true"></i>
         </button>
       </div>

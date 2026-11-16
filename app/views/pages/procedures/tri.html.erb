@@ -13,7 +13,7 @@
       <p>Je prépare des caisses de jouets pour mes collègues de la valorisation. <strong>Je suis responsable de ce que je mets dans ma caisse.</strong></p>
       <ul class="procedure-list">
         <li>Je ne garde que les jouets qui peuvent être vendus.</li>
-        <li>Je mets <strong>une seule catégorie</strong> de jouets par caisse.</li>
+        <li>Je mets <strong>une seule catégorie</strong> de jouets par caisse. Seule exception : le roll des <strong>grosses pièces</strong> <i class="fa-solid fa-dolly" aria-hidden="true"></i>, où je mélange les catégories et où je choisis la catégorie « Grosses pièces » (voir l'étape 3).</li>
         <li>Je crée la caisse dans RE-PLAY et je colle son numéro dessus.</li>
         <li>Quand la caisse revient vide, je le dis dans RE-PLAY.</li>
       </ul>
@@ -31,7 +31,7 @@
         <li><strong>Jouets</strong> : sans marquage CE ; publicitaires (McDonald's, Quick, KFC…) ; cassés, recollés, réparés ou mordus ; dangereux (plastique coupant, peinture écaillée, rouille) ; personnalisés (prénom gravé, étiquette cousue) ; faits maison.</li>
         <li><strong>Jouets électroniques</strong> : ceux qui ne fonctionnent plus, et ceux dont les piles ont coulé ou dont le compartiment à piles est rouillé.</li>
         <li><strong>Peluches</strong> : déchirées, raccommodées, déformées, trop peu rembourrées, ou qui perdent leurs poils.</li>
-        <li><strong>Puzzles</strong> : plus de 60 pièces (sauf les modèles à grosses pièces, 65 au maximum, et les puzzles neufs sous blister) ; puzzles sans boîte.</li>
+        <li><strong>Puzzles</strong> : je refuse ceux de plus de 60 pièces et ceux sans boîte. Deux exceptions sont acceptées : les modèles à grosses pièces (type Djeco) jusqu'à 65 pièces, et les puzzles neufs sous blister.</li>
         <li><strong>Livres</strong> : pas pour l'âge visé (revues, BD pour adultes, encyclopédies, dictionnaires, catalogues) ; contenu inapproprié ; pages cornées, déchirées, tachées, écrites au feutre ou couvertes d'autocollants.</li>
         <li><strong>Autres objets</strong> : sacs d'enfant, décoration, puériculture (poussettes, chaises hautes, transats), jouets d'extérieur trop volumineux, CD sans livre, DVD, cassettes.</li>
       </ul>
@@ -59,18 +59,22 @@
   <section class="procedure-step">
     <span class="procedure-num">4</span>
     <div>
-      <h2>Étiqueter et compléter la caisse</h2>
+      <h2>Étiqueter, vérifier et compléter la caisse</h2>
       <figure class="procedure-shot procedure-shot--phone">
-        <%= image_tag "procedures/tri-etiquette.jpg", alt: "Numéro de la caisse en grand, à recopier sur l'étiquette, puis « Électronique » et le nombre de jouets", loading: "lazy" %>
-        <figcaption>Le numéro à écrire sur la caisse</figcaption>
+        <%= image_tag "procedures/tri-etiquette.jpg", alt: "Numéro de la caisse en grand, puis les neuf vérifications du tri à cocher, dont six déjà en vert, le compteur 6 / 9 et le bouton d'enregistrement encore bloqué", loading: "lazy" %>
+        <figcaption>Le numéro, puis mes <%= QualityCause::TRI_CHECKS.size %> vérifications</figcaption>
       </figure>
       <ol class="procedure-list">
         <li>J'écris le numéro affiché en grand (par exemple <strong>C712</strong>) sur l'étiquette de la caisse.</li>
-        <li>Je touche <strong>Électronique</strong> <i class="fa-solid fa-microchip" aria-hidden="true"></i> seulement si la caisse ne contient que des jouets électroniques.</li>
+        <li><strong>Je vérifie ma caisse</strong> : je touche les <%= QualityCause::TRI_CHECKS.size %> cases une par une, après avoir vraiment regardé. Une case <strong>rouge</strong> n'est pas encore vérifiée, une case <strong>verte</strong> l'est.</li>
         <li>J'écris le <strong>nombre de jouets</strong> que j'ai mis dans la caisse. Il sert à suivre l'avancement.</li>
         <li>J'enregistre avec le bouton <span class="procedure-pill procedure-pill--coral"><i class="fa-solid fa-check" aria-hidden="true"></i></span>.</li>
       </ol>
-      <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Tant que je n'ai pas appuyé sur ✓, la caisse n'existe pas pour mes collègues.</p>
+      <p><span class="procedure-pill procedure-pill--red">6 / <%= QualityCause::TRI_CHECKS.size %></span> Tant que toutes les cases ne sont pas vertes, le bouton d'enregistrement reste bloqué.
+         <span class="procedure-pill"><i class="fa-solid fa-circle-check" aria-hidden="true" style="color:#0B7F68;"></i> <%= QualityCause::TRI_CHECKS.size %> / <%= QualityCause::TRI_CHECKS.size %></span> Tout est vert : j'ai bien fait mon travail, je peux enregistrer.</p>
+      <h3>Mes <%= QualityCause::TRI_CHECKS.size %> vérifications</h3>
+      <%= render "pages/procedures/causes", causes: QualityCause::TRI_CHECKS %>
+      <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Tant que je n'ai pas appuyé sur ✓, la caisse n'existe pas pour mes collègues. Une fois enregistrée, sa fiche affiche « Tri vérifié ».</p>
     </div>
   </section>
 

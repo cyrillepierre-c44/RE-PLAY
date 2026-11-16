@@ -1059,6 +1059,24 @@ a.toy-card {
   border-top: 1px dashed rgba($navy, 0.2);
   padding-top: 0.75rem;
 }
+// Vérifications du TRI à la création d'une caisse (rouge → vert, comme les critères du valoriste).
+.tri-checklist {
+  .tri-checklist-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.5rem; font-weight: 800; color: $navy; margin-bottom: 0.3rem;
+    strong { font-size: 1.3rem; color: darken($danger-red, 10%); } }
+  .tri-checklist-track { height: 10px; background: rgba($navy, 0.1); border-radius: 999px; overflow: hidden; margin-bottom: 0.6rem; }
+  .tri-checklist-fill { height: 100%; width: 0; background: $coral; border-radius: 999px; transition: width 0.25s ease; }
+  .tri-checklist-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.4rem;
+    .condition-toggle-label { min-height: 68px; font-size: 0.78rem; line-height: 1.15; i { font-size: 1.35rem; } } }
+  &.tri-checklist--complete {
+    .tri-checklist-head strong { color: darken($mint, 15%); }
+    .tri-checklist-fill { background: darken($mint, 15%); }
+  }
+}
+form.tri-checklist--complete .tri-checklist-head strong { color: darken($mint, 15%); }
+form.tri-checklist--complete .tri-checklist-fill { background: darken($mint, 15%); }
+.tri-checklist-hint { font-size: 0.85rem; font-weight: 700; color: #5B6472; text-align: center; margin-bottom: 0.4rem; }
+.tri-verified { color: darken($mint, 15%); }
+
 // Jauge d'une caisse : jouets sortis / jouets annoncés.
 .box-progress {
   grid-column: 1 / -1; width: 100%;

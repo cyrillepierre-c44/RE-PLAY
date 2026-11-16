@@ -109,7 +109,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".procedure-causes li", count: QualityCause::DISCARD.size
     get procedure_path("tri")
     assert_response :success
-    assert_select ".procedure-causes li", count: QualityCause::TRI_KEYS.size
+    assert_select ".procedure-causes li", count: QualityCause::TRI_KEYS.size + QualityCause::TRI_CHECKS.size
     %w[controle-qualite tableau-de-bord].each do |slug|
       get procedure_path(slug)
       assert_redirected_to root_path

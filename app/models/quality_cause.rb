@@ -49,7 +49,7 @@ class QualityCause
     { key: "electronique",   tri: true,  label: "Électronique HS",   icon: "fa-battery-empty",
       help: "Ne s'allume plus, ou piles qui ont coulé." },
     { key: "puzzle",         tri: true,  label: "Puzzle refusé",     icon: "fa-puzzle-piece",
-      help: "Plus de 60 pièces, ou puzzle sans boîte." },
+      help: "Plus de 60 pièces (65 pour les grosses pièces type Djeco), ou sans boîte." },
     { key: "livre",          tri: true,  label: "Livre refusé",      icon: "fa-book",
       help: "Pas pour l'âge visé, ou contenu inapproprié." },
     { key: "hors_perimetre", tri: true,  label: "Pas un jouet",      icon: "fa-ban",
@@ -74,8 +74,24 @@ class QualityCause
   DISCARD_KEYS = DISCARD.map(&:key).freeze
   TRI_KEYS = DISCARD.select(&:tri).map(&:key).freeze
 
-  def self.cq(key) = CQ.find { |c| c.key == key }
   def self.discard(key) = DISCARD.find { |c| c.key == key }
+
+  # Vérifications du TRI à cocher à la création d'une caisse : le pendant positif
+  # des neuf raisons d'écarter que le TRI doit éviter (mêmes clés, mêmes pictogrammes).
+  TRI_CHECKS = {
+    "sans_ce" => ["Marquage CE", "Chaque jouet porte le marquage CE."],
+    "publicitaire" => ["Pas de pub", "Aucun jouet publicitaire ou promotionnel."],
+    "trop_abime" => ["Bon état", "Rien de cassé, recollé, mordu, déchiré."],
+    "dangereux" => ["Sans danger", "Rien de coupant, d'écaillé ou de rouillé."],
+    "personnalise" => ["Pas personnalisé", "Pas de prénom gravé, pas de fait maison."],
+    "electronique" => ["Électronique OK", "Les jouets à piles fonctionnent, piles saines."],
+    "puzzle" => ["Puzzles OK", "60 pièces au plus (65 pour les grosses pièces type Djeco), avec leur boîte."],
+    "livre" => ["Livres OK", "Pour l'âge visé, propres, non abîmés."],
+    "hors_perimetre" => ["Que des jouets", "Pas de sac, déco, puériculture, CD ou DVD."]
+  }.map { |key, (label, help)| Cause.new(key: key, label: label, help: help, icon: discard(key).icon, tri: true) }.freeze
+  TRI_CHECK_KEYS = TRI_CHECKS.map(&:key).freeze
+
+  def self.cq(key) = CQ.find { |c| c.key == key }
   def self.cq_labels(keys) = Array(keys).filter_map { |k| cq(k)&.label }
   def self.discard_labels(keys) = Array(keys).filter_map { |k| discard(k)&.label }
 end

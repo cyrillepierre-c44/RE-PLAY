@@ -86,8 +86,18 @@ class BoxesController < ApplicationController
 
   def update
     authorize @box
-    @box.status = :pending if @box.draft?
-    @box.update(box_params)
+    creating = @box.draft?
+    @box.assign_attributes(box_params)
+    # À la création, la caisse n'est enregistrée que si le TRI a coché ses neuf vérifications.
+    if creating && !@box.tri_checked?
+      @box.errors.add(:base, "Cochez toutes les vérifications du tri avant d'enregistrer la caisse.")
+      params[:new] = "true"
+      return render :edit, status: :unprocessable_entity
+    end
+
+    @box.status = :pending if creating
+    return render :edit, status: :unprocessable_entity unless @box.save
+
     Action.create!(user: current_user, actionable: @box,
                    content: "#{current_user.email} a modifié la caisse C#{@box.id}")
     redirect_to box_path(@box), status: :see_other
@@ -147,6 +157,8 @@ class BoxesController < ApplicationController
 
   def box_params
     # :status volontairement exclu — le cycle de vie passe par toggle_empty/destroy/restore.
-    params.require(:box).permit(:category_id, :electronic, :nb_toys)
+    permitted = params.require(:box).permit(:category_id, :nb_toys, tri_checks: [])
+    permitted[:tri_checks] = Array(permitted[:tri_checks]).compact_blank if permitted.key?(:tri_checks)
+    permitted
   end
 end

@@ -44,10 +44,10 @@
               <span><%= truncate(@box.category.name, length: 20) %></span>
             </div>
             <%= render "boxes/progress", box: @box, out: @toys_out %>
-            <% if @box.electronic? %>
-              <div class="toy-show-info-item">
-                <i class="fa-solid fa-microchip" style="color:#FF6B35;"></i>
-                <span>Électronique</span>
+            <% if @box.tri_checked? %>
+              <div class="toy-show-info-item tri-verified">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <span>Tri vérifié</span>
               </div>
             <% end %>
           </div>

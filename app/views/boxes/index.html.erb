@@ -128,15 +128,6 @@
             <div class="box-card-category">
               <i class="fa-solid <%= box.category.icon.presence || 'fa-tag' %> me-1"></i><%= box.category.name %>
             </div>
-            <div class="box-card-details">
-              <div class="box-card-details-left">
-                <% if box.electronic? %>
-                  <span class="box-detail-item" title="Électronique">
-                    <i class="fa-solid fa-microchip" style="color:#FF6B35; font-size:1.5em;"></i>
-                  </span>
-                <% end %>
-              </div>
-            </div>
             <%= render "boxes/progress", box: box, out: @toys_out[box.id].to_i, compact: true %>
           <% end %>
         </div>

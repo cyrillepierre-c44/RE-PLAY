@@ -80,8 +80,27 @@ class BoxesControllerTest < ActionDispatch::IntegrationTest
     get box_path(draft)
     assert_redirected_to edit_box_path(draft, new: true)
 
-    patch box_path(draft), params: { box: { nb_toys: 3 } }
+    # étape 2 : les neuf vérifications du tri sont exigées pour enregistrer
+    assert_select "input[name='box[tri_checks][]'][type=checkbox]", count: 0 # (page précédente : redirection)
+    get edit_box_path(draft, new: true)
+    assert_select "input[name='box[tri_checks][]'][type=checkbox]", count: QualityCause::TRI_CHECKS.size
+    patch box_path(draft), params: { box: { nb_toys: 3, tri_checks: QualityCause::TRI_CHECK_KEYS.first(8) } }
+    assert_response :unprocessable_entity
+    assert draft.reload.draft?
+    assert_select ".alert", text: /Cochez toutes les vérifications du tri/
+    assert_select "input[name='box[tri_checks][]'][checked]", count: 8 # la saisie est conservée
+
+    patch box_path(draft), params: { box: { nb_toys: 3, tri_checks: QualityCause::TRI_CHECK_KEYS } }
     assert draft.reload.pending?
+    assert draft.tri_checked?
+    get box_path(draft)
+    assert_select ".tri-verified", text: /Tri vérifié/
+
+    # une caisse déjà enregistrée se modifie sans que la liste soit exigée
+    touch(@box, @user)
+    patch box_path(@box), params: { box: { nb_toys: 7 } }
+    assert_redirected_to box_path(@box)
+    assert_equal 7, @box.reload.nb_toys
   end
 
   test "une caisse en brouillon n'apparaît pas chez un autre employé" do
