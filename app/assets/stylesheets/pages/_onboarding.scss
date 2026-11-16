@@ -344,7 +344,9 @@
       -webkit-print-color-adjust: exact; print-color-adjust: exact;
     }
     .procedure-header { padding: 4mm 5mm; margin-bottom: 3mm; break-after: avoid; h1 { font-size: 16pt; } }
-    .procedure-step { box-shadow: none; border: 1px solid #D9DDE4; break-inside: avoid; padding: 3.5mm; margin-bottom: 2.5mm; }
+    .procedure-step { box-shadow: none; border: 1px solid #D9DDE4; break-inside: avoid; padding: 3mm 3.5mm; margin-bottom: 2mm; }
+    .procedure-step h2 { margin: 0.5mm 0 1.5mm; }
+    .procedure-step p, .procedure-list li { margin-bottom: 1.2mm; line-height: 1.4; }
     .procedure-step h2 { break-after: avoid; }
     // Une longue liste d'images peut se couper entre deux pages (jamais au milieu d'une ligne),
     // pour ne pas laisser une demi-page vide avant elle.
@@ -354,7 +356,7 @@
   }
 
   .procedure-page .procedure-shot { break-inside: avoid; img { box-shadow: none; } }
-  .procedure-page .procedure-shot--phone { width: 58mm; float: right; margin: 0 0 2mm 4mm; }
+  .procedure-page .procedure-shot--phone { width: 54mm; float: right; margin: 0 0 1.5mm 4mm; }
   .procedure-page .procedure-shot--wide { margin-bottom: 2.5mm; }
 
   // Procédure opérateur : une page A4 à afficher dans l'atelier, chaque capture dans son étape.

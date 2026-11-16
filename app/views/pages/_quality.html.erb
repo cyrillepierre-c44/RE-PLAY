@@ -189,7 +189,7 @@
   <div class="detail-card p-4 mb-3 quality-card">
     <% if q.daily? %>
       <h3 class="quality-h3">VALO par opérateur · suivi du jour</h3>
-      <p class="quality-sub">Sur une journée, on suit les non-conformités à reprendre, pas un pourcentage : les jouets contrôlés aujourd'hui ont souvent été valorisés plus tôt. Le Bon du 1er coup par opérateur se lit sur une semaine ou plus.</p>
+      <p class="quality-sub">La barre montre tout ce que l'opérateur a à reprendre <strong>en ce moment</strong>, quelle que soit la date du refus : c'est son stock, pas celui de la journée choisie. Les trois colonnes de droite, elles, ne comptent que la journée choisie. Le Bon du 1er coup par opérateur se lit sur une semaine ou plus.</p>
     <% else %>
       <h3 class="quality-h3">VALO par opérateur</h3>
       <p class="quality-sub">En taux, pour ne pas pénaliser ceux qui traitent le plus de jouets. Pointillé = objectif <%= s.target_valo %> %. Pas de pourcentage en dessous de <%= s.min_sample %> jouets contrôlés. Délais en jours ouvrés.</p>
@@ -205,6 +205,11 @@
       <div class="table-responsive">
         <table class="quality-table quality-table--day">
           <thead>
+            <tr class="quality-table-groups">
+              <td></td>
+              <th scope="colgroup">En ce moment</th>
+              <th scope="colgroup" colspan="3">Sur la journée choisie</th>
+            </tr>
             <tr>
               <th scope="col">Opérateur</th>
               <th scope="col" style="width:46%;">Non-conformités à reprendre</th>

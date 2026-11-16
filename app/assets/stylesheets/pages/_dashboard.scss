@@ -757,6 +757,12 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
   .quality-zero { color: rgba($navy, 0.3); }
   .quality-day-checked { color: $quality-ink; white-space: nowrap; }
   .quality-table--day tbody td { vertical-align: middle; }
+  // Deux familles de colonnes : le stock de l'instant, puis l'activité de la journée choisie.
+  .quality-table-groups th {
+    font-size: 0.72rem; color: $navy; text-align: center; padding-bottom: 0.2rem;
+    border-bottom: 2px solid $navy; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .quality-table-groups th + th { border-left: 0.75rem solid $white; }
 }
 
 .quality-now {
