@@ -42,6 +42,8 @@ Rails.application.routes.draw do
   get "about_us", to: "pages#about_us"
   get "onboarding", to: "pages#onboarding"
   get "enjoue", to: "pages#enjoue"
+  get "procedures", to: "pages#procedures"
+  get "procedures/:slug", to: "pages#procedure", as: :procedure
 
   # Pages légales et support — publiques (accessibles sans compte)
   get "mentions-legales", to: "pages#mentions_legales", as: :mentions_legales

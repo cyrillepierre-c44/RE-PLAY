@@ -76,6 +76,35 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 90, QualitySetting.current.target_valo
   end
 
+  test "procédures : l'opérateur ne voit que la sienne, l'admin les trois" do
+    get procedures_path
+    assert_redirected_to new_user_session_path
+
+    sign_in create_user
+    get procedures_path
+    assert_select "a.procedure-card", count: 1
+    get procedure_path("operateur")
+    assert_response :success
+    assert_select ".procedure-causes li", count: QualityCause::DISCARD.size
+    %w[controle-qualite tableau-de-bord].each do |slug|
+      get procedure_path(slug)
+      assert_redirected_to root_path
+    end
+    sign_out :user
+
+    sign_in create_user(admin: true)
+    get procedures_path
+    assert_select "a.procedure-card", count: 3
+    %w[operateur controle-qualite tableau-de-bord].each do |slug|
+      get procedure_path(slug)
+      assert_response :success, slug
+      assert_select "button", text: "Imprimer en PDF"
+    end
+    assert_select ".procedure-table td", text: "#{QualitySetting.current.target_valo} %"
+    get procedure_path("inconnue")
+    assert_response :not_found
+  end
+
   test "dashboard refusé à un employé (redirection, pas de 500)" do
     sign_in create_user
     get dashboard_path

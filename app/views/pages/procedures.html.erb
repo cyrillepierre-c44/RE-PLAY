@@ -1,0 +1,20 @@
+<% content_for :title, "Procédures · RE-PLAY" %>
+
+<div class="container py-4 procedure-page">
+  <div class="onb-section-title mb-3" style="justify-content:flex-start;">
+    <h1 style="font-size:2rem;"><i class="fa-solid fa-book-open me-2 text-coral" aria-hidden="true"></i>Procédures</h1>
+  </div>
+  <p class="procedure-lead">Les modes d'emploi de RE-PLAY. Chaque page se lit ici et s'imprime en PDF.</p>
+
+  <div class="row g-3">
+    <% @procedures.each do |slug, procedure| %>
+      <div class="col-12 col-md-4">
+        <%= link_to procedure_path(slug), class: "procedure-card" do %>
+          <i class="fa-solid <%= procedure[:icon] %>" aria-hidden="true"></i>
+          <span class="procedure-card-title"><%= procedure[:title] %></span>
+          <span class="procedure-card-text"><%= procedure[:summary] %></span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

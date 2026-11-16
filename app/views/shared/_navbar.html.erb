@@ -72,6 +72,11 @@
                 <i class="fa-solid fa-circle-info me-2"></i>Guide
               <% end %>
             </li>
+            <li>
+              <%= link_to procedures_path, class: "dropdown-item #{'active' if %w[procedures procedure].include?(action_name)}" do %>
+                <i class="fa-solid fa-book-open me-2"></i>Procédures
+              <% end %>
+            </li>
             <li><hr class="dropdown-divider"></li>
             <li>
               <%= link_to destroy_user_session_path,

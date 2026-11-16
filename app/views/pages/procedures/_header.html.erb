@@ -1,0 +1,16 @@
+<%# En-tête commun des procédures : retour, titre, impression. locals : title, icon, intro %>
+<div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3 procedure-toolbar">
+  <%= link_to procedures_path, class: "btn-back-boxes", "aria-label": "Retour aux procédures" do %>
+    <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+    <i class="fa-solid fa-book-open btn-back-context-icon" aria-hidden="true"></i>
+  <% end %>
+  <button type="button" class="period-pill period-pill--print" onclick="window.print()">Imprimer en PDF</button>
+</div>
+<header class="procedure-header">
+  <div class="procedure-brandline">
+    <span class="procedure-brand">RE-PLAY</span>
+    <span class="procedure-kicker">Procédure · novembre 2026</span>
+  </div>
+  <h1><i class="fa-solid <%= icon %> me-2 text-coral" aria-hidden="true"></i><%= title %></h1>
+  <p class="procedure-lead"><%= intro %></p>
+</header>

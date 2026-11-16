@@ -1,0 +1,12 @@
+<%# Liste illustrée des causes — toujours à jour : lue dans QualityCause. locals : causes, tri (afficher la colonne TRI) %>
+<ul class="procedure-causes">
+  <% causes.each do |cause| %>
+    <li>
+      <span class="procedure-cause-icon"><i class="fa-solid <%= cause.icon %>" aria-hidden="true"></i></span>
+      <span>
+        <strong><%= cause.label %></strong><% if local_assigns[:tri] && cause.tri %> <span class="procedure-tag">compte pour le TRI</span><% end %><br>
+        <%= cause.help %>
+      </span>
+    </li>
+  <% end %>
+</ul>

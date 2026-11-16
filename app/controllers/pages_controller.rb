@@ -18,6 +18,28 @@ class PagesController < ApplicationController
   def enjoue
   end
 
+  # Procédures consultables dans l'appli et imprimables en PDF. `admin: true` =
+  # réservée aux administrateurs (contrôle qualité, tableau de bord).
+  PROCEDURES = {
+    "operateur" => { title: "Opérateur", icon: "fa-hands-holding-child", admin: false, template: "operateur",
+                     summary: "Reprendre un jouet refusé, écarter un jouet, jouets à terminer." },
+    "controle-qualite" => { title: "Contrôle qualité", icon: "fa-magnifying-glass", admin: true, template: "controle_qualite",
+                            summary: "Causes, commentaires, 2e tour, arbitrage, réattribution." },
+    "tableau-de-bord" => { title: "Tableau de bord", icon: "fa-chart-bar", admin: true, template: "tableau_de_bord",
+                           summary: "Lire les indicateurs, aller au détail, régler les objectifs." }
+  }.freeze
+
+  def procedures
+    authorize :page, :onboarding?
+    @procedures = PROCEDURES.reject { |_, procedure| procedure[:admin] && !current_user.admin? }
+  end
+
+  def procedure
+    procedure = PROCEDURES[params[:slug]] or raise ActiveRecord::RecordNotFound
+    authorize :page, procedure[:admin] ? :dashboard? : :onboarding?
+    render "pages/procedures/#{procedure[:template]}"
+  end
+
   def cyrille_pierre
   end
 

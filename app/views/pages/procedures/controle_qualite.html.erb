@@ -1,0 +1,109 @@
+<% content_for :title, "Procédure contrôle qualité · RE-PLAY" %>
+<% red_after = QualitySetting.current.red_after_days %>
+
+<div class="container py-4 procedure-page">
+  <%= render "pages/procedures/header", title: "Contrôle qualité : ce qui change", icon: "fa-magnifying-glass",
+        intro: "Chaque refus est maintenant motivé, suivi dans le temps et limité à deux tours. Cette page s'adresse aux administrateurs qui contrôlent les jouets." %>
+
+  <section class="procedure-step">
+    <span class="procedure-num">1</span>
+    <div>
+      <h2>L'écran de contrôle</h2>
+      <p>Depuis la liste des jouets, ouvrez un jouet puis touchez la loupe <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>. Sous les critères, la catégorie, le prix et l'emplacement, vous trouvez maintenant :</p>
+      <ul class="procedure-list">
+        <li><strong>Les tours précédents</strong>, dans un cadre gris en lecture seule : causes, note de l'opérateur et commentaire du contrôle.</li>
+        <li><strong>La note de l'opérateur</strong> pour le tour en cours. « Aucun commentaire » signifie qu'il n'a rien écrit.</li>
+        <li><strong>Les problèmes détectés</strong> : onze causes à cocher, avec une légende dépliable.</li>
+        <li><strong>Le commentaire du contrôle qualité</strong>.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">2</span>
+    <div>
+      <h2>Les décisions et ce qu'elles exigent</h2>
+      <div class="table-responsive">
+        <table class="procedure-table">
+          <thead><tr><th scope="col">Bouton</th><th scope="col">Effet</th><th scope="col">Obligatoire</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><i class="fa-solid fa-store" aria-hidden="true"></i> Mise en vente</th><td>Le jouet passe dans « Prêts ».</td><td>L'emplacement. Le commentaire seulement au 2<sup>e</sup> tour.</td></tr>
+            <tr><th scope="row"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> Revaloriser</th><td>Le jouet retourne chez l'opérateur, en « CQ refusé ».</td><td>Au moins une cause, et un commentaire.</td></tr>
+            <tr><th scope="row"><i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> Vrac</th><td>Le jouet servira de pièces pour compléter d'autres jouets.</td><td>Un commentaire.</td></tr>
+            <tr><th scope="row"><i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i> Don</th><td>Le jouet est donné.</td><td>Un commentaire.</td></tr>
+            <tr><th scope="row"><i class="fa-solid fa-trash" aria-hidden="true"></i> Jeter</th><td>Le jouet part au rebut.</td><td>Un commentaire.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> S'il manque une information, l'écran se réaffiche avec un message rouge et conserve ce que vous avez saisi.</p>
+      <p>Vos commentaires sont lus par l'opérateur quand il reprend le jouet, et ils apparaissent dans le tableau de bord. Écrivez ce qu'il doit corriger.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">3</span>
+    <div>
+      <h2>Les onze causes de refus</h2>
+      <%= render "pages/procedures/causes", causes: QualityCause::CQ %>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">4</span>
+    <div>
+      <h2>Le 2<sup>e</sup> tour</h2>
+      <p>Quand l'opérateur a retraité le jouet, celui-ci revient dans « Attente ». L'écran de contrôle indique alors <strong>« 2e tour »</strong> et affiche le 1<sup>er</sup> tour en gris.</p>
+      <ul class="procedure-list">
+        <li>Le commentaire est <strong>obligatoire dans tous les cas</strong>, même pour mettre en vente : il confirme que la revalorisation s'est bien passée.</li>
+        <li>Le bouton de refus devient <strong>« Refuser (2e fois) »</strong>. Il n'y a pas de 3<sup>e</sup> tour : le jouet passe en « À arbitrer ».</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">5</span>
+    <div>
+      <h2>Arbitrer un jouet refusé deux fois</h2>
+      <p>L'onglet <span class="procedure-pill procedure-pill--orange"><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> À arbitrer</span> de la liste des jouets regroupe ces jouets. Ouvrez-en un, touchez la loupe et choisissez sa destination, avec un commentaire :</p>
+      <ul class="procedure-list">
+        <li><strong>Vendre en l'état</strong> : mise en vente, en ajustant le prix si besoin.</li>
+        <li><strong>Vrac</strong>, <strong>Don</strong> ou <strong>Jeter</strong>.</li>
+      </ul>
+      <p>Un jouet à arbitrer ne peut plus être renvoyé à l'opérateur.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">6</span>
+    <div>
+      <h2>Suivre les jouets refusés</h2>
+      <p>L'onglet <span class="procedure-pill procedure-pill--orange"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> À reprendre</span> vous montre tous les jouets refusés de l'atelier, du plus ancien au plus récent. Chaque opérateur, lui, n'y voit que les siens et y arrive dès sa connexion.</p>
+      <p><span class="procedure-banner procedure-banner--orange">CQ refusé · 2 j</span> Dans les temps.
+         <span class="procedure-banner procedure-banner--red">CQ refusé · <%= red_after + 1 %> j · en retard</span> Plus de <%= red_after %> jours ouvrés sans retraitement. L'onglet passe lui aussi au rouge.</p>
+      <p>Les délais se comptent du lundi au vendredi. Les jours fériés ne sont pas décomptés.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">7</span>
+    <div>
+      <h2>Confier un jouet à un autre opérateur</h2>
+      <p>Quand un opérateur est absent, vous pouvez confier ses jouets un par un. Le bloc <strong>« Confier ce jouet à »</strong> <i class="fa-solid fa-people-arrows" aria-hidden="true"></i> se trouve en bas de la fiche du jouet et de l'écran de contrôle, pour un jouet refusé, en attente ou non terminé.</p>
+      <ul class="procedure-list">
+        <li>Le nouvel opérateur voit le jouet dans sa liste et peut le traiter.</li>
+        <li>L'opérateur d'origine ne l'a plus dans « À reprendre ».</li>
+        <li>La non-conformité reste comptée à l'opérateur d'origine dans le tableau de bord, et le délai continue de courir.</li>
+        <li>L'historique du jouet garde la trace de qui a confié le jouet, et à qui.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">8</span>
+    <div>
+      <h2>Vrac, dons et jouets écartés par les opérateurs</h2>
+      <p>La liste des jouets a deux nouveaux onglets, <strong>Vrac</strong> <i class="fa-solid fa-puzzle-piece" aria-hidden="true"></i> et <strong>Dons</strong> <i class="fa-solid fa-hand-holding-heart" aria-hidden="true"></i>. Depuis la fiche d'un de ces jouets, la flèche <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> le remet en valorisation.</p>
+      <p>Les opérateurs peuvent aussi écarter un jouet dès la sortie de la caisse, en choisissant une cause et une destination (poubelle, don ou vrac). Les causes que le TRI aurait dû écarter sont comptées dans le Bon du 1<sup>er</sup> coup du TRI.</p>
+    </div>
+  </section>
+</div>

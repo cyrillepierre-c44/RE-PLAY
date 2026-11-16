@@ -850,19 +850,32 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
   .quality-dash { break-after: page; }
 }
 
-// Choix de la période : pastilles (marine = période active) + impression.
-.period-pills {
-  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+// Pastilles : choix de la période (marine = active) et bouton d'impression.
+.period-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
 
-  .period-pill {
-    min-height: 44px; padding: 0 1.1rem; border-radius: 999px;
-    border: 2px solid #D9DDE4; background: $white; color: $navy;
-    font-family: $body-font; font-weight: 800; font-size: 1rem; line-height: 1;
-    transition: background 0.15s ease, border-color 0.15s ease;
-    &:hover { border-color: $navy; }
-    &:focus-visible { outline: 3px solid rgba($navy, 0.35); outline-offset: 2px; }
-    &.active { background: $navy; border-color: $navy; color: $white; }
-  }
-  .period-pill--print { border-color: $coral-text; color: darken($coral-text, 12%); }
-  .period-pill--print:hover { background: rgba($coral, 0.1); border-color: $coral-text; }
+.period-pill {
+  min-height: 44px; padding: 0 1.1rem; border-radius: 999px;
+  border: 2px solid #D9DDE4; background: $white; color: $navy;
+  font-family: $body-font; font-weight: 800; font-size: 1rem; line-height: 1;
+  display: inline-flex; align-items: center; gap: 0.4rem; cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  &:hover { border-color: $navy; }
+  &:focus-visible { outline: 3px solid rgba($navy, 0.35); outline-offset: 2px; }
+  &.active { background: $navy; border-color: $navy; color: $white; }
+}
+.period-pill--print { border-color: $coral-text; color: darken($coral-text, 12%); }
+.period-pill--print:hover { background: rgba($coral, 0.1); border-color: $coral-text; }
+
+// Impression : la page « Projet » impose @page { margin: 0 } à tout le site.
+// Les documents (tableau de bord, procédures) utilisent une page nommée avec de
+// vraies marges et un pied de page numéroté.
+@page document {
+  size: A4;
+  margin: 12mm 11mm 14mm;
+  @bottom-left { content: "RE-PLAY"; font-family: "Nunito", sans-serif; font-size: 8pt; color: #5B6472; }
+  @bottom-right { content: counter(page) " / " counter(pages); font-family: "Nunito", sans-serif; font-size: 8pt; color: #5B6472; }
+}
+@media print {
+  // Sur la racine (et non sur le bloc) : sinon le changement de page nommée laisse une 1re page blanche.
+  :root:has(.procedure-page), :root:has(.quality-dash) { page: document; }
 }

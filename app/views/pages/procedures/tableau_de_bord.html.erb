@@ -1,0 +1,150 @@
+<% content_for :title, "Procédure tableau de bord · RE-PLAY" %>
+<% setting = QualitySetting.current %>
+
+<div class="container py-4 procedure-page">
+  <%= render "pages/procedures/header", title: "Tableau de bord qualité", icon: "fa-chart-bar",
+        intro: "Comment lire les indicateurs du TRI et de la VALO, aller du chiffre au jouet, et régler les objectifs. Page réservée aux administrateurs." %>
+
+  <section class="procedure-step">
+    <span class="procedure-num">1</span>
+    <div>
+      <h2>Choisir la période</h2>
+      <p>Les pastilles en haut de la page fixent la période de tous les chiffres, sauf le bandeau « En ce moment ».</p>
+      <div class="table-responsive">
+        <table class="procedure-table">
+          <tbody>
+            <tr><th scope="row">Aujourd'hui</th><td>La journée en cours.</td></tr>
+            <tr><th scope="row">Hier</th><td>Le dernier jour ouvré : le lundi, c'est le vendredi.</td></tr>
+            <tr><th scope="row">Semaine</th><td>La semaine précédente, du lundi au dimanche.</td></tr>
+            <tr><th scope="row">4 semaines</th><td>Les 28 derniers jours.</td></tr>
+            <tr><th scope="row">Mois</th><td>Depuis le 1<sup>er</sup> du mois en cours.</td></tr>
+            <tr><th scope="row">Dates libres</th><td>Deux dates à choisir.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">2</span>
+    <div>
+      <h2>« En ce moment dans l'atelier »</h2>
+      <p>Ce bandeau bleu marine montre l'état de l'atelier à l'instant, quelle que soit la période. C'est l'indicateur à regarder chaque jour.</p>
+      <ul class="procedure-list">
+        <li><strong>Non-conformités ouvertes</strong> : jouets refusés au contrôle et pas encore retraités.</li>
+        <li><strong>En rouge</strong> : ceux qui attendent depuis plus de <%= setting.red_after_days %> jours ouvrés.</li>
+        <li><strong>La plus ancienne</strong> : son âge en jours ouvrés.</li>
+        <li><strong>À arbitrer</strong> : jouets refusés deux fois, en attente de votre décision.</li>
+      </ul>
+      <p>Touchez une tuile pour voir les jouets concernés.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">3</span>
+    <div>
+      <h2>Le Bon du 1<sup>er</sup> coup</h2>
+      <p>C'est l'inverse du taux de non-conformité. Le trait pointillé marque l'objectif, et la phrase sous la barre donne l'écart.</p>
+      <div class="table-responsive">
+        <table class="procedure-table">
+          <thead><tr><th scope="col">Atelier</th><th scope="col">Calcul</th><th scope="col">À qui c'est compté</th></tr></thead>
+          <tbody>
+            <tr>
+              <th scope="row">VALO</th>
+              <td>Jouets mis en vente dès le 1<sup>er</sup> contrôle, divisés par les jouets passés au 1<sup>er</sup> contrôle sur la période.</td>
+              <td>À l'opérateur qui a créé la fiche du jouet.</td>
+            </tr>
+            <tr>
+              <th scope="row">TRI</th>
+              <td>Jouets sortis des caisses qui n'ont pas été écartés pour une cause que le TRI devait voir, divisés par les jouets sortis des caisses.</td>
+              <td>À la personne qui a créé la caisse.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Un jouet envoyé directement au vrac, au don ou au rebut par le contrôle n'est compté ni en bon ni en non conforme pour la VALO.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">4</span>
+    <div>
+      <h2>Les cinq chiffres clés de la VALO</h2>
+      <ul class="procedure-list">
+        <li><strong>Taux de non-conformité</strong> : part des jouets refusés au 1<sup>er</sup> contrôle.</li>
+        <li><strong>Problèmes détectés</strong> : nombre de causes cochées. Un jouet peut en avoir plusieurs.</li>
+        <li><strong>Délai de retraitement</strong> : jours ouvrés entre le refus et le retraitement par l'opérateur.</li>
+        <li><strong>Délai total</strong> : jours ouvrés entre le refus et la décision finale.</li>
+        <li><strong>Taux de 2<sup>e</sup> refus</strong> : part des revalorisations refusées à nouveau.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">5</span>
+    <div>
+      <h2>Du chiffre au jouet</h2>
+      <p>Presque tout se touche : un point de la courbe, une barre de cause, le nom d'un opérateur, une case du tableau croisé, une tuile du bandeau. La liste des jouets s'ouvre dans le <strong>cadre orange</strong>, sous les deux premiers graphiques, avec pour chacun :</p>
+      <ul class="procedure-list">
+        <li>l'opérateur, la date et le tour du refus, les causes ;</li>
+        <li>le <strong>commentaire du contrôle</strong> et la <strong>réponse de l'opérateur</strong> ;</li>
+        <li>l'état : ouverte depuis combien de jours, retraitée en combien de jours, à arbitrer.</li>
+      </ul>
+      <p>Le numéro du jouet mène à sa fiche.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">6</span>
+    <div>
+      <h2>Lire les graphiques</h2>
+      <ul class="procedure-list">
+        <li><strong>Semaine par semaine</strong> : le Bon du 1<sup>er</sup> coup VALO des huit dernières semaines, face à l'objectif.</li>
+        <li><strong>Par cause</strong> : de la plus fréquente à la plus rare, avec le cumul et le délai moyen de retraitement. Les premières lignes sont celles où agir d'abord.</li>
+        <li><strong>Par opérateur</strong> : en taux, pour ne pas pénaliser ceux qui traitent le plus de jouets.</li>
+        <li><strong>Qui a besoin d'aide, et sur quoi ?</strong> Le tableau croise opérateurs et causes. Plus la case est foncée, plus il y a de problèmes : c'est le support pour cibler une formation.</li>
+        <li><strong>TRI par responsable de caisse</strong> et <strong>écartés à l'entrée de la VALO</strong>. Les causes marquées « TRI » comptent contre le TRI ; les autres (complétude, propreté, langue) sont découvertes à la VALO et ne lui sont pas reprochées.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">7</span>
+    <div>
+      <h2>Régler les objectifs</h2>
+      <p>En bas du volet qualité, dépliez <strong>« Régler les objectifs »</strong> <i class="fa-solid fa-sliders" aria-hidden="true"></i>, modifiez les valeurs puis validez avec le bouton ✓.</p>
+      <div class="table-responsive">
+        <table class="procedure-table">
+          <thead><tr><th scope="col">Réglage</th><th scope="col">Valeur actuelle</th><th scope="col">Effet</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">Bon du 1<sup>er</sup> coup VALO</th><td><%= setting.target_valo %> %</td><td>Déplace le pointillé de la carte VALO, de la courbe et du tableau par opérateur.</td></tr>
+            <tr><th scope="row">Bon du 1<sup>er</sup> coup TRI</th><td><%= setting.target_tri %> %</td><td>Déplace le pointillé de la carte TRI et du tableau par responsable.</td></tr>
+            <tr><th scope="row">Rouge après</th><td><%= setting.red_after_days %> jours ouvrés</td><td>Change le moment où le bandeau « CQ refusé » passe de l'orange au rouge, pour tout le monde.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Le changement s'applique tout de suite, y compris aux périodes passées. Tous les administrateurs peuvent modifier ces réglages.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">8</span>
+    <div>
+      <h2>Imprimer en PDF</h2>
+      <p>Choisissez la période, puis touchez <span class="procedure-pill procedure-pill--coral-outline">Imprimer en PDF</span>. Dans la fenêtre d'impression, choisissez « Enregistrer au format PDF ». Les boutons, les réglages et la navigation n'apparaissent pas sur le document.</p>
+      <p>Pour imprimer une liste de jouets, ouvrez d'abord le détail voulu : il sera imprimé avec le reste.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">9</span>
+    <div>
+      <h2>Les limites à connaître</h2>
+      <ul class="procedure-list">
+        <li>Avant la mise en service du suivi qualité, les décisions ont été reconstruites à partir du journal. Les causes de cette période sont approximatives et les délais de retraitement n'existent pas.</li>
+        <li>Le Bon du 1<sup>er</sup> coup du TRI n'est fiable que depuis la mise en service : avant, les raisons des jets n'étaient pas enregistrées.</li>
+        <li>Les jours fériés sont comptés comme des jours ouvrés.</li>
+      </ul>
+    </div>
+  </section>
+</div>
