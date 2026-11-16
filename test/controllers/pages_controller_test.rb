@@ -51,7 +51,15 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".quality-hero", count: 0
     assert_select ".quality-small-sample", text: /Moins de 20 jouets/
     assert_select "h3", text: /suivi du jour/
+    assert_select ".quality-table th", text: "Retraités", count: 0 # aucun retraitement enregistré : colonne masquée
+    assert_select ".quality-hint", text: /apparaîtront dès qu'un opérateur/
+    QualityCheck.refused.last.update!(reworked_at: Time.current)
+    get dashboard_path(period: "today")
     assert_select ".quality-table th", text: "Retraités"
+    get dashboard_path(period: "four_weeks")
+    assert_select ".quality-table th", text: "Délai moyen"
+    QualityCheck.refused.last.update!(reworked_at: nil)
+    get dashboard_path(period: "today")
     assert_select ".quality-stock-bar .quality-stock-ontime", text: "1" # le refus du jour, dans les délais
     get dashboard_path(period: "four_weeks")
     assert_select ".quality-small-sample", text: "1 sur 2"

@@ -124,6 +124,11 @@ class QualityDashboard
     end
   end
 
+  # Un retraitement a-t-il été enregistré sur la période ? Sinon les colonnes
+  # « Retraités » et « Délai » n'ont rien à montrer (c'est le cas de tout
+  # l'historique d'avant le suivi qualité, qui ne connaissait pas cette étape).
+  def rework_recorded? = operator_rows.any? { |row| row[:reworked].positive? || row[:delay] }
+
   def matrix_causes = cause_rows.first(TOP_CAUSES).map { |row| row[:cause] }
 
   # Tableau opérateurs × causes, en problèmes pour 100 contrôles (1er et 2e tours,

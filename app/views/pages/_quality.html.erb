@@ -208,13 +208,13 @@
             <tr class="quality-table-groups">
               <td></td>
               <th scope="colgroup">En ce moment</th>
-              <th scope="colgroup" colspan="3">Sur la journée choisie</th>
+              <th scope="colgroup" colspan="<%= q.rework_recorded? ? 3 : 2 %>">Sur la journée choisie</th>
             </tr>
             <tr>
               <th scope="col">Opérateur</th>
               <th scope="col" style="width:46%;">Non-conformités à reprendre</th>
               <th scope="col" class="text-center"><i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i>Refus reçus</th>
-              <th scope="col" class="text-center"><i class="fa-solid fa-check me-1" aria-hidden="true"></i>Retraités</th>
+              <% if q.rework_recorded? %><th scope="col" class="text-center"><i class="fa-solid fa-check me-1" aria-hidden="true"></i>Retraités</th><% end %>
               <th scope="col" class="text-end">Contrôlés</th>
             </tr>
           </thead>
@@ -238,7 +238,7 @@
                   <% end %>
                 </td>
                 <td class="text-center"><%= row[:refused].zero? ? tag.span("–", class: "quality-zero") : tag.strong(row[:refused]) %></td>
-                <td class="text-center"><%= row[:reworked].zero? ? tag.span("–", class: "quality-zero") : tag.strong(row[:reworked]) %></td>
+                <% if q.rework_recorded? %><td class="text-center"><%= row[:reworked].zero? ? tag.span("–", class: "quality-zero") : tag.strong(row[:reworked]) %></td><% end %>
                 <td class="text-end quality-day-checked"><%= row[:total].zero? ? "–" : "#{row[:ok]} sur #{row[:total]}" %></td>
               </tr>
             <% end %>
@@ -255,7 +255,10 @@
               <th scope="col" class="text-end">Contrôlés</th>
               <th scope="col" class="text-end">Refusés</th>
               <th scope="col" class="text-end">Problèmes</th>
-              <th scope="col" class="text-end">Délai</th>
+              <% if q.rework_recorded? %>
+                <th scope="col" class="text-end">Retraités</th>
+                <th scope="col" class="text-end">Délai moyen</th>
+              <% end %>
               <th scope="col" class="text-end">NC ouvertes</th>
             </tr>
           </thead>
@@ -281,7 +284,10 @@
                 <td class="text-end"><%= row[:total] %></td>
                 <td class="text-end"><%= row[:refused] %></td>
                 <td class="text-end"><%= row[:problems] %></td>
-                <td class="text-end"><%= days.(row[:delay]) %></td>
+                <% if q.rework_recorded? %>
+                  <td class="text-end"><%= row[:reworked].zero? ? tag.span("–", class: "quality-zero") : row[:reworked] %></td>
+                  <td class="text-end"><%= row[:delay] ? days.(row[:delay]) : tag.span("–", class: "quality-zero") %></td>
+                <% end %>
                 <td class="text-end">
                   <%= row[:open] %>
                   <% if row[:late].positive? %><span class="quality-late"> · <%= row[:late] %> rouge<%= 's' if row[:late] > 1 %></span><% end %>
@@ -291,6 +297,11 @@
           </tbody>
         </table>
       </div>
+    <% end %>
+    <% if q.operator_rows.any? && !q.rework_recorded? %>
+      <p class="quality-hint mt-2 mb-0">
+        <i class="fa-solid fa-circle-info me-1" aria-hidden="true"></i>Les colonnes « Retraités » et « Délai » apparaîtront dès qu'un opérateur aura renvoyé un jouet refusé au contrôle sur la période. L'ancien parcours n'enregistrait pas cette étape.
+      </p>
     <% end %>
   </div>
 
