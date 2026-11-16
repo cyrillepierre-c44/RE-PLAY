@@ -10,8 +10,9 @@ export default class extends Controller {
   select(event) {
     const period = event.currentTarget.dataset.period
     this.element.querySelector("input[name='period']").value = period
-    this.periodBtnTargets.forEach(btn => btn.classList.remove("active"))
+    this.periodBtnTargets.forEach(btn => { btn.classList.remove("active"); btn.setAttribute("aria-pressed", "false") })
     event.currentTarget.classList.add("active")
+    event.currentTarget.setAttribute("aria-pressed", "true")
     this.updateVisibility()
     if (period !== "custom") this.doSubmit()
   }
@@ -28,7 +29,8 @@ export default class extends Controller {
 
   doSubmit() {
     const params = new URLSearchParams(new FormData(this.element))
-    window.location.href = `${window.location.pathname}?${params}#resultats`
+    // Pas d'ancre : on reste en haut, sur les filtres et le volet qualité juste dessous.
+    window.location.href = `${window.location.pathname}?${params}`
   }
 
   updateVisibility() {

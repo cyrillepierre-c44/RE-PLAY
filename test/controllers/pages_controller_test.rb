@@ -29,6 +29,53 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "dashboard : volet qualité avec des données, détail au clic et réglage des objectifs" do
+    admin = create_user(admin: true)
+    operator = create_user(email: "zoe@example.com")
+    box = create_box
+    touch(box, operator)
+    2.times do |i|
+      toy = create_toy(box: box, operator: operator, location: "Rack A")
+      QualityControl.new(toy, checker: admin).decide(outcome: i.zero? ? "market" : "review",
+                                                     causes: %w[nettoyage], comment: "Encore sale")
+    end
+    create_toy(box: box, operator: operator, status: "suppr", discard_causes: %w[dangereux])
+
+    sign_in admin
+    %w[today four_weeks month last_week prev_day].each do |period|
+      get dashboard_path(period: period)
+      assert_response :success, "période #{period}"
+    end
+    get dashboard_path(period: "today")
+    assert_select ".quality-hero", text: "50 %"
+    assert_select ".quality-bar-row", text: /Nettoyage/
+    assert_select ".quality-table th a", text: "zoe"
+    assert_select ".quality-now-tile .quality-now-value", text: "1"
+
+    get dashboard_quality_detail_path(period: "today", cause: "nettoyage")
+    assert_response :success
+    assert_select "turbo-frame#quality-detail td", text: "Encore sale"
+    get dashboard_quality_detail_path(period: "today", scope: "tri", cause: "dangereux")
+    assert_select "turbo-frame#quality-detail td", text: "Dangereux"
+    get dashboard_quality_detail_path(period: "today", scope: "open")
+    assert_select "turbo-frame#quality-detail td", text: /Ouverte/
+    get dashboard_quality_detail_path(period: "today", week: Date.current.beginning_of_week(:monday).iso8601)
+    assert_response :success
+
+    patch quality_setting_path, params: { quality_setting: { target_valo: 85, target_tri: 97, red_after_days: 2 } }
+    assert_equal [85, 97, 2], QualitySetting.current.then { |s| [s.target_valo, s.target_tri, s.red_after_days] }
+    patch quality_setting_path, params: { quality_setting: { target_valo: 150 } }
+    assert_equal 85, QualitySetting.current.target_valo
+  end
+
+  test "volet qualité refusé à un employé" do
+    sign_in create_user
+    get dashboard_quality_detail_path
+    assert_redirected_to root_path
+    patch quality_setting_path, params: { quality_setting: { target_valo: 10 } }
+    assert_equal 90, QualitySetting.current.target_valo
+  end
+
   test "dashboard refusé à un employé (redirection, pas de 500)" do
     sign_in create_user
     get dashboard_path

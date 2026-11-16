@@ -1,8 +1,6 @@
 require "csv"
 
 class PagesController < ApplicationController
-  include DashboardPareto
-
   skip_before_action :authenticate_user!,
                      only: %i[home mentions_legales confidentialite cgu aide]
 
@@ -102,16 +100,26 @@ class PagesController < ApplicationController
     @category_id = params[:category_id].presence
     @user_id     = params[:user_id].presence
     @actions     = filtered_actions
-    build_dashboard_stats
+    @quality = QualityDashboard.new(period_range)
     @recent_actions = @actions.order(created_at: :desc).limit(100)
     @categories     = Category.all
     @users          = User.order(:email)
   end
 
+  # Détail d'un chiffre du volet qualité (clic sur une barre, un point, une case) :
+  # liste des jouets avec les commentaires du CQ et de l'opérateur, dans un turbo-frame.
+  def quality_detail
+    authorize :page, :dashboard?
+    @period = params[:period].presence || "prev_day"
+    @quality = QualityDashboard.new(period_range)
+    @title, @rows = @quality.detail(params.permit(:scope, :cause, :operator_id, :sorter_id, :week))
+    render layout: false
+  end
+
   private
 
   def filtered_actions
-    scope = Action.where(created_at: period_range).includes(:user).preload(:actionable)
+    scope = Action.where(created_at: period_range)
     scope = filter_by_type(scope)
     scope = filter_by_category(scope)
     scope = scope.where(user_id: @user_id) if @user_id.present?
@@ -122,6 +130,8 @@ class PagesController < ApplicationController
     return parse_custom_range               if @period == "custom"
     return last_week_range                  if @period == "last_week"
     return Time.current.beginning_of_day..Time.current.end_of_day if @period == "today"
+    return 27.days.ago.beginning_of_day..Time.current.end_of_day if @period == "four_weeks"
+    return Time.current.beginning_of_month..Time.current.end_of_day if @period == "month"
 
     prev = previous_working_day
     prev.beginning_of_day..prev.end_of_day
@@ -163,99 +173,5 @@ class PagesController < ApplicationController
       "(actionable_type = 'Box' AND actionable_id IN (:box_ids))",
       toy_ids: toy_ids, box_ids: box_ids
     )
-  end
-
-  def build_dashboard_stats
-    build_count_stats
-    build_rework_stats
-    build_nc_stats
-    build_type_stats
-    build_pareto_stats
-  end
-
-  def build_count_stats
-    @total_actions     = @actions.count
-    @actions_by_admin  = @actions.joins(:user).where(users: { admin: true }).count
-    @actions_by_user   = @actions.joins(:user).where(users: { admin: false }).count
-    @toy_actions_count = @actions.where(actionable_type: "Toy").count
-    @box_actions_count = @actions.where(actionable_type: "Box").count
-    @box_ids           = @actions.where(actionable_type: "Box").pluck(:actionable_id).uniq
-    @toy_ids           = @actions.where(actionable_type: "Toy").pluck(:actionable_id).uniq
-    @boxes_toys_count          = Toy.not_draft.where(box_id: @box_ids).count
-    @boxes_toys_electronic     = Toy.not_draft.joins(:box).where(boxes: { id: @box_ids, electronic: true }).count
-    @boxes_toys_non_electronic = Toy.not_draft.joins(:box).where(boxes: { id: @box_ids, electronic: false }).count
-    elec_base     = Toy.joins(:box).where(boxes: { id: @box_ids, electronic: true })
-    non_elec_base = Toy.joins(:box).where(boxes: { id: @box_ids, electronic: false })
-    @elec_waiting      = elec_base.waiting.count
-    @non_elec_waiting  = non_elec_base.waiting.count
-    @elec_validated    = elec_base.validated.count
-    @non_elec_validated = non_elec_base.validated.count
-    @elec_deleted      = elec_base.deleted.count
-    @non_elec_deleted  = non_elec_base.deleted.count
-    @toys_price_total   = Toy.validated.where(id: @toy_ids).sum(:price)
-    @toys_price_pending = Toy.waiting.where(id: @toy_ids).sum(:price)
-  end
-
-  def build_rework_stats
-    # Retouches = jouets renvoyés via "Revaloriser" (statut review), par les admins uniquement
-    review_scope     = @actions.where("content LIKE ?", "%en statut: review%")
-    @review_total    = review_scope.count
-    @review_by_admin = review_scope.joins(:user).where(users: { admin: true }).count
-    @review_by_user  = review_scope.joins(:user).where(users: { admin: false }).count
-  end
-
-  def build_nc_stats
-    nc_scope = @actions.where("content LIKE ?", "%[NC:%]%")
-    @nc_total = nc_scope.count
-
-    @nc_by_type = [
-      { key: "NC:français",  label: "Français",  icon: "fa-flag",
-        count: nc_scope.where("content LIKE ?", "%[NC:français]%").count },
-      { key: "NC:CE",        label: "CE/Marque", icon: "fa-award",
-        count: nc_scope.where("content LIKE ?", "%[NC:CE%").count },
-      { key: "NC:sécurité",  label: "Sécurité",  icon: "fa-lock",
-        count: nc_scope.where("content LIKE ?", "%[NC:sécurité]%").count },
-      { key: "NC:propreté",  label: "Propre",    icon: "fa-soap",
-        count: nc_scope.where("content LIKE ?", "%[NC:propr%").count },
-      { key: "NC:complet",   label: "Complet",   icon: "fa-list-check",
-        count: nc_scope.where("content LIKE ?", "%[NC:complet]%").count },
-      { key: "NC:jouable",   label: "Jouable",   icon: "fa-gamepad",
-        count: nc_scope.where("content LIKE ?", "%[NC:jouable]%").count },
-      { key: "NC:catégorie", label: "Catégorie", icon: "fa-tag",
-        count: nc_scope.where("content LIKE ?", "%[NC:catégorie]%").count }
-    ].reject { |t| t[:count].zero? }
-
-    nc_toy_ids = nc_scope.where(actionable_type: "Toy").pluck(:actionable_id).uniq
-    return @nc_by_creator = [] if nc_toy_ids.empty?
-
-    creator_map = Action
-                  .select("DISTINCT ON (actionable_id) actionable_id, user_id")
-                  .where(actionable_type: "Toy", actionable_id: nc_toy_ids)
-                  .order("actionable_id, created_at ASC")
-                  .to_h { |a| [a.actionable_id, a.user_id] }
-
-    nc_counts_by_toy = nc_scope
-                       .where(actionable_type: "Toy", actionable_id: nc_toy_ids)
-                       .group(:actionable_id)
-                       .count
-
-    creator_counts = Hash.new(0)
-    nc_counts_by_toy.each do |toy_id, count|
-      creator_id = creator_map[toy_id]
-      creator_counts[creator_id] += count if creator_id
-    end
-
-    users = User.where(id: creator_counts.keys).index_by(&:id)
-
-    @nc_by_creator = creator_counts
-                     .map { |user_id, count| { user: users[user_id], count: count } }
-                     .sort_by { |item| -item[:count] }
-                     .first(10)
-  end
-
-  def build_type_stats
-    @create_total = @actions.where("content LIKE ?", "%créé%").count
-    @verify_total = @actions.where("content LIKE ?", "%passé%").count
-    @delete_total = @actions.where("content LIKE ?", "%supprimé%").count
   end
 end

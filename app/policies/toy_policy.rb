@@ -10,7 +10,9 @@ class ToyPolicy < ApplicationPolicy
       if user.admin?
         scope.all
       else
+        # ses jouets (il a agi dessus) + ceux qu'un admin lui a confiés
         scope.where(id: Action.where(actionable_type: "Toy", user: user).select(:actionable_id))
+             .or(scope.where(assignee_id: user.id))
       end
     end
   end
@@ -20,7 +22,7 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def show?
-    user.admin? || record.actions.where(user: user).any?
+    user.admin? || involved?
   end
 
   def new?
@@ -36,23 +38,28 @@ class ToyPolicy < ApplicationPolicy
   end
 
   def update?
-    user.admin? || record.actions.where(user: user).any?
+    user.admin? || involved?
   end
 
   def destroy?
-    user.admin? || record.actions.where(user: user).any?
+    user.admin? || involved?
   end
 
   def restore?
-    user.admin? || record.actions.where(user: user).any?
+    user.admin? || involved?
   end
 
   def toggle_sold?
-    user.admin? || record.actions.where(user: user).any?
+    user.admin? || involved?
   end
 
   def verify?
     user.present? && user.admin?
+  end
+
+  # Confier le jouet à un autre opérateur (opérateur absent) : admins seulement.
+  def reassign?
+    verify?
   end
 
   def confirm_verify?
@@ -81,5 +88,12 @@ class ToyPolicy < ApplicationPolicy
 
   def cancel_price_refresh?
     user.admin?
+  end
+
+  private
+
+  # L'utilisateur a agi sur le jouet, ou un admin le lui a confié.
+  def involved?
+    record.assignee_id == user.id || record.actions.where(user: user).any?
   end
 end

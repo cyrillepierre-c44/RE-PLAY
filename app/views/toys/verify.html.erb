@@ -110,58 +110,76 @@
 
         <%# Emplacement %>
         <div class="mb-3" style="margin-top:-0.5rem;">
-          <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">Obligatoire</div>
+          <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">Emplacement (pour la mise en vente)</div>
           <%= f.input :location,
               label: false,
-              required: true,
+              required: false,
               placeholder: "Lieu de stockage : Rack A, Étagère 0…",
               input_html: { class: "form-control verify-input", value: (@toy.location unless @toy.location == "En attente de validation") } %>
         </div>
 
-        <%# Note vocale opérateur — lecture seule %>
-        <% if @toy.operator_note.present? %>
-          <div class="mb-3">
-            <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">
-              <i class="fa-solid fa-microphone me-1" style="color:#FF6B35;"></i>Note de l'opérateur
-            </div>
-            <div class="vocal-readonly-box"><%= @toy.operator_note %></div>
+        <% input = @quality_input || { causes: [], comment: nil } %>
+        <% round = @control.round %>
+
+        <% if @toy.errors.any? %>
+          <div class="alert alert-danger" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-1" aria-hidden="true"></i>
+            <%= @toy.errors.full_messages.to_sentence %>
           </div>
         <% end %>
 
-        <%# Commentaire qualité %>
-        <div class="mb-3">
-          <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.2rem;">
-            <i class="fa-solid fa-shield-halved me-1" style="color:#FF6B35;"></i>Commentaire qualité (facultatif)
+        <%# Tours précédents — grisés, lecture seule %>
+        <%= render "toys/quality_history", toy: @toy %>
+
+        <div class="quality-round mb-3">
+          <div class="quality-round-title">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <%= round == QualityCheck::ARBITRATION_ROUND ? "Arbitrage : 2 refus, où va ce jouet ?" : "#{round == 1 ? '1er' : '2e'} tour" %>
           </div>
-          <%= f.input :admin_comment,
-              label: false,
-              as: :text,
-              placeholder: "Observation, motif de correction…",
-              input_html: {
-                class: "form-control verify-input",
-                rows: 3,
-                maxlength: 255,
-                style: "resize:none;",
-                id: "admin_comment_field",
-                oninput: "document.getElementById('admin-comment-remaining').textContent = 255 - this.value.length"
-              } %>
-          <div style="font-size:0.7rem; color:#6B7280; text-align:right; margin-top:0.2rem;">
-            <span id="admin-comment-remaining">255</span> caractères restants
-          </div>
+
+          <%# Note de l'opérateur pour ce tour — lecture seule %>
+          <% unless @toy.arbitrage? %>
+            <div class="quality-round-label"><i class="fa-solid fa-microphone" aria-hidden="true"></i> Note de l'opérateur</div>
+            <div class="quality-round-text <%= 'is-empty' if @toy.operator_note.blank? %>"><%= @toy.operator_note.presence || "Aucun commentaire" %></div>
+
+            <div class="quality-round-label mt-2"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Problèmes détectés (en cas de refus)</div>
+            <%= render "shared/cause_chips", causes: QualityCause::CQ, name: "quality[causes][]", selected: input[:causes], prefix: "cq_cause" %>
+          <% end %>
+
+          <label for="cq_comment_field" class="quality-round-label mt-2">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            Commentaire du contrôle qualité ·
+            <%= @control.comment_required_to_accept? ? "obligatoire" : "obligatoire sauf mise en vente" %>
+          </label>
+          <%= text_area_tag "quality[comment]", input[:comment],
+                id: "cq_comment_field", rows: 3, class: "form-control verify-input",
+                placeholder: "Vide — à remplir par le contrôle qualité" %>
         </div>
 
         <%# Boutons décision %>
         <div class="verify-decisions">
           <%= button_tag name: :status, value: "market", class: "verify-btn verify-btn-market" do %>
             <i class="fa-solid fa-store"></i>
-            <span>Mise en vente</span>
+            <span><%= @toy.arbitrage? ? "Vendre en l'état" : "Mise en vente" %></span>
           <% end %>
-          <%= button_tag name: :status, value: "review", class: "verify-btn verify-btn-review" do %>
-            <i class="fa-solid fa-rotate-left"></i>
-            <span>Revaloriser</span>
+          <% unless @toy.arbitrage? %>
+            <%= button_tag name: :status, value: "review", class: "verify-btn verify-btn-review" do %>
+              <i class="fa-solid fa-rotate-left"></i>
+              <span><%= round == 2 ? "Refuser (2e fois)" : "Revaloriser" %></span>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="verify-decisions mt-2">
+          <%= button_tag name: :status, value: "vrac", class: "verify-btn verify-btn-vrac" do %>
+            <i class="fa-solid fa-puzzle-piece"></i>
+            <span>Vrac</span>
+          <% end %>
+          <%= button_tag name: :status, value: "don", class: "verify-btn verify-btn-don" do %>
+            <i class="fa-solid fa-hand-holding-heart"></i>
+            <span>Don</span>
           <% end %>
           <%= button_tag name: :status, value: "suppr", class: "verify-btn verify-btn-suppr",
-              data: { confirm: "Supprimer définitivement ce jouet ?" } do %>
+              data: { turbo_confirm: "Jeter ce jouet ?" } do %>
             <i class="fa-solid fa-trash"></i>
             <span>Jeter</span>
           <% end %>
@@ -171,5 +189,7 @@
     </div>
 
   <% end %>
+
+  <%= render "toys/reassign", toy: @toy %>
 </div>
 

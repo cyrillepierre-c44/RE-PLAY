@@ -1,4 +1,24 @@
 module ApplicationHelper
+  # Bandeau d'un jouet refusé au contrôle qualité : orange tant que le délai est
+  # tenu, rouge au-delà de `red_after_days` jours ouvrés (réglage des admins).
+  def cq_banner(toy)
+    check = toy.open_check
+    days = check&.working_days_open
+    @cq_red_after ||= QualitySetting.current.red_after_days
+    late = check.present? && toy.review? && days > @cq_red_after
+    label = toy.arbitrage? ? "À arbitrer" : "CQ refusé"
+    since = if days.nil?
+              nil
+            else
+              (days.zero? ? "aujourd'hui" : "#{days} j")
+            end
+    icon = toy.arbitrage? ? "fa-scale-balanced" : "fa-triangle-exclamation"
+    content_tag(:div, class: "toy-card-review-badge #{'toy-card-review-badge--late' if late}") do
+      safe_join([tag.i(class: "fa-solid #{icon}", aria: { hidden: true }), " ",
+                 [label, since, ("en retard" if late)].compact.join(" · ")])
+    end
+  end
+
   # Un jouet peut ne pas (encore) avoir de catégorie : créé depuis une caisse
   # « Grosses pièces », il n'hérite pas de celle de la caisse et attend le choix
   # de l'opérateur. Les badges affichent alors un point d'interrogation.

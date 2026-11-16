@@ -1,0 +1,352 @@
+<%# Volet qualité du tableau de bord — chiffres : QualityDashboard. %>
+<% q = quality %>
+<% s = q.setting %>
+<% detail = ->(extra) { dashboard_quality_detail_path({ period: @period, start_date: @start_date, end_date: @end_date }.compact.merge(extra)) } %>
+<% frame = { turbo_frame: "quality-detail" } %>
+<% short = ->(user) { user&.email&.split("@")&.first || "?" } %>
+<% days = ->(value) { value.nil? ? "–" : "#{number_with_precision(value, precision: 1, separator: ',', strip_insignificant_zeros: true)} j" } %>
+
+<section class="quality-dash mb-4" aria-label="Qualité">
+
+  <div class="onb-section-title mb-3" style="justify-content:flex-start;">
+    <h2><i class="fa-solid fa-award me-2 text-coral"></i>Qualité · TRI et VALO</h2>
+  </div>
+
+  <%# ── En ce moment dans l'atelier (indépendant de la période) ── %>
+  <div class="quality-now mb-3">
+    <div class="quality-now-title">
+      <span><i class="fa-solid fa-bolt me-1" aria-hidden="true"></i>En ce moment dans l'atelier</span>
+      <small>Indépendant de la période choisie</small>
+    </div>
+    <div class="quality-now-grid">
+      <%= link_to detail.(scope: "open"), class: "quality-now-tile", data: frame do %>
+        <span class="quality-now-value"><%= q.open_checks.size %></span>
+        <span class="quality-now-label">non-conformités ouvertes</span>
+        <small>CQ refusé, pas encore retraité</small>
+      <% end %>
+      <%= link_to detail.(scope: "late"), class: "quality-now-tile quality-now-tile--late", data: frame do %>
+        <span class="quality-now-value"><%= q.late_checks.size %></span>
+        <span class="quality-now-label"><i class="fa-solid fa-circle-exclamation me-1" aria-hidden="true"></i>en rouge</span>
+        <small>plus de <%= s.red_after_days %> jours ouvrés</small>
+      <% end %>
+      <div class="quality-now-tile">
+        <span class="quality-now-value"><%= q.oldest_open_days.nil? ? "–" : "#{q.oldest_open_days} j" %></span>
+        <span class="quality-now-label">la plus ancienne</span>
+        <small>jours ouvrés depuis le refus</small>
+      </div>
+      <%= link_to toys_path(filter: "arbitrage"), class: "quality-now-tile" do %>
+        <span class="quality-now-value"><%= q.arbitrage_count %></span>
+        <span class="quality-now-label">à arbitrer</span>
+        <small>refusés 2 fois, destination à décider</small>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── Bon du 1er coup : VALO et TRI ── %>
+  <div class="row g-3 mb-3">
+    <% [
+         { title: "Atelier VALO", value: q.fpy_valo, target: s.target_valo, bad: "NC",
+           line: "#{q.valo_ok} jouets sur #{q.valo_total} validés au 1er contrôle",
+           empty: "Aucun jouet contrôlé sur la période." },
+         { title: "Atelier TRI", value: q.fpy_tri, target: s.target_tri, bad: "Jetés",
+           line: "#{q.toys_out.size - q.tri_rejects.size} jouets gardés sur #{q.toys_out.size} sortis des caisses",
+           empty: "Aucun jouet sorti des caisses sur la période." }
+       ].each do |card| %>
+      <div class="col-12 col-lg-6">
+        <div class="detail-card p-4 h-100 quality-card">
+          <div class="d-flex justify-content-between flex-wrap gap-2">
+            <span class="kpi-group-label"><%= card[:title] %> · Bon du 1er coup</span>
+            <span class="quality-target">Objectif : <%= card[:target] %> %</span>
+          </div>
+          <% if card[:value].nil? %>
+            <p class="quality-empty mt-2 mb-0"><%= card[:empty] %></p>
+          <% else %>
+            <div class="d-flex align-items-baseline flex-wrap gap-2 mt-1">
+              <span class="quality-hero"><%= card[:value] %> %</span>
+              <span class="quality-hero-sub"><%= card[:line] %></span>
+            </div>
+            <div class="quality-split mt-2" role="img" aria-label="Bon du premier coup <%= card[:value] %> %, objectif <%= card[:target] %> %">
+              <div class="quality-split-ok" style="width: <%= card[:value] %>%;"><% if card[:value] >= 25 %><%= card[:value] %> %<% end %></div>
+              <% if card[:value] < 100 %>
+                <div class="quality-split-ko" style="width: <%= 100 - card[:value] %>%;"><% if card[:value] <= 88 %><%= card[:bad] %> <%= 100 - card[:value] %> %<% end %></div>
+              <% end %>
+              <div class="quality-split-target" style="left: <%= card[:target] %>%;"></div>
+            </div>
+            <p class="quality-gap mt-2 mb-0">
+              <% gap = card[:target] - card[:value] %>
+              <% if gap.positive? %>
+                <i class="fa-solid fa-arrow-trend-up me-1" aria-hidden="true"></i>Il manque <%= gap %> point<%= 's' if gap > 1 %> pour atteindre l'objectif.
+              <% else %>
+                <i class="fa-solid fa-circle-check me-1" aria-hidden="true"></i>Objectif atteint.
+              <% end %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Chiffres clés VALO ── %>
+  <div class="row g-2 mb-3">
+    <% [
+         [q.nc_rate.nil? ? "–" : "#{q.nc_rate} %", "Taux de non-conformité", "refusés au 1er contrôle"],
+         [q.problems_count, "Problèmes détectés", "toutes causes, tous tours"],
+         [days.(q.rework_delay), "Délai de retraitement", "du refus au retraitement"],
+         [days.(q.total_delay), "Délai total", "du refus à la décision finale"],
+         [q.second_refusal_rate.nil? ? "–" : "#{q.second_refusal_rate} %", "Taux de 2e refus", "revalorisations ratées"]
+       ].each do |value, label, hint| %>
+      <div class="col-6 col-md">
+        <div class="kpi-card h-100">
+          <div class="kpi-value" style="color:#1A2B4A;"><%= value %></div>
+          <div class="kpi-label"><%= label %></div>
+          <div class="quality-hint"><%= hint %></div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row g-3 mb-3">
+    <%# ── Évolution hebdomadaire ── %>
+    <div class="col-12 col-lg-6">
+      <div class="detail-card p-4 h-100 quality-card">
+        <h3 class="quality-h3">Bon du 1er coup VALO, semaine par semaine</h3>
+        <p class="quality-sub">Touchez un point pour voir les jouets refusés cette semaine-là.</p>
+        <% weeks = q.weekly %>
+        <% if weeks.all? { |w| w[:fpy].nil? } %>
+          <p class="quality-empty mb-0">Pas encore de contrôle sur les <%= QualityDashboard::WEEKS %> dernières semaines.</p>
+        <% else %>
+          <% floor = [weeks.filter_map { |w| w[:fpy] }.min, s.target_valo].min >= 55 ? 50 : 0 %>
+          <% x = ->(i) { 60 + i * (480.0 / (weeks.size - 1)) } %>
+          <% y = ->(v) { 180 - (v - floor) * 160.0 / (100 - floor) } %>
+          <svg viewBox="0 0 560 215" class="quality-trend" role="img"
+               aria-label="Bon du premier coup par semaine : <%= weeks.map { |w| "#{w[:label]} #{w[:fpy] ? "#{w[:fpy]} %" : 'aucun contrôle'}" }.join(', ') %>">
+            <% [floor, (floor + 100) / 2, 100].each do |tick| %>
+              <line x1="50" x2="550" y1="<%= y.(tick) %>" y2="<%= y.(tick) %>" stroke="#EEF0F3" stroke-width="1"></line>
+              <text x="42" y="<%= y.(tick) + 4 %>" text-anchor="end" class="quality-trend-axis"><%= tick %> %</text>
+            <% end %>
+            <line x1="50" x2="550" y1="<%= y.(s.target_valo) %>" y2="<%= y.(s.target_valo) %>" stroke="#1A2B4A" stroke-width="2" stroke-dasharray="6 5"></line>
+            <text x="550" y="<%= y.(s.target_valo) - 6 %>" text-anchor="end" class="quality-trend-target">Objectif <%= s.target_valo %> %</text>
+            <polyline fill="none" stroke="#0B7F68" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
+                      points="<%= weeks.each_with_index.filter_map { |w, i| "#{x.(i).round(1)},#{y.(w[:fpy]).round(1)}" if w[:fpy] }.join(' ') %>"></polyline>
+            <% weeks.each_with_index do |w, i| %>
+              <text x="<%= x.(i) %>" y="205" text-anchor="middle" class="quality-trend-axis"><%= w[:label] %></text>
+              <% next unless w[:fpy] %>
+              <a href="<%= detail.(week: w[:monday].iso8601) %>" data-turbo-frame="quality-detail" aria-label="<%= w[:label] %> : <%= w[:fpy] %> %, <%= w[:total] %> jouets contrôlés">
+                <circle cx="<%= x.(i) %>" cy="<%= y.(w[:fpy]) %>" r="16" fill="transparent"></circle>
+                <circle cx="<%= x.(i) %>" cy="<%= y.(w[:fpy]) %>" r="6" fill="#0B7F68" stroke="#FFFFFF" stroke-width="2"></circle>
+                <text x="<%= x.(i) %>" y="<%= y.(w[:fpy]) + (w[:fpy] > 88 ? 22 : -12) %>" text-anchor="middle" class="quality-trend-value"><%= w[:fpy] %> %</text>
+              </a>
+            <% end %>
+          </svg>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── Causes VALO ── %>
+    <div class="col-12 col-lg-6">
+      <div class="detail-card p-4 h-100 quality-card">
+        <h3 class="quality-h3">Non-conformités VALO par cause</h3>
+        <p class="quality-sub">Du plus fréquent au plus rare. Touchez une barre pour voir les jouets et les commentaires.</p>
+        <% if q.cause_rows.empty? %>
+          <p class="quality-empty mb-0">Aucun refus au contrôle qualité sur la période.</p>
+        <% else %>
+          <% q.cause_rows.each do |row| %>
+            <%= link_to detail.(cause: row[:cause].key), class: "quality-bar-row", data: frame do %>
+              <span class="quality-bar-head">
+                <span><i class="fa-solid <%= row[:cause].icon %> me-1" aria-hidden="true"></i><%= row[:cause].label %></span>
+                <span><strong><%= row[:count] %></strong> · cumul <%= row[:cumulative] %> % · <%= days.(row[:delay]) %></span>
+              </span>
+              <span class="quality-bar-track"><span class="quality-bar-fill" style="width: <%= row[:share] %>%;"></span></span>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Panneau de détail (rempli au clic) ── %>
+  <turbo-frame id="quality-detail" class="d-block mb-3">
+    <div class="quality-detail-hint">
+      <i class="fa-solid fa-hand-pointer me-1" aria-hidden="true"></i>
+      Touchez une barre, un point ou une case : la liste des jouets et les commentaires s'affichent ici.
+    </div>
+  </turbo-frame>
+
+  <%# ── VALO par opérateur ── %>
+  <div class="detail-card p-4 mb-3 quality-card">
+    <h3 class="quality-h3">VALO par opérateur</h3>
+    <p class="quality-sub">En taux, pour ne pas pénaliser ceux qui traitent le plus de jouets. Pointillé = objectif <%= s.target_valo %> %. Délais en jours ouvrés.</p>
+    <% if q.operator_rows.empty? %>
+      <p class="quality-empty mb-0">Aucun contrôle sur la période.</p>
+    <% else %>
+      <div class="table-responsive">
+        <table class="quality-table">
+          <thead>
+            <tr>
+              <th scope="col">Opérateur</th>
+              <th scope="col" style="width:34%;">Bon du 1er coup</th>
+              <th scope="col" class="text-end">Contrôlés</th>
+              <th scope="col" class="text-end">Problèmes</th>
+              <th scope="col" class="text-end">Délai</th>
+              <th scope="col" class="text-end">NC ouvertes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% q.operator_rows.each do |row| %>
+              <tr>
+                <th scope="row"><%= link_to short.(row[:user]), detail.(operator_id: row[:id]), data: frame %></th>
+                <td>
+                  <% if row[:fpy] %>
+                    <div class="quality-rate">
+                      <div class="quality-rate-track">
+                        <div class="quality-rate-fill" style="width: <%= row[:fpy] %>%;"></div>
+                        <div class="quality-rate-target" style="left: <%= s.target_valo %>%;"></div>
+                      </div>
+                      <span class="quality-rate-value"><%= row[:fpy] %> %</span>
+                    </div>
+                  <% else %>
+                    <span class="quality-hint">aucun 1er contrôle</span>
+                  <% end %>
+                </td>
+                <td class="text-end"><%= row[:total] %></td>
+                <td class="text-end"><%= row[:problems] %></td>
+                <td class="text-end"><%= days.(row[:delay]) %></td>
+                <td class="text-end">
+                  <%= row[:open] %>
+                  <% if row[:late].positive? %><span class="quality-late"> · <%= row[:late] %> rouge<%= 's' if row[:late] > 1 %></span><% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+
+  <%# ── Opérateur × cause ── %>
+  <% if q.operator_rows.any? && q.matrix_causes.any? %>
+    <div class="detail-card p-4 mb-3 quality-card">
+      <h3 class="quality-h3">Qui a besoin d'aide, et sur quoi ?</h3>
+      <p class="quality-sub">Problèmes par opérateur et par cause (les <%= q.matrix_causes.size %> causes principales). Plus la case est foncée, plus il y en a. Touchez une case pour le détail.</p>
+      <div class="table-responsive">
+        <table class="quality-matrix">
+          <thead>
+            <tr>
+              <td></td>
+              <% q.matrix_causes.each do |cause| %>
+                <th scope="col"><i class="fa-solid <%= cause.icon %>" aria-hidden="true"></i><br><%= cause.label %></th>
+              <% end %>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% q.operator_rows.select { |row| row[:problems].positive? }.each do |row| %>
+              <tr>
+                <th scope="row"><%= short.(row[:user]) %></th>
+                <% q.matrix_causes.each do |cause| %>
+                  <% n = row[:causes][cause.key].to_i %>
+                  <% level = n.zero? ? 0 : [(n * 5.0 / q.matrix_max).ceil, 5].min %>
+                  <td class="quality-cell quality-cell--<%= level %>">
+                    <% if n.zero? %>
+                      <span aria-label="0">·</span>
+                    <% else %>
+                      <%= link_to n, detail.(operator_id: row[:id], cause: cause.key), data: frame %>
+                    <% end %>
+                  </td>
+                <% end %>
+                <td><strong><%= row[:problems] %></strong></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row g-3 mb-3">
+    <%# ── TRI par responsable de caisse ── %>
+    <div class="col-12 col-lg-7">
+      <div class="detail-card p-4 h-100 quality-card">
+        <h3 class="quality-h3">TRI par responsable de caisse</h3>
+        <p class="quality-sub">La personne qui crée la caisse répond des jouets mis dedans. Un jouet jeté à l'entrée de la VALO pour une cause que le TRI devait écarter compte contre le TRI. Pointillé = objectif <%= s.target_tri %> %.</p>
+        <% if q.sorter_rows.empty? %>
+          <p class="quality-empty mb-0">Aucun jouet sorti des caisses sur la période.</p>
+        <% else %>
+          <div class="table-responsive">
+            <table class="quality-table">
+              <thead>
+                <tr>
+                  <th scope="col">Responsable</th>
+                  <th scope="col" style="width:40%;">Bon du 1er coup</th>
+                  <th scope="col" class="text-end">Sortis des caisses</th>
+                  <th scope="col" class="text-end">Jetés (TRI)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% q.sorter_rows.each do |row| %>
+                  <tr>
+                    <th scope="row"><%= link_to short.(row[:user]), detail.(scope: "tri", sorter_id: row[:id]), data: frame %></th>
+                    <td>
+                      <div class="quality-rate">
+                        <div class="quality-rate-track">
+                          <div class="quality-rate-fill" style="width: <%= row[:fpy] %>%;"></div>
+                          <div class="quality-rate-target" style="left: <%= s.target_tri %>%;"></div>
+                        </div>
+                        <span class="quality-rate-value"><%= row[:fpy] %> %</span>
+                      </div>
+                    </td>
+                    <td class="text-end"><%= row[:total] %></td>
+                    <td class="text-end"><%= row[:rejected] %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# ── Causes du jet à l'entrée ── %>
+    <div class="col-12 col-lg-5">
+      <div class="detail-card p-4 h-100 quality-card">
+        <h3 class="quality-h3">Jetés à l'entrée de la VALO</h3>
+        <p class="quality-sub"><%= q.tri_rejects.size %> comptés contre le TRI, <%= q.valo_rejects.size %> découverts à la VALO (complétude, propreté, langue : le TRI ne les vérifie pas).</p>
+        <% if q.discard_rows.empty? %>
+          <p class="quality-empty mb-0">Aucun jouet jeté à l'entrée sur la période.</p>
+        <% else %>
+          <% q.discard_rows.each do |row| %>
+            <%= link_to detail.(scope: "tri", cause: row[:cause].key), class: "quality-bar-row", data: frame do %>
+              <span class="quality-bar-head">
+                <span><i class="fa-solid <%= row[:cause].icon %> me-1" aria-hidden="true"></i><%= row[:cause].label %><%= " · TRI" if row[:cause].tri %></span>
+                <strong><%= row[:count] %></strong>
+              </span>
+              <span class="quality-bar-track"><span class="quality-bar-fill <%= 'quality-bar-fill--muted' unless row[:cause].tri %>" style="width: <%= row[:share] %>%;"></span></span>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# ── Objectifs (admins) ── %>
+  <details class="detail-card p-4 quality-card quality-settings">
+    <summary><i class="fa-solid fa-sliders me-2 text-coral" aria-hidden="true"></i>Régler les objectifs</summary>
+    <%= form_with model: s, url: quality_setting_path, method: :patch, class: "row g-3 mt-1 align-items-end" do |f| %>
+      <div class="col-12 col-md">
+        <%= f.label :target_valo, "Bon du 1er coup VALO (%)", class: "filter-label" %>
+        <%= f.number_field :target_valo, min: 0, max: 100, class: "form-control verify-input" %>
+      </div>
+      <div class="col-12 col-md">
+        <%= f.label :target_tri, "Bon du 1er coup TRI (%)", class: "filter-label" %>
+        <%= f.number_field :target_tri, min: 0, max: 100, class: "form-control verify-input" %>
+      </div>
+      <div class="col-12 col-md">
+        <%= f.label :red_after_days, "Rouge après (jours ouvrés)", class: "filter-label" %>
+        <%= f.number_field :red_after_days, min: 1, max: 30, class: "form-control verify-input" %>
+      </div>
+      <div class="col-12 col-md-auto">
+        <button type="submit" class="btn btn-primary w-100" aria-label="Enregistrer les objectifs"><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+      </div>
+    <% end %>
+  </details>
+</section>

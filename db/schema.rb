@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_16_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -82,6 +82,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
     t.integer "progression", default: 0, null: false
     t.datetime "updated_at", null: false
     t.index ["module_code", "numero"], name: "index_projet_leviers_on_module_code_and_numero", unique: true
+  end
+
+  create_table "quality_checks", force: :cascade do |t|
+    t.string "causes", default: [], null: false, array: true
+    t.bigint "checker_id"
+    t.text "cq_comment"
+    t.datetime "created_at", null: false
+    t.string "decision", null: false
+    t.text "operator_comment"
+    t.bigint "operator_id"
+    t.datetime "resolved_at"
+    t.datetime "reworked_at"
+    t.integer "round", null: false
+    t.bigint "toy_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["checker_id"], name: "index_quality_checks_on_checker_id"
+    t.index ["created_at"], name: "index_quality_checks_on_created_at"
+    t.index ["decision", "reworked_at"], name: "index_quality_checks_on_decision_and_reworked_at"
+    t.index ["operator_id"], name: "index_quality_checks_on_operator_id"
+    t.index ["toy_id"], name: "index_quality_checks_on_toy_id"
+  end
+
+  create_table "quality_settings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "red_after_days", default: 3, null: false
+    t.integer "target_tri", default: 95, null: false
+    t.integer "target_valo", default: 90, null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "solid_cable_messages", force: :cascade do |t|
@@ -228,6 +256,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
 
   create_table "toys", force: :cascade do |t|
     t.string "admin_comment", limit: 255
+    t.bigint "assignee_id"
     t.string "barcode"
     t.bigint "box_id", null: false
     t.bigint "category_id"
@@ -235,8 +264,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
     t.boolean "clean"
     t.boolean "complete"
     t.datetime "created_at", null: false
+    t.string "discard_causes", default: [], null: false, array: true
     t.boolean "french", default: false
     t.string "location", default: "En attente de validation"
+    t.bigint "operator_id"
     t.text "operator_note"
     t.boolean "playable"
     t.decimal "price"
@@ -244,9 +275,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
     t.boolean "sold", default: false, null: false
     t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
+    t.index ["assignee_id"], name: "index_toys_on_assignee_id"
     t.index ["box_id"], name: "index_toys_on_box_id"
     t.index ["category_id"], name: "index_toys_on_category_id"
     t.index ["created_at"], name: "index_toys_on_created_at"
+    t.index ["operator_id"], name: "index_toys_on_operator_id"
     t.index ["price"], name: "index_toys_on_price"
     t.index ["sold"], name: "index_toys_on_sold"
     t.index ["status"], name: "index_toys_on_status"
@@ -274,6 +307,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_12_090000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "boxes", "categories"
+  add_foreign_key "quality_checks", "toys"
+  add_foreign_key "quality_checks", "users", column: "checker_id", on_delete: :nullify
+  add_foreign_key "quality_checks", "users", column: "operator_id", on_delete: :nullify
   add_foreign_key "toys", "boxes"
   add_foreign_key "toys", "categories"
+  add_foreign_key "toys", "users", column: "assignee_id", on_delete: :nullify
+  add_foreign_key "toys", "users", column: "operator_id", on_delete: :nullify
 end

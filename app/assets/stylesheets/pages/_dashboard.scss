@@ -722,3 +722,147 @@
     margin: 0;
   }
 }
+
+// ── Volet qualité (TRI / VALO) ──────────────────────────────────────────────
+$quality-ok: #0B7F68;      // bon du 1er coup
+$quality-ko: $coral-text;  // non conforme
+$quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
+
+.quality-dash {
+  .quality-h3 { font-family: $headers-font; font-size: 1.15rem; color: $navy; margin: 0 0 0.2rem; }
+  .quality-sub, .quality-hint, .quality-empty, .quality-target, .quality-gap, .quality-hero-sub { color: $quality-ink; }
+  .quality-sub { font-size: 0.85rem; margin-bottom: 0.75rem; }
+  .quality-hint { font-size: 0.72rem; }
+  .quality-empty { font-size: 0.9rem; font-weight: 700; }
+  .quality-target, .quality-gap { font-size: 0.85rem; font-weight: 700; }
+  .quality-hero { font-size: 3.2rem; font-weight: 800; line-height: 1; color: $navy; }
+  .quality-hero-sub { font-size: 0.9rem; font-weight: 700; }
+  .quality-late { color: darken($danger-red, 12%); font-weight: 800; }
+  .quality-none { color: $quality-ink; font-style: italic; }
+}
+
+.quality-now {
+  background: $navy;
+  color: $white;
+  border-radius: $border-radius-xl;
+  padding: 1rem;
+
+  .quality-now-title {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem;
+    font-weight: 800; margin-bottom: 0.75rem;
+    small { color: #D5DAE3; font-weight: 600; }
+  }
+  .quality-now-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.6rem; }
+  .quality-now-tile {
+    display: flex; flex-direction: column; gap: 0.15rem;
+    background: rgba($white, 0.1); color: $white; text-decoration: none;
+    border-radius: 0.9rem; padding: 0.8rem; border: 3px solid transparent; min-height: 44px;
+    small { color: #D5DAE3; font-size: 0.75rem; }
+  }
+  .quality-now-tile--late {
+    background: $white; color: $navy; border-color: $danger-red;
+    small { color: $quality-ink; }
+  }
+  .quality-now-value { font-size: 2.2rem; font-weight: 800; line-height: 1; }
+  .quality-now-label { font-size: 0.85rem; font-weight: 800; }
+}
+
+.quality-split {
+  position: relative; display: flex; gap: 2px; height: 30px; padding-top: 6px; box-sizing: content-box;
+  > .quality-split-ok, > .quality-split-ko {
+    height: 30px; color: $white; font-size: 0.8rem; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; white-space: nowrap; overflow: hidden;
+  }
+  .quality-split-ok { background: $quality-ok; border-radius: 6px 0 0 6px; }
+  .quality-split-ko { background: $quality-ko; border-radius: 0 6px 6px 0; }
+  .quality-split-target { position: absolute; top: 0; bottom: -6px; border-left: 3px dashed $navy; }
+}
+
+.quality-trend {
+  width: 100%; height: auto;
+  .quality-trend-axis { font-size: 12px; fill: $quality-ink; }
+  .quality-trend-target { font-size: 13px; font-weight: 800; fill: $navy; }
+  .quality-trend-value { font-size: 13px; font-weight: 800; fill: $navy; }
+  a:hover circle:last-of-type, a:focus circle:last-of-type { r: 8; }
+}
+
+.quality-bar-row {
+  display: flex; flex-direction: column; gap: 0.2rem; min-height: 44px; justify-content: center;
+  padding: 0.3rem 0.4rem; border-radius: 0.5rem; text-decoration: none; color: $navy;
+  &:hover, &:focus-visible { background: rgba($coral, 0.1); color: $navy; }
+  .quality-bar-head { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.85rem; font-weight: 700; flex-wrap: wrap; }
+  .quality-bar-track { display: block; height: 12px; background: #EEF0F3; border-radius: 4px; }
+  .quality-bar-fill { display: block; height: 12px; background: $navy; border-radius: 4px; min-width: 4px; }
+  .quality-bar-fill--muted { background: #7C93B8; }
+}
+
+.quality-table {
+  width: 100%; min-width: 560px; border-collapse: collapse; font-size: 0.9rem; color: $navy;
+  th, td { padding: 0.6rem 0.5rem; vertical-align: top; }
+  thead th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: $quality-ink; font-weight: 800; }
+  tbody tr { border-top: 1px solid #EEF0F3; }
+  tbody th { font-weight: 800; white-space: nowrap; }
+  a { color: $coral-text; font-weight: 800; }
+}
+
+.quality-rate {
+  display: flex; align-items: center; gap: 0.6rem;
+  .quality-rate-track { position: relative; flex: 1; height: 14px; background: #EEF0F3; border-radius: 4px; }
+  .quality-rate-fill { height: 14px; background: $quality-ok; border-radius: 4px; }
+  .quality-rate-target { position: absolute; top: -4px; bottom: -4px; border-left: 2px dashed $navy; }
+  .quality-rate-value { min-width: 3rem; text-align: right; font-weight: 800; }
+}
+
+.quality-matrix {
+  width: 100%; min-width: 560px; border-collapse: separate; border-spacing: 4px; text-align: center; font-size: 0.9rem; color: $navy;
+  thead th { font-size: 0.7rem; font-weight: 800; color: $quality-ink; text-transform: uppercase; }
+  tbody th { text-align: left; font-weight: 800; white-space: nowrap; }
+  .quality-cell { border-radius: 8px; font-weight: 800; padding: 0; }
+  .quality-cell a, .quality-cell span { display: block; padding: 0.7rem 0.3rem; color: inherit; text-decoration: none; }
+  // Rampe séquentielle une seule teinte (marine), du clair au foncé.
+  .quality-cell--0 { background: #F4F5F7; color: $quality-ink; }
+  .quality-cell--1 { background: #DCE3EE; }
+  .quality-cell--2 { background: #B1C0D6; }
+  .quality-cell--3 { background: #7C93B8; }
+  .quality-cell--4 { background: #46639A; color: $white; }
+  .quality-cell--5 { background: $navy; color: $white; }
+}
+
+.quality-detail-hint {
+  border: 2px dashed rgba($navy, 0.2); border-radius: $border-radius-xl;
+  padding: 0.9rem 1rem; font-size: 0.9rem; font-weight: 700; color: $quality-ink;
+}
+.quality-detail { border: 3px solid $coral; }
+.quality-settings summary { font-weight: 800; color: $navy; cursor: pointer; min-height: 44px; display: flex; align-items: center; }
+
+// Impression / PDF : on garde le volet qualité, sans navigation ni filtres.
+@media print {
+  .navbar, footer, .quality-settings, .quality-detail-hint,
+  form[action$="/dashboard"] { display: none !important; }
+  body { background: #FFFFFF !important; }
+  .quality-dash .detail-card, .quality-now { box-shadow: none !important; break-inside: avoid; }
+  .quality-now { background: #FFFFFF; color: $navy; border: 2px solid $navy; }
+  .quality-now .quality-now-tile { color: $navy; border: 1px solid #D9DDE4; small { color: $quality-ink; } }
+  .quality-now .quality-now-title small { color: $quality-ink; }
+  .quality-split-ok, .quality-split-ko, .quality-rate-fill, .quality-bar-fill, .quality-cell {
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .quality-dash { break-after: page; }
+}
+
+// Choix de la période : pastilles (marine = période active) + impression.
+.period-pills {
+  display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+
+  .period-pill {
+    min-height: 44px; padding: 0 1.1rem; border-radius: 999px;
+    border: 2px solid #D9DDE4; background: $white; color: $navy;
+    font-family: $body-font; font-weight: 800; font-size: 1rem; line-height: 1;
+    transition: background 0.15s ease, border-color 0.15s ease;
+    &:hover { border-color: $navy; }
+    &:focus-visible { outline: 3px solid rgba($navy, 0.35); outline-offset: 2px; }
+    &.active { background: $navy; border-color: $navy; color: $white; }
+  }
+  .period-pill--print { border-color: $coral-text; color: darken($coral-text, 12%); }
+  .period-pill--print:hover { background: rgba($coral, 0.1); border-color: $coral-text; }
+}

@@ -98,12 +98,16 @@
   </div>
 
 
+  <%# Tours de contrôle précédents (CQ refusé) — grisés, lecture seule %>
+  <% past_checks = @toy.persisted? ? @toy.quality_checks.to_a : [] %>
+  <%= render "toys/quality_history", toy: @toy if past_checks.any? %>
+
   <%# Note vocale — opérateurs non-admin uniquement %>
   <% unless current_user.admin? %>
     <div class="vocal-section mb-3" data-controller="voice-recorder">
       <div class="vocal-header">
         <span class="vocal-label">
-          <i class="fa-solid fa-microphone me-1" style="color:#FF6B35;"></i>Note vocale
+          <i class="fa-solid fa-microphone me-1" style="color:#FF6B35;"></i>Note de l'opérateur<%= " · 2e tour" if past_checks.any? %>
         </span>
         <div class="vocal-controls">
           <button type="button"
@@ -125,7 +129,7 @@
       <%= f.input :operator_note,
           label: false,
           as: :text,
-          placeholder: "Appuyez sur le micro pour dicter, ou écrivez directement…",
+          placeholder: "Vide — appuyez sur le micro ou écrivez ici",
           input_html: {
             class: "form-control verify-input vocal-textarea",
             rows: 4,
@@ -134,7 +138,7 @@
     </div>
   <% end %>
 
-  <% if @toy.admin_comment.present? %>
+  <% if @toy.admin_comment.present? && past_checks.empty? %>
     <div class="mb-3" style="background:#f9f5f0; padding:0.75rem; border-radius:0.375rem; border-left:3px solid #FF6B35;">
       <div style="font-size:0.75rem; color:#6B7280; margin-bottom:0.3rem;">
         <i class="fa-solid fa-shield-halved me-1" style="color:#FF6B35;"></i>Commentaire qualité
@@ -144,9 +148,17 @@
   <% end %>
 
   <div class="d-grid">
-    <button type="submit" class="btn btn-primary btn-lg" aria-label="Enregistrer le jouet">
-      <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;" aria-hidden="true"></i>
-    </button>
+    <% if @toy.review? %>
+      <button type="submit" class="btn btn-primary btn-lg" aria-label="Renvoyer le jouet au contrôle qualité">
+        <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;" aria-hidden="true"></i>
+        <i class="fa-solid fa-arrow-right mx-1" style="color:white;" aria-hidden="true"></i>
+        <i class="fa-solid fa-magnifying-glass" style="font-size:1.5rem; color:white;" aria-hidden="true"></i>
+      </button>
+    <% else %>
+      <button type="submit" class="btn btn-primary btn-lg" aria-label="Enregistrer le jouet">
+        <i class="fa-solid fa-check" style="font-size:1.5rem; color:white;" aria-hidden="true"></i>
+      </button>
+    <% end %>
   </div>
 
 <% end %>

@@ -1,0 +1,27 @@
+<%# Tours de contrôle déjà passés : grisés, lisibles, non modifiables.
+    Une zone restée vide affiche « Aucun commentaire » (jamais un texte d'exemple). %>
+<% checks = toy.quality_checks.select(&:persisted?).sort_by(&:id) %>
+<% checks.each do |check| %>
+  <div class="quality-round quality-round--past mb-2">
+    <div class="quality-round-title">
+      <i class="fa-solid fa-lock" aria-hidden="true"></i>
+      <%= check.round == QualityCheck::ARBITRATION_ROUND ? "Arbitrage" : "#{check.round == 1 ? '1er' : '2e'} tour" %>
+      · <%= { "accepted" => "validé", "refused" => "refusé", "vrac" => "vrac", "don" => "don", "discarded" => "jeté" }[check.decision] %>
+      le <%= check.created_at.in_time_zone(WorkingDays::ZONE).strftime("%d/%m/%Y") %>
+    </div>
+    <% if check.causes.any? %>
+      <div class="quality-round-causes">
+        <% check.causes.each do |key| %>
+          <% cause = QualityCause.cq(key) %>
+          <span class="quality-cause-pill"><i class="fa-solid <%= cause&.icon %>" aria-hidden="true"></i> <%= cause&.label || key %></span>
+        <% end %>
+      </div>
+    <% end %>
+    <% unless check.round == QualityCheck::ARBITRATION_ROUND %>
+      <div class="quality-round-label"><i class="fa-solid fa-microphone" aria-hidden="true"></i> Note de l'opérateur</div>
+      <div class="quality-round-text <%= 'is-empty' if check.operator_comment.blank? %>"><%= check.operator_comment.presence || "Aucun commentaire" %></div>
+    <% end %>
+    <div class="quality-round-label"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Commentaire du contrôle qualité</div>
+    <div class="quality-round-text <%= 'is-empty' if check.cq_comment.blank? %>"><%= check.cq_comment.presence || "Aucun commentaire" %></div>
+  </div>
+<% end %>

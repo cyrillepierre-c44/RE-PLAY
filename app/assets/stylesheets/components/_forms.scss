@@ -534,3 +534,12 @@
   line-height: 1.5;
   white-space: pre-wrap;
 }
+
+// Onglet « À reprendre » (CQ refusés) : orange, rouge si un jouet est en retard.
+.filter-tabs .filter-tab.filter-tab-rework {
+  .filter-count { background: rgba(#F97316, 0.18); color: #9A4A0B; }
+  &.active { background: #F97316; border-color: #F97316; color: #1A2B4A; box-shadow: 0 2px 8px rgba(#F97316, 0.35); }
+  &.filter-tab-rework--late { border-color: $danger-red; }
+  &.filter-tab-rework--late .filter-count { background: $danger-red; color: $white; }
+  &.filter-tab-rework--late.active { background: $danger-red; color: $white; box-shadow: 0 2px 8px rgba($danger-red, 0.35); }
+}

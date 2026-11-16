@@ -9,6 +9,18 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+  protected
+
+  # Un opérateur qui prend son poste traite d'abord ses revalorisations : s'il a
+  # des jouets « CQ refusé » à sa charge, il arrive directement dessus.
+  def after_sign_in_path_for(resource)
+    if resource.is_a?(User) && !resource.admin? && Toy.review.held_by(resource).exists?
+      toys_path(filter: "review")
+    else
+      super
+    end
+  end
+
   private
 
   def user_not_authorized

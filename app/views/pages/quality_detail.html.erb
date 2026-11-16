@@ -1,0 +1,65 @@
+<%# Détail d'un chiffre du volet qualité — chargé dans le turbo-frame de /dashboard. %>
+<% short = ->(user) { user&.email&.split("@")&.first || "?" } %>
+<% fmt = ->(time) { time.in_time_zone(WorkingDays::ZONE).strftime("%d/%m") } %>
+<turbo-frame id="quality-detail" class="d-block mb-3">
+  <div class="detail-card p-4 quality-card quality-detail">
+    <div class="d-flex justify-content-between align-items-baseline flex-wrap gap-2">
+      <h3 class="quality-h3 mb-0"><i class="fa-solid fa-list me-2 text-coral" aria-hidden="true"></i><%= @title %></h3>
+      <span class="quality-hint"><%= @rows.size %> ligne<%= 's' if @rows.size > 1 %></span>
+    </div>
+    <% if @rows.empty? %>
+      <p class="quality-empty mt-2 mb-0">Rien à afficher pour cette sélection.</p>
+    <% elsif @rows.first.is_a?(Toy) %>
+      <div class="table-responsive mt-2">
+        <table class="quality-table">
+          <thead><tr><th scope="col">Jouet</th><th scope="col">Caisse</th><th scope="col">Jeté par</th><th scope="col">Le</th><th scope="col">Causes</th><th scope="col">Note de l'opérateur</th></tr></thead>
+          <tbody>
+            <% @rows.each do |toy| %>
+              <tr>
+                <th scope="row"><%= link_to "J#{toy.id}", toy_path(toy), data: { turbo_frame: "_top" } %></th>
+                <td><%= link_to "C#{toy.box_id}", box_path(toy.box_id), data: { turbo_frame: "_top" } %></td>
+                <td><%= short.(toy.operator) %></td>
+                <td><%= fmt.(toy.created_at) %></td>
+                <td><%= toy.discard_cause_labels.join(", ") %></td>
+                <td class="<%= 'quality-none' if toy.operator_note.blank? %>"><%= toy.operator_note.presence || "Aucun commentaire" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% else %>
+      <div class="table-responsive mt-2">
+        <table class="quality-table">
+          <thead><tr><th scope="col">Jouet</th><th scope="col">Opérateur</th><th scope="col">Refusé le</th><th scope="col">Causes</th><th scope="col">Commentaire CQ</th><th scope="col">Réponse de l'opérateur</th><th scope="col">État</th></tr></thead>
+          <tbody>
+            <% red_after = @quality.setting.red_after_days %>
+            <% @rows.each do |check| %>
+              <% toy = check.toy %>
+              <% following = toy.quality_checks.select { |c| c.id > check.id }.min_by(&:id) %>
+              <% answer = following ? following.operator_comment : (toy.pending? ? toy.operator_note : nil) %>
+              <tr>
+                <th scope="row"><%= link_to "J#{toy.id}", toy_path(toy), data: { turbo_frame: "_top" } %></th>
+                <td><%= short.(toy.operator) %><% if toy.assignee %><br><small>confié à <%= short.(toy.assignee) %></small><% end %></td>
+                <td><%= fmt.(check.created_at) %><br><small><%= check.round == 1 ? "1er" : "2e" %> tour</small></td>
+                <td><%= check.cause_labels.join(", ") %></td>
+                <td class="<%= 'quality-none' if check.cq_comment.blank? %>"><%= check.cq_comment.presence || "Aucun commentaire" %></td>
+                <td class="<%= 'quality-none' if answer.blank? %>"><%= answer.presence || "Aucun commentaire" %></td>
+                <td>
+                  <% if check.reworked_at %>
+                    Retraité en <%= WorkingDays.elapsed(check.created_at, check.reworked_at) %> j
+                  <% elsif check.resolved_at %>
+                    <%= toy.arbitrage? ? "À arbitrer" : "Close" %>
+                  <% elsif toy.arbitrage? %>
+                    À arbitrer
+                  <% else %>
+                    <span class="<%= 'quality-late' if check.late?(red_after) %>">Ouverte · <%= check.working_days_open %> j</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  </div>
+</turbo-frame>

@@ -1,5 +1,5 @@
 class ToysController < ApplicationController
-  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore toggle_sold refresh_price]
+  before_action :set_toy, only: %i[show edit update destroy verify confirm_verify restore toggle_sold refresh_price reassign]
   before_action :box_find, only: %i[new create quick_discard]
   helper_method :new_flow?
 
@@ -14,7 +14,7 @@ class ToysController < ApplicationController
   def index
     # includes/with_attached_photo : la vue lit toy.category et toy.photo pour
     # chaque carte — sans préchargement c'est 3 requêtes par jouet (N+1).
-    base_scope = policy_scope(Toy).not_draft.includes(:category).with_attached_photo
+    base_scope = policy_scope(Toy).not_draft.includes(:category, :quality_checks).with_attached_photo
     base_scope = base_scope.where(category_id: params[:category_id]) if params[:category_id].present?
     if params[:q].present?
       num = params[:q].to_s.gsub(/\D/, '')
@@ -32,6 +32,13 @@ class ToysController < ApplicationController
       @toys = base_scope.validated.sold.order(created_at: :desc)
     elsif params[:filter] == "deleted"
       @toys = base_scope.deleted.order(created_at: :desc)
+    elsif params[:filter] == "review"
+      # « À reprendre » : les CQ refusés dont l'utilisateur a la charge (tous pour
+      # l'admin), le plus ancien refus en premier (FIFO).
+      scope = current_user.admin? ? base_scope.review : base_scope.review.held_by(current_user)
+      @toys = scope.sort_by { |toy| toy.open_check&.created_at || toy.updated_at }
+    elsif %w[arbitrage vrac don].include?(params[:filter])
+      @toys = base_scope.where(status: params[:filter]).order(updated_at: :asc)
     else
       @toys = base_scope.waiting.order(
         Arel.sql("CASE WHEN toys.status = 'review' THEN 0 ELSE 1 END"),
@@ -47,6 +54,10 @@ class ToysController < ApplicationController
     @count_scope = params[:category_id].present? ? own.where(category_id: params[:category_id]) : own
     @categories = Category.for_toys.order(:name)
     @drafts = policy_scope(Toy).draft.order(:id)
+    rework = current_user.admin? ? Toy.review : Toy.review.held_by(current_user)
+    @rework_count = rework.count
+    red_after = QualitySetting.current.red_after_days
+    @rework_late = rework.includes(:quality_checks).any? { |toy| toy.open_check&.late?(red_after) }
     @missing_price_count = current_user.admin? ? Toy.waiting.where(price: nil).joins(:photo_attachment).count : 0
     session.delete(:price_refresh_total) # ancien format
     refresh = session[:price_refresh]
@@ -73,41 +84,28 @@ class ToysController < ApplicationController
   end
 
   def quick_discard
+    # Jet à l'entrée de la VALO : la ou les causes disent pourquoi (cf. QualityCause::DISCARD).
+    # Celles marquées `tri` comptent contre le Bon du 1er coup du TRI.
     c = params[:toy] || {}
-    @toy = Toy.new(
-      box: @box, category: @box.toy_category, status: :suppr,
-      french: c[:french].to_s == "1",
-      ce_mark: c[:ce_mark].to_s == "1",
-      safe: c[:safe].to_s == "1",
-      clean: c[:clean].to_s == "1",
-      complete: c[:complete].to_s == "1",
-      playable: c[:playable].to_s == "1",
-      operator_note: c[:operator_note].presence
-    )
+    causes = Array(c[:discard_causes]).compact_blank & QualityCause::DISCARD_KEYS
+    # Destination choisie par l'opérateur : rebut (par défaut), don (ex. Armée du Salut) ou vrac.
+    status = DISCARD_DESTINATIONS.fetch(c[:destination].to_s, "suppr")
+    @toy = Toy.new(box: @box, category: @box.toy_category, status: status, operator: current_user,
+                   discard_causes: causes, operator_note: c[:operator_note].presence)
     authorize @toy
+    return redirect_to box_path(@box), alert: "Choisissez au moins une raison pour jeter le jouet.", status: :see_other if causes.empty?
+
     @toy.save(validate: false)
     Action.create!(user: current_user, actionable: @toy,
-                   content: "#{current_user.email} a jeté directement le jouet J#{@toy.id}")
-    {
-      french: "NC:français",
-      ce_mark: "NC:CE/marque",
-      safe: "NC:sécurité",
-      clean: "NC:propreté",
-      complete: "NC:complet",
-      playable: "NC:jouable"
-    }.each do |field, nc_key|
-      unless @toy.send(field)
-        Action.create!(user: current_user, actionable: @toy,
-                       content: "[#{nc_key}] #{current_user.email} a rejeté #{nc_key.sub('NC:', '')} du jouet J#{@toy.id}")
-      end
-    end
-    redirect_to box_path(@box), notice: "Jouet jeté.", status: :see_other
+                   content: "#{current_user.email} a écarté directement le jouet J#{@toy.id} " \
+                            "(#{DISCARD_LABELS[status]}) : #{@toy.discard_cause_labels.join(', ')}")
+    redirect_to box_path(@box), notice: "Jouet J#{@toy.id} : #{DISCARD_LABELS[status]}.", status: :see_other
   end
 
   def new
     # Brouillon : le numéro J est réservé tout de suite, la fiche ne devient un vrai
     # jouet « en attente » qu'au premier enregistrement du formulaire (cf. Draftable).
-    @toy = Toy.new(box: @box, category: @box.toy_category, status: :draft)
+    @toy = Toy.new(box: @box, category: @box.toy_category, status: :draft, operator: current_user)
     authorize @toy
     @toy.save(validate: false)
     Action.create!(user: current_user, actionable: @toy,
@@ -120,6 +118,7 @@ class ToysController < ApplicationController
     authorize @toy
     authorize @box
     @toy.box = @box
+    @toy.operator ||= current_user
 
     if @toy.save
       PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean,
@@ -139,19 +138,26 @@ class ToysController < ApplicationController
   def update
     authorize @toy
     was_draft = @toy.draft?
-    @toy.status = :pending if was_draft
+    # Enregistrer un jouet « CQ refusé », c'est le retraiter : il repart en attente
+    # de contrôle (2e tour) et le délai de la non-conformité s'arrête là.
+    reworked = @toy.review? ? @toy.open_check : nil
+    @toy.status = :pending if was_draft || @toy.review?
     if @toy.update(toy_params.merge(price: nil))
+      reworked&.update!(reworked_at: Time.current)
       PriceiaJob.perform_later(@toy.id, french: @toy.french, ce_mark: @toy.ce_mark, safe: @toy.safe, clean: @toy.clean,
                                         complete: @toy.complete, playable: @toy.playable)
       Action.create!(user: current_user, actionable: @toy,
-                     content: "#{current_user.email} a modifié le jouet J#{@toy.id}")
-      if params[:from_new] == "1"
+                     content: "#{current_user.email} a #{reworked ? 'retraité' : 'modifié'} le jouet J#{@toy.id}")
+      if reworked
+        redirect_to toys_path(filter: "review"), notice: "Jouet J#{@toy.id} renvoyé au contrôle qualité.", status: :see_other
+      elsif params[:from_new] == "1"
         redirect_to toy_path(@toy, back_box: @toy.box_id), notice: "Jouet créé avec succès.", status: :see_other
       else
         redirect_to toy_path(@toy), status: :see_other, notice: "modifié avec succès"
       end
     else
       @toy.status = :draft if was_draft
+      @toy.status = :review if reworked
       @box = @toy.box
       render :edit, status: :unprocessable_entity
     end
@@ -249,29 +255,56 @@ class ToysController < ApplicationController
   def verify
     @box = @toy.box
     authorize @toy
+    @control = QualityControl.new(@toy, checker: current_user)
   end
 
   def confirm_verify
     authorize @toy
-    new_status = params[:status]
+    @control = QualityControl.new(@toy, checker: current_user)
+    was_arbitrage = @toy.arbitrage?
+    cq = params[:quality] || {}
 
-    if @toy.update(verify_params.merge(status: new_status))
-      Action.create!(
-        user: current_user,
-        actionable: @toy,
-        content: "#{current_user.email} a passé le jouet J#{@toy.id} en statut: #{new_status}"
-      )
-      log_nonconformities
-      if new_status == "market"
-        redirect_to toys_path, notice: "Mise en vente de l'objet"
-      else
-        redirect_to toys_path, status: :see_other, notice: "Statut mis à jour : #{new_status}"
-      end
+    attributes = verify_params
+    attributes.delete(:location) if attributes[:location].blank? # champ vidé à l'affichage tant qu'il n'est pas fixé
+
+    if @control.decide(outcome: params[:status].to_s, causes: cq[:causes], comment: cq[:comment],
+                       attributes: attributes)
+      Action.create!(user: current_user, actionable: @toy,
+                     content: "#{current_user.email} a passé le jouet J#{@toy.id} en statut: #{@toy.status}")
+      log_quality_decision
+      back = was_arbitrage ? toys_path(filter: "arbitrage") : toys_path
+      redirect_to back, status: :see_other, notice: QUALITY_NOTICES.fetch(@toy.status, "Statut mis à jour.")
     else
+      @toy.restore_attributes(%i[status operator_note])
+      @quality_input = { causes: Array(cq[:causes]), comment: cq[:comment] }
       @box = @toy.box
       render :verify, status: :unprocessable_entity
     end
   end
+
+  # Un admin confie le jouet à un autre opérateur (opérateur absent). La
+  # non-conformité reste comptée au valorisateur d'origine.
+  def reassign
+    authorize @toy
+    user = User.find(params[:user_id])
+    @toy.update_columns(assignee_id: user.id == @toy.operator_id ? nil : user.id, updated_at: Time.current)
+    Action.create!(user: current_user, actionable: @toy,
+                   content: "#{current_user.email} a confié le jouet J#{@toy.id} à #{user.email}")
+    redirect_back fallback_location: toy_path(@toy), notice: "Jouet J#{@toy.id} confié à #{user.email}.", status: :see_other
+  end
+
+  # « Écarter directement » un jouet à l'entrée de la VALO : destination → statut.
+  DISCARD_DESTINATIONS = { "rebut" => "suppr", "don" => "don", "vrac" => "vrac" }.freeze
+  DISCARD_LABELS = { "suppr" => "rebut", "don" => "don", "vrac" => "vrac" }.freeze
+
+  QUALITY_NOTICES = {
+    "market" => "Mise en vente de l'objet",
+    "review" => "Jouet renvoyé en revalorisation.",
+    "arbitrage" => "2e refus : le jouet est à arbitrer.",
+    "vrac" => "Jouet envoyé au vrac.",
+    "don" => "Jouet envoyé aux dons.",
+    "suppr" => "Jouet jeté."
+  }.freeze
 
   private
 
@@ -282,32 +315,15 @@ class ToysController < ApplicationController
     params[:new].present? || params[:from_new] == "1" || @toy&.draft?
   end
 
-  def log_nonconformities
-    bool_nc = {
-      french: "NC:français",
-      ce_mark: "NC:CE/marque",
-      safe: "NC:sécurité",
-      clean: "NC:propreté",
-      complete: "NC:complet",
-      playable: "NC:jouable"
-    }
-    if params[:status] == "review"
-      # Revaloriser : tous les critères actuellement à false sont des motifs de NC
-      bool_nc.each do |attr, nc_key|
-        next if @toy.send(attr)
+  def log_quality_decision
+    check = @control.check
+    return unless check
 
-        Action.create!(user: current_user, actionable: @toy,
-                       content: "[#{nc_key}] #{current_user.email} a renvoyé #{nc_key.sub('NC:', '')} du jouet J#{@toy.id}")
-      end
-    else
-      # Mise en vente : on logue uniquement les critères corrigés (changés)
-      bool_nc.merge(category_id: "NC:catégorie").each do |attr, nc_key|
-        next unless @toy.saved_change_to_attribute?(attr)
-
-        Action.create!(user: current_user, actionable: @toy,
-                       content: "[#{nc_key}] #{current_user.email} a corrigé #{nc_key.sub('NC:', '')} du jouet J#{@toy.id}")
-      end
-    end
+    detail = [check.cause_labels.join(", ").presence, check.cq_comment].compact.join(" — ")
+    verb = check.refused? ? "a refusé au CQ" : "a contrôlé"
+    label = "#{verb} le jouet J#{@toy.id} (tour #{check.round})"
+    Action.create!(user: current_user, actionable: @toy,
+                   content: "[CQ] #{current_user.email} #{label}#{" : #{detail}" if detail.present?}".first(1000))
   end
 
   def box_find
@@ -327,7 +343,8 @@ class ToysController < ApplicationController
   end
 
   def verify_params
-    params.require(:toy).permit(:category_id, :french, :ce_mark, :safe, :clean, :barcode, :complete, :playable, :photo, :price, :location,
-                                :status, :admin_comment)
+    # :status exclu — la décision passe par QualityControl (bouton `status` hors `toy`).
+    params.require(:toy).permit(:category_id, :french, :ce_mark, :safe, :clean, :barcode, :complete, :playable, :photo,
+                                :price, :location)
   end
 end

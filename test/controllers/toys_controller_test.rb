@@ -103,7 +103,7 @@ class ToysControllerTest < ActionDispatch::IntegrationTest
     sign_in @user
     box = create_box(category: mixed_category)
     assert_difference("Toy.count", 1) do
-      post quick_discard_box_toys_path(box), params: { toy: { clean: "1" } }
+      post quick_discard_box_toys_path(box), params: { toy: { discard_causes: %w[trop_abime] } }
     end
     assert_nil Toy.last.category
     assert Toy.last.suppr?

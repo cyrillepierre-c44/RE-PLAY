@@ -58,8 +58,25 @@ Key authorization rules:
 0. **Brouillon (`status: draft`, concern `Draftable`, jouets *et* caisses)** — the J/C number is reserved as soon as creation starts (`toys#new` saves the toy; `boxes#create` with `new_flow`), because several people label toys/boxes in parallel. The record stays `draft` until the form is saved once (`toys#update` / `boxes#update` → `pending`). A draft counts nowhere (`not_draft` in lists, dashboard, box deletion check, `toggle_empty?`), has no show page (redirects to `edit?new=true`), and is only shown to its creator and admins in the dashed « À terminer » strip (`shared/_drafts`) with resume + trash. The in-app back arrow of the creation form is a `DELETE` that hard-deletes the draft and its actions (`discard_draft!`, "fausse manip" — the number is lost, gaps in numbering are expected); browser back / closed tab leaves the draft, and `PurgeDraftsJob` (`config/recurring.yml`, daily) removes drafts older than 7 days. Decided with Cyrille on 12/11/2026: no confirmation screen on the back arrow — to keep a number, press ✓. Toys/boxes abandoned before that date were left as `pending` (not converted).
 1. Once saved, the toy is `pending` with `location: "En attente de validation"` (scope: `Toy.waiting`)
 2. After create/update, a `PriceiaJob` calls the Claude API (Haiku 5.5) to suggest a price based on a French prompt + toy photo
-3. Admin verifies the toy via `GET /toys/:id/verify` → `PATCH /toys/:id/confirm_verify`, which updates location and moves it to `Toy.validated` scope
+3. Admin verifies the toy via `GET /toys/:id/verify` → `PATCH /toys/:id/confirm_verify` (see **Suivi qualité** below), which on acceptance sets the location and moves it to `Toy.validated` scope
 4. Toys index supports `?filter=validated` to toggle between waiting and validated views
+
+### Suivi qualité (CQ) — règles décidées avec Enjoué le 16/11/2026
+
+Vocabulaire du client : **TRI** = atelier qui remplit les caisses (le créateur de la caisse répond de son contenu) ; **VALO** = valorisation d'un jouet par un opérateur ; **CQ** = contrôle qualité par un admin ; **Bon du 1er coup** = l'inverse du taux de non-conformité. Opérateurs et CQ travaillent sur smartphone.
+
+- **`QualityControl`** (PORO) applique chaque décision du CQ et crée un **`QualityCheck`** (une ligne par décision : `round`, `decision`, `causes[]`, `cq_comment`, `operator_comment` figé, `operator`, `checker`, `reworked_at`, `resolved_at`). Un contrôle `refused` est une non-conformité.
+- **Tours** : 1er tour → `market`, ou refus → statut `review` (« CQ refusé »). L'opérateur retraite en enregistrant le formulaire (`toys#update`) : le jouet repasse `pending`, `reworked_at` est posé. 2e tour → `market`, ou 2e refus → statut **`arbitrage`** (« À arbitrer ») : la boucle s'arrête, un admin choisit la destination. Pas de 3e tour.
+- **Destinations finales** : `market` (prêt), vendu (`sold`), `suppr` (rebut), **`vrac`** (pièces pour compléter d'autres jouets), **`don`**. Vrac/don/rebut sont décidables dès le 1er tour.
+- **Commentaire CQ obligatoire** à chaque refus et pour tout ce qui n'est pas une mise en vente au 1er tour (2e tour même validé, arbitrage, vrac, don, rebut). Un refus exige au moins une cause.
+- **Causes** : `QualityCause::CQ` (11 causes, unifiées entre le tableur du client et les anciens critères) et `QualityCause::DISCARD` (13 causes du « jeter directement », stockées dans `toys.discard_causes`). `tri: true` = le TRI aurait dû écarter le jouet (affiche « Objets non acceptés au TRI ») → compte contre le Bon du 1er coup du TRI ; `tri: false` (incomplet, sale, langue, panne non électronique) = le TRI ne le vérifie pas. Les clés sont en base : ne pas les renommer. Sélecteur à pictogrammes + légende dépliable : `shared/_cause_chips`.
+- **Commentaires par tour** : les tours passés s'affichent grisés et en lecture seule (`toys/_quality_history`) ; au refus, `toy.operator_note` est vidé pour libérer la note du tour suivant. Une zone vide en lecture seule affiche « Aucun commentaire », un champ à remplir a un placeholder commençant par « Vide — ».
+- **Délais en jours ouvrés** (`WorkingDays`, lundi–vendredi, fériés ignorés). Bandeau « CQ refusé » orange, **rouge** au-delà de `QualitySetting.current.red_after_days` (3 par défaut) : `cq_banner`. Liste « À reprendre » (`/toys?filter=review`) triée du plus ancien refus au plus récent (FIFO) ; un opérateur qui se connecte avec des CQ refusés à sa charge y arrive directement (`after_sign_in_path_for`).
+- **Responsable d'un jouet** : `toys.operator_id` = valorisateur (créateur), à qui la non-conformité est comptée ; `toys.assignee_id` = personne à qui un admin a **confié** le jouet (opérateur absent, `PATCH /toys/:id/reassign`, admins seulement) — elle y a alors accès (`ToyPolicy#involved?`) et le voit dans « À reprendre » (`Toy.held_by`).
+- **Objectifs** réglables : `QualitySetting` (ligne unique : `target_valo`, `target_tri`, `red_after_days`).
+- **Tableau de bord** (`/dashboard`, admins) : volet qualité calculé par `QualityDashboard` (définitions des indicateurs en tête du fichier), rendu par `pages/_quality`. Bandeau « En ce moment » indépendant de la période ; Bon du 1er coup VALO et TRI avec objectif ; causes, opérateurs, matrice opérateur × cause, TRI par créateur de caisse. Tout chiffre cliquable charge `GET /dashboard/quality_detail` dans le turbo-frame `quality-detail` (jouets + commentaires CQ et opérateur). Objectifs : `PATCH /quality_setting`. Impression/PDF : `@media print` dans `pages/_dashboard.scss` (sauts de page à affiner avec le client). Périodes : `today`, `prev_day` (« Hier » = jour ouvré précédent), `last_week`, `four_weeks`, `month`, `custom`.
+- **Historique** : `bin/rails quality:backfill` (`DRY_RUN=1` pour un essai) reconstruit les `QualityCheck` d'avant le 16/11/2026 depuis le journal des actions — causes approximatives, pas de date de retraitement. À lancer une fois après la mise en production ; sans danger à relancer.
+- `admin_comment` ne sert plus au CQ (ancien commentaire affiché seulement si le jouet n'a aucun `QualityCheck`) ; il porte toujours la note « prix IA impossible ».
 
 ### AI Pricing
 
@@ -87,6 +104,7 @@ root → pages#home
 /toys                → ToysController  (index, show, edit, update, destroy)
 /toys/:id/verify         GET   → verify form (admin only)
 /toys/:id/confirm_verify PATCH → save verification result (admin only)
+/toys/:id/reassign       PATCH → confier le jouet à un autre opérateur (admin only)
 /about_us, /onboarding, /enjoue → PagesController (Pundit skipped)
 /projet                  GET   → pages#projet (admin only)
 /projet_leviers/:id      PATCH → projet_leviers#update (admin only)

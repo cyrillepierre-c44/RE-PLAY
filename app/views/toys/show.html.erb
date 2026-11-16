@@ -48,6 +48,12 @@
         <% elsif @toy.market? %>
           <span class="status-dot status-dot-validated toy-card-status-dot" title="Validé"></span>
           <span class="visually-hidden">Validé</span>
+        <% elsif @toy.review? || @toy.arbitrage? %>
+          <span class="status-dot status-dot-review toy-card-status-dot" title="Contrôle qualité refusé"></span>
+          <%= cq_banner(@toy) %>
+        <% elsif @toy.vrac? || @toy.don? %>
+          <span class="status-dot status-dot-empty toy-card-status-dot" title="<%= @toy.vrac? ? 'Vrac' : 'Don' %>"></span>
+          <div class="toy-card-sold-badge"><i class="fa-solid <%= @toy.vrac? ? 'fa-puzzle-piece' : 'fa-hand-holding-heart' %>"></i> <%= @toy.vrac? ? 'Vrac' : 'Don' %></div>
         <% else %>
           <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente"></span>
           <span class="visually-hidden">En attente</span>
@@ -78,6 +84,21 @@
           </div>
         </div>
 
+        <%# Tours de contrôle qualité passés %>
+        <%= render "toys/quality_history", toy: @toy %>
+
+        <% if @toy.discard_causes.any? %>
+          <div class="quality-round quality-round--past mb-2">
+            <div class="quality-round-title"><i class="fa-solid fa-trash-can" aria-hidden="true"></i> Écarté à l'entrée de la VALO</div>
+            <div class="quality-round-causes">
+              <% @toy.discard_causes.each do |key| %>
+                <% cause = QualityCause.discard(key) %>
+                <span class="quality-cause-pill"><i class="fa-solid <%= cause&.icon %>" aria-hidden="true"></i> <%= cause&.label || key %></span>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
         <%# Note vocale opérateur %>
         <% if @toy.operator_note.present? %>
           <div class="mb-2" style="background:#f0f4ff; padding:0.65rem 0.85rem; border-radius:0.5rem; border-left:3px solid #1A2B4A;">
@@ -89,7 +110,7 @@
         <% end %>
 
         <%# Commentaire qualité admin %>
-        <% if @toy.admin_comment.present? %>
+        <% if @toy.admin_comment.present? && @toy.quality_checks.empty? %>
           <div class="mb-2" style="background:#fff8f0; padding:0.65rem 0.85rem; border-radius:0.5rem; border-left:3px solid #F97316;">
             <div style="font-size:0.7rem; font-weight:700; color:#F97316; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:0.2rem;">
               <i class="fa-solid fa-triangle-exclamation me-1"></i>Commentaire qualité
@@ -157,8 +178,8 @@
                 <i class="fa-solid fa-trash"></i>
               <% end %>
             <% end %>
-          <% elsif @toy.suppr? %>
-            <%# Jouet supprimé %>
+          <% elsif @toy.suppr? || @toy.vrac? || @toy.don? %>
+            <%# Jouet sorti du circuit (rebut, vrac, don) %>
             <% if policy(@toy).restore? %>
               <%= button_to restore_toy_path(@toy), method: :patch, class: "toy-show-btn toy-show-btn-restore", title: "Remettre en valorisation" do %>
                 <i class="fa-solid fa-rotate-left"></i>
@@ -197,6 +218,8 @@
             <% end %>
           <% end %>
         </div>
+
+        <%= render "toys/reassign", toy: @toy %>
 
       </div>
     </div>

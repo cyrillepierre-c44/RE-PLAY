@@ -27,6 +27,10 @@ a.toy-card {
 
   .toy-card-photo-wrap {
     position: relative;
+    // Hauteur garantie même si la photo ne charge pas (réseau, photo absente du
+    // stockage) : sinon la zone s'écrase et le bandeau « CQ refusé » recouvre le prix.
+    min-height: 200px;
+    background: linear-gradient(135deg, #FFF4EC, #FFE8D6);
   }
 
   .toy-card-img {
@@ -947,3 +951,103 @@ a.toy-card {
   color: #E63946;
   font-size: 1.05rem;
 }
+
+// ── Suivi qualité : causes, tours de contrôle, réattribution ────────────────
+.toy-card-review-badge--late { background: rgba($danger-red, 0.92); }
+
+.cause-chips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.4rem;
+
+  .cause-chip {
+    min-height: 68px;
+    font-size: 0.78rem;
+    line-height: 1.15;
+    i { font-size: 1.35rem; }
+  }
+
+  // Une cause cochée est un problème : orange, pas le vert des critères respectés.
+  .condition-toggle-input:checked + .cause-chip {
+    background: rgba($coral, 0.16);
+    color: $coral-text;
+    border-color: $coral;
+  }
+}
+
+.cause-legend {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+
+  summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 44px;
+    color: $navy;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  ul { list-style: none; margin: 0.25rem 0 0; padding: 0; display: grid; gap: 0.4rem; }
+  li { display: flex; gap: 0.6rem; align-items: baseline; color: $navy; }
+  li i { width: 1.4rem; text-align: center; color: $coral-text; flex-shrink: 0; }
+}
+
+.quality-round {
+  background: $white;
+  border: 1.5px solid rgba($navy, 0.12);
+  border-radius: 0.9rem;
+  padding: 0.8rem;
+
+  // Tour passé : grisé mais lisible (contraste conservé), non modifiable.
+  &--past { background: #EEF0F3; border-color: transparent; color: #4A5361; }
+}
+
+.quality-round-title {
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+
+.quality-round-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4A5361;
+  margin: 0.4rem 0 0.2rem;
+}
+
+.quality-round-text {
+  background: rgba($navy, 0.06);
+  border-radius: 0.6rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  &.is-empty { font-style: italic; color: #5B6472; }
+}
+
+.quality-round-causes { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.quality-cause-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba($navy, 0.1);
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.verify-btn.verify-btn-vrac,
+.verify-btn.verify-btn-don { background: rgba($sky, 0.2); color: darken($sky, 30%); }
+
+.reassign-box {
+  border-top: 1px dashed rgba($navy, 0.2);
+  padding-top: 0.75rem;
+}
+.reassign-label { display: block; font-size: 0.85rem; font-weight: 700; color: $navy; margin-bottom: 0.35rem; }
+.reassign-note { font-size: 0.8rem; color: #5B6472; margin-top: 0.35rem; }

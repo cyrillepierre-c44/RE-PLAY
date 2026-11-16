@@ -41,7 +41,7 @@ class BoxesController < ApplicationController
 
     # Tout le monde voit toutes les caisses, mais un employé ne voit que les
     # jouets qu'il a créés dedans (l'admin voit tout) — idem pour la timeline.
-    @toys = policy_scope(@box.toys).not_draft
+    @toys = policy_scope(@box.toys).not_draft.includes(:quality_checks)
     @drafts = policy_scope(@box.toys).draft.order(:id)
     @timeline = Action.where(actionable: @box)
                       .or(Action.where(actionable: @toys))

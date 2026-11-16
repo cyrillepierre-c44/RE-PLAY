@@ -15,6 +15,14 @@
           Jouets vendus
         <% elsif params[:filter] == "deleted" %>
           Jouets jetés
+        <% elsif params[:filter] == "review" %>
+          Contrôle qualité refusé : à reprendre en premier
+        <% elsif params[:filter] == "arbitrage" %>
+          Refusés deux fois : destination à décider
+        <% elsif params[:filter] == "vrac" %>
+          Jouets envoyés au vrac
+        <% elsif params[:filter] == "don" %>
+          Jouets donnés
         <% else %>
           Jouets en attente de contrôle qualité
         <% end %>
@@ -52,6 +60,14 @@
   <div class="mb-3">
     <div class="filter-tabs filter-tabs-toys">
       <% f = @active_filter || params[:filter] %>
+      <% if @rework_count.positive? || f == "review" %>
+        <%= link_to toys_path(filter: "review"),
+              class: "filter-tab filter-tab-rework filter-tab-full #{'filter-tab-rework--late' if @rework_late} #{'active' if f == 'review'}" do %>
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          À reprendre
+          <span class="filter-count"><%= @rework_count %></span>
+        <% end %>
+      <% end %>
       <%= link_to toys_path(category_id: params[:category_id]),
             class: "filter-tab filter-tab-waiting filter-tab-full #{'active' if f.blank? || f == 'waiting'}" do %>
         <i class="fa-solid fa-clock"></i>
@@ -76,6 +92,28 @@
           <i class="fa-solid fa-trash-can"></i>
           <span class="tab-label">Jetés</span>
           <span class="filter-count"><%= @count_scope.deleted.count %></span>
+        <% end %>
+      </div>
+      <div class="filter-tabs-sub-row">
+        <% if current_user.admin? %>
+          <%= link_to toys_path(filter: "arbitrage"),
+                class: "filter-tab filter-tab-rework #{'active' if f == 'arbitrage'}" do %>
+            <i class="fa-solid fa-scale-balanced"></i>
+            <span class="tab-label">À arbitrer</span>
+            <span class="filter-count"><%= @count_scope.arbitrage.count %></span>
+          <% end %>
+        <% end %>
+        <%= link_to toys_path(filter: "vrac", category_id: params[:category_id]),
+              class: "filter-tab filter-tab-sold #{'active' if f == 'vrac'}" do %>
+          <i class="fa-solid fa-puzzle-piece"></i>
+          <span class="tab-label">Vrac</span>
+          <span class="filter-count"><%= @count_scope.vrac.count %></span>
+        <% end %>
+        <%= link_to toys_path(filter: "don", category_id: params[:category_id]),
+              class: "filter-tab filter-tab-sold #{'active' if f == 'don'}" do %>
+          <i class="fa-solid fa-hand-holding-heart"></i>
+          <span class="tab-label">Dons</span>
+          <span class="filter-count"><%= @count_scope.don.count %></span>
         <% end %>
       </div>
     </div>
@@ -194,12 +232,12 @@
               <% elsif toy.market? %>
                 <span class="status-dot status-dot-validated toy-card-status-dot" title="Validé"></span>
                 <span class="visually-hidden">Validé</span>
-              <% elsif toy.review? %>
+              <% elsif toy.review? || toy.arbitrage? %>
                 <span class="status-dot status-dot-review toy-card-status-dot" title="Contrôle qualité refusé"></span>
-                <span class="visually-hidden">Contrôle qualité refusé</span>
-                <div class="toy-card-review-badge">
-                  <i class="fa-solid fa-triangle-exclamation"></i> CQ refusé
-                </div>
+                <%= cq_banner(toy) %>
+              <% elsif toy.vrac? || toy.don? %>
+                <span class="status-dot status-dot-empty toy-card-status-dot" title="<%= toy.vrac? ? 'Vrac' : 'Don' %>"></span>
+                <span class="visually-hidden"><%= toy.vrac? ? 'Vrac' : 'Don' %></span>
               <% else %>
                 <span class="status-dot status-dot-waiting toy-card-status-dot" title="En attente de validation"></span>
                 <span class="visually-hidden">En attente de validation</span>
@@ -218,6 +256,12 @@
                   <i class="fa-solid fa-store me-1"></i>
                 <% elsif toy.review? %>
                   <i class="fa-solid fa-triangle-exclamation me-1" style="color:#F97316;"></i>
+                <% elsif toy.arbitrage? %>
+                  <i class="fa-solid fa-scale-balanced me-1" style="color:#F97316;"></i>
+                <% elsif toy.vrac? %>
+                  <i class="fa-solid fa-puzzle-piece me-1"></i>
+                <% elsif toy.don? %>
+                  <i class="fa-solid fa-hand-holding-heart me-1"></i>
                 <% else %>
                   <i class="fa-solid fa-clock me-1"></i>
                 <% end %>

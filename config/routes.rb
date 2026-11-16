@@ -29,6 +29,7 @@ Rails.application.routes.draw do
       patch :restore
       patch :toggle_sold
       post :refresh_price
+      patch :reassign
     end
     collection do
       delete :purge_deleted
@@ -53,7 +54,9 @@ Rails.application.routes.draw do
   get "equipe/loic-laplagne", to: "pages#loic_laplagne", as: :loic_laplagne
 
   get "dashboard/export_csv", to: "pages#export_csv", as: :dashboard_export_csv
+  get "dashboard/quality_detail", to: "pages#quality_detail", as: :dashboard_quality_detail
   get "dashboard", to: "pages#dashboard"
+  resource :quality_setting, only: [:update]
   get "projet", to: "pages#projet"
   resources :projet_leviers, only: [:update]
 

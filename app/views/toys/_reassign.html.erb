@@ -1,0 +1,20 @@
+<%# Admins : confier un jouet non terminé ou refusé à un autre opérateur (opérateur absent). %>
+<% if policy(toy).reassign? && (toy.draft? || toy.pending? || toy.review?) %>
+  <%= form_with url: reassign_toy_path(toy), method: :patch, class: "reassign-box mt-3" do %>
+    <label for="reassign_user_id" class="reassign-label">
+      <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
+      Confier ce jouet à
+    </label>
+    <div class="d-flex gap-2">
+      <%= select_tag :user_id,
+            options_from_collection_for_select(User.where(disabled: false).order(:email), :id, :email, toy.holder&.id),
+            id: "reassign_user_id", class: "form-select verify-select" %>
+      <button type="submit" class="btn btn-primary" aria-label="Confier le jouet">
+        <i class="fa-solid fa-check" aria-hidden="true"></i>
+      </button>
+    </div>
+    <% if toy.assignee %>
+      <div class="reassign-note">Valorisé par <%= toy.operator&.email || "?" %>, confié à <%= toy.assignee.email %>.</div>
+    <% end %>
+  <% end %>
+<% end %>
