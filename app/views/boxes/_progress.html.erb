@@ -1,0 +1,24 @@
+<%# Jauge d'une caisse : jouets sortis / jouets annoncés à sa création.
+    locals : box, out (jouets sortis, tous opérateurs confondus), compact (carte de la liste) %>
+<% compact = local_assigns[:compact] %>
+<% if box.nb_toys.to_i.positive? %>
+  <%# Trois états : en cours (orange), compte exact (vert), plus de jouets sortis qu'annoncé (rouge :
+      le nombre annoncé était faux, ou un jouet a été créé dans la mauvaise caisse). %>
+  <% state = out > box.nb_toys ? "over" : (out == box.nb_toys ? "done" : "going") %>
+  <div class="box-progress box-progress--<%= state %> <%= 'box-progress--compact' if compact %>">
+    <div class="box-progress-head">
+      <span><%= toys_icon %> <strong><%= out %></strong> / <%= box.nb_toys %> jouet<%= 's' if box.nb_toys > 1 %></span>
+      <% if state == "done" %>
+        <i class="fa-solid fa-circle-check" aria-hidden="true"></i><span class="visually-hidden">Tous les jouets annoncés sont sortis</span>
+      <% elsif state == "over" %>
+        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i><span class="visually-hidden">Plus de jouets sortis qu'annoncé</span>
+      <% end %>
+    </div>
+    <div class="box-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="<%= box.nb_toys %>"
+         aria-valuenow="<%= [out, box.nb_toys].min %>" aria-label="<%= out %> jouets sortis sur <%= box.nb_toys %>">
+      <div class="box-progress-fill" style="width: <%= [(out * 100.0 / box.nb_toys).round, 100].min %>%;"></div>
+    </div>
+  </div>
+<% elsif !compact || out.positive? %>
+  <span class="box-toy-count"><%= toys_icon %> <%= out %> jouet<%= 's' if out > 1 %> sorti<%= 's' if out > 1 %></span>
+<% end %>

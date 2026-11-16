@@ -43,12 +43,7 @@
               <i class="fa-solid <%= @box.category.icon.presence || 'fa-tag' %>"></i>
               <span><%= truncate(@box.category.name, length: 20) %></span>
             </div>
-            <% if @box.nb_toys.present? %>
-              <div class="toy-show-info-item">
-                <%= toys_icon %>
-                <span><%= @box.nb_toys %> jouet<%= 's' if @box.nb_toys > 1 %></span>
-              </div>
-            <% end %>
+            <%= render "boxes/progress", box: @box, out: @toys_out %>
             <% if @box.electronic? %>
               <div class="toy-show-info-item">
                 <i class="fa-solid fa-microchip" style="color:#FF6B35;"></i>
@@ -106,7 +101,7 @@
     <div class="col-12 col-md-8 col-lg-9">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <h2 class="toy-show-title" style="font-size:1.4rem;">
-          <%= toys_icon(html_class: "me-2") %><%= @toys.size %> jouet<%= 's' if @toys.size > 1 %>
+          <%= toys_icon(html_class: "me-2") %><% if @toys.size == @toys_out %>Jouets de la caisse<% else %>Mes jouets · <%= @toys.size %><% end %>
         </h2>
       </div>
 

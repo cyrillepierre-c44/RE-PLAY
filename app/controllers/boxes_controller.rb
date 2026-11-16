@@ -22,6 +22,8 @@ class BoxesController < ApplicationController
       @boxes = base_scope.active.order(created_at: :desc)
     end
     @boxes = paginate(@boxes) unless params[:q].present?
+    # Jauge des cartes : jouets sortis de chaque caisse affichée, en une requête.
+    @toys_out = Toy.not_draft.where(box_id: @boxes.map(&:id)).group(:box_id).count
     own = if current_user.admin?
             Box
           else
@@ -46,6 +48,9 @@ class BoxesController < ApplicationController
     @toys = policy_scope(@box.toys).not_draft.includes(:quality_checks, :category).with_attached_photo
                                    .order(created_at: :desc).load
     @drafts = policy_scope(@box.toys).draft.order(:id)
+    # Jauge « jouets sortis / jouets annoncés » : tous les jouets sortis de la caisse, par
+    # n'importe qui et quelle que soit leur destination (un employé ne voit que les siens en liste).
+    @toys_out = @box.toys.not_draft.count
     @timeline = Action.where(actionable: @box)
                       .or(Action.where(actionable: @toys))
                       .includes(:user)

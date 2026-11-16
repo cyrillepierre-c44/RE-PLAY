@@ -95,16 +95,21 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_equal 90, QualitySetting.current.target_valo
   end
 
-  test "procédures : l'opérateur ne voit que la sienne, l'admin les trois" do
+  test "procédures : l'opérateur voit Tri et Valorisation, l'admin les quatre" do
     get procedures_path
     assert_redirected_to new_user_session_path
 
     sign_in create_user
     get procedures_path
-    assert_select "a.procedure-card", count: 1
-    get procedure_path("operateur")
+    assert_select "a.procedure-card", count: 2
+    get procedure_path("operateur") # ancien nom de la procédure Valorisation
+    assert_redirected_to procedure_path("valorisation")
+    get procedure_path("valorisation")
     assert_response :success
     assert_select ".procedure-causes li", count: QualityCause::DISCARD.size
+    get procedure_path("tri")
+    assert_response :success
+    assert_select ".procedure-causes li", count: QualityCause::TRI_KEYS.size
     %w[controle-qualite tableau-de-bord].each do |slug|
       get procedure_path(slug)
       assert_redirected_to root_path
@@ -113,8 +118,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
 
     sign_in create_user(admin: true)
     get procedures_path
-    assert_select "a.procedure-card", count: 3
-    %w[operateur controle-qualite tableau-de-bord].each do |slug|
+    assert_select "a.procedure-card", count: 4
+    %w[tri valorisation controle-qualite tableau-de-bord].each do |slug|
       get procedure_path(slug)
       assert_response :success, slug
       assert_select "button", text: "Imprimer en PDF"

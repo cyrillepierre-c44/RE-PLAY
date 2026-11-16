@@ -136,13 +136,8 @@
                   </span>
                 <% end %>
               </div>
-              <% if box.nb_toys.present? %>
-                <span class="box-toy-count" title="<%= box.nb_toys %> jouet<%= 's' if box.nb_toys > 1 %>">
-                  <%= toys_icon %>
-                  <%= box.nb_toys %>
-                </span>
-              <% end %>
             </div>
+            <%= render "boxes/progress", box: box, out: @toys_out[box.id].to_i, compact: true %>
           <% end %>
         </div>
       <% end %>

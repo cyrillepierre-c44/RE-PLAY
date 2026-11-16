@@ -21,8 +21,10 @@ class PagesController < ApplicationController
   # Procédures consultables dans l'appli et imprimables en PDF. `admin: true` =
   # réservée aux administrateurs (contrôle qualité, tableau de bord).
   PROCEDURES = {
-    "operateur" => { title: "Opérateur", icon: "fa-hands-holding-child", admin: false, template: "operateur",
-                     summary: "Reprendre un jouet refusé, écarter un jouet, jouets à terminer." },
+    "tri" => { title: "Tri", icon: "fa-boxes-stacked", admin: false, template: "tri",
+               summary: "Ce qu'on met dans une caisse, la créer, l'étiqueter, la récupérer vide." },
+    "valorisation" => { title: "Valorisation", icon: "fa-hands-holding-child", admin: false, template: "valorisation",
+                        summary: "Reprendre un jouet refusé, écarter un jouet, jouets à terminer." },
     "controle-qualite" => { title: "Contrôle qualité", icon: "fa-magnifying-glass", admin: true, template: "controle_qualite",
                             summary: "Causes, commentaires, 2e tour, arbitrage, réattribution." },
     "tableau-de-bord" => { title: "Tableau de bord", icon: "fa-chart-bar", admin: true, template: "tableau_de_bord",
@@ -35,6 +37,8 @@ class PagesController < ApplicationController
   end
 
   def procedure
+    return redirect_to(procedure_path("valorisation"), status: :moved_permanently) if params[:slug] == "operateur" # ancien nom
+
     procedure = PROCEDURES[params[:slug]] or raise ActiveRecord::RecordNotFound
     authorize :page, procedure[:admin] ? :dashboard? : :onboarding?
     render "pages/procedures/#{procedure[:template]}"

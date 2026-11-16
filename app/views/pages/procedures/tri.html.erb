@@ -1,0 +1,134 @@
+<% content_for :title, "Procédure tri · RE-PLAY" %>
+<% tri_causes = QualityCause::DISCARD.select(&:tri) %>
+<% setting = QualitySetting.current %>
+
+<div class="container py-4 procedure-page">
+  <%= render "pages/procedures/header", title: "Tri : préparer et suivre les caisses", icon: "fa-boxes-stacked",
+        intro: "Je trie les dons, je remplis les caisses pour la valorisation et je les récupère une fois vides. Voici tout le poste, étape par étape." %>
+
+  <section class="procedure-step">
+    <span class="procedure-num">1</span>
+    <div>
+      <h2>Mon rôle au tri</h2>
+      <p>Je prépare des caisses de jouets pour mes collègues de la valorisation. <strong>Je suis responsable de ce que je mets dans ma caisse.</strong></p>
+      <ul class="procedure-list">
+        <li>Je ne garde que les jouets qui peuvent être vendus.</li>
+        <li>Je mets <strong>une seule catégorie</strong> de jouets par caisse.</li>
+        <li>Je crée la caisse dans RE-PLAY et je colle son numéro dessus.</li>
+        <li>Quand la caisse revient vide, je le dis dans RE-PLAY.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">2</span>
+    <div>
+      <h2>Ce que je ne mets pas dans une caisse</h2>
+      <p>Si un de ces jouets arrive à la valorisation, mon collègue l'écarte et <strong>cela compte dans mon résultat</strong> (voir l'étape 8).</p>
+      <%= render "pages/procedures/causes", causes: tri_causes %>
+      <h3>Le détail, par famille</h3>
+      <ul class="procedure-list">
+        <li><strong>Jouets</strong> : sans marquage CE ; publicitaires (McDonald's, Quick, KFC…) ; cassés, recollés, réparés ou mordus ; dangereux (plastique coupant, peinture écaillée, rouille) ; personnalisés (prénom gravé, étiquette cousue) ; faits maison.</li>
+        <li><strong>Jouets électroniques</strong> : ceux qui ne fonctionnent plus, et ceux dont les piles ont coulé ou dont le compartiment à piles est rouillé.</li>
+        <li><strong>Peluches</strong> : déchirées, raccommodées, déformées, trop peu rembourrées, ou qui perdent leurs poils.</li>
+        <li><strong>Puzzles</strong> : plus de 60 pièces (sauf les modèles à grosses pièces, 65 au maximum, et les puzzles neufs sous blister) ; puzzles sans boîte.</li>
+        <li><strong>Livres</strong> : pas pour l'âge visé (revues, BD pour adultes, encyclopédies, dictionnaires, catalogues) ; contenu inapproprié ; pages cornées, déchirées, tachées, écrites au feutre ou couvertes d'autocollants.</li>
+        <li><strong>Autres objets</strong> : sacs d'enfant, décoration, puériculture (poussettes, chaises hautes, transats), jouets d'extérieur trop volumineux, CD sans livre, DVD, cassettes.</li>
+      </ul>
+      <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Les objets refusés peuvent être donnés, par exemple à l'Armée du Salut. Les consoles, jeux vidéo et manettes sont mis de côté pour être testés.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">3</span>
+    <div>
+      <h2>Créer une caisse</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/tri-nouvelle-caisse.jpg", alt: "Écran « Nouvelle caisse » : choix de la catégorie puis flèche pour continuer", loading: "lazy" %>
+        <figcaption>Je choisis la catégorie</figcaption>
+      </figure>
+      <ol class="procedure-list">
+        <li>Dans <strong>Caisses</strong> <i class="fa-solid fa-boxes-stacked" aria-hidden="true"></i>, je touche le bouton <span class="procedure-pill procedure-pill--coral"><i class="fa-solid fa-plus" aria-hidden="true"></i></span>.</li>
+        <li>Je choisis la <strong>catégorie</strong> des jouets de la caisse.</li>
+        <li>Je touche la flèche <i class="fa-solid fa-arrow-right" aria-hidden="true"></i> : RE-PLAY me donne le <strong>numéro</strong> de la caisse.</li>
+      </ol>
+      <p><strong>Grosses pièces</strong> <i class="fa-solid fa-dolly" aria-hidden="true"></i> : c'est la catégorie du roll des jouets encombrants. Elle peut mélanger plusieurs sortes de jouets ; mon collègue choisira la catégorie de chaque jouet.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">4</span>
+    <div>
+      <h2>Étiqueter et compléter la caisse</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/tri-etiquette.jpg", alt: "Numéro de la caisse en grand, à recopier sur l'étiquette, puis « Électronique » et le nombre de jouets", loading: "lazy" %>
+        <figcaption>Le numéro à écrire sur la caisse</figcaption>
+      </figure>
+      <ol class="procedure-list">
+        <li>J'écris le numéro affiché en grand (par exemple <strong>C712</strong>) sur l'étiquette de la caisse.</li>
+        <li>Je touche <strong>Électronique</strong> <i class="fa-solid fa-microchip" aria-hidden="true"></i> seulement si la caisse ne contient que des jouets électroniques.</li>
+        <li>J'écris le <strong>nombre de jouets</strong> que j'ai mis dans la caisse. Il sert à suivre l'avancement.</li>
+        <li>J'enregistre avec le bouton <span class="procedure-pill procedure-pill--coral"><i class="fa-solid fa-check" aria-hidden="true"></i></span>.</li>
+      </ol>
+      <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Tant que je n'ai pas appuyé sur ✓, la caisse n'existe pas pour mes collègues.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">5</span>
+    <div>
+      <h2>Si je me suis trompé</h2>
+      <p><i class="fa-solid fa-circle-arrow-left text-coral" aria-hidden="true"></i> <strong>Flèche retour pendant la création</strong> : la caisse est effacée. Son numéro est perdu, je n'écris donc pas d'étiquette avant d'avoir enregistré.</p>
+      <p><i class="fa-solid fa-hourglass-half text-coral" aria-hidden="true"></i> Si le téléphone s'éteint en cours de route, je retrouve ma caisse en haut de la liste, dans le cadre <strong>« À terminer »</strong> : le crayon pour continuer, la poubelle pour effacer.</p>
+      <p><i class="fa-solid fa-pen text-coral" aria-hidden="true"></i> Sur une caisse enregistrée, le <strong>crayon</strong> permet de corriger la catégorie ou le nombre de jouets.</p>
+      <p><i class="fa-solid fa-trash text-coral" aria-hidden="true"></i> La <strong>poubelle</strong> supprime une caisse, seulement si aucun jouet n'en a été sorti.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">6</span>
+    <div>
+      <h2>Suivre mes caisses</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/tri-liste.jpg", alt: "Liste des caisses : pour chacune, la jauge des jouets sortis sur les jouets annoncés", loading: "lazy" %>
+        <figcaption>La jauge de chaque caisse</figcaption>
+      </figure>
+      <p>Chaque caisse a une <strong>jauge</strong> : les jouets déjà sortis par la valorisation, sur le nombre que j'ai annoncé.</p>
+      <p><span class="procedure-pill procedure-pill--coral">12 / 37</span> La barre orange avance à chaque jouet sorti de la caisse, qu'il soit valorisé ou écarté.</p>
+      <p><span class="procedure-pill"><i class="fa-solid fa-circle-check" aria-hidden="true" style="color:#0B7F68;"></i> 37 / 37</span> La barre passe au vert : tous les jouets annoncés sont sortis.</p>
+      <p><span class="procedure-pill procedure-pill--red"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> 39 / 37</span> La barre passe au <strong>rouge</strong> : il est sorti plus de jouets que je n'en avais annoncé. Je me suis trompé en comptant, ou un jouet a été créé dans la mauvaise caisse.</p>
+      <p>Les trois onglets de la liste : <strong>En cours</strong>, <strong>Vides</strong> et <strong>Jetées</strong>. Je peux aussi chercher une caisse par son numéro.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">7</span>
+    <div>
+      <h2>Récupérer une caisse vide</h2>
+      <figure class="procedure-shot procedure-shot--phone">
+        <%= image_tag "procedures/tri-vide.jpg", alt: "Fiche d'une caisse : la jauge et l'interrupteur caisse pleine / caisse vide", loading: "lazy" %>
+        <figcaption>L'interrupteur plein / vide</figcaption>
+      </figure>
+      <ol class="procedure-list">
+        <li>Je récupère la caisse et je vérifie qu'elle est <strong>vraiment vide</strong>.</li>
+        <li>J'ouvre sa fiche dans RE-PLAY (je touche sa carte, ou je cherche son numéro).</li>
+        <li>Je bascule l'interrupteur de <i class="fa-solid fa-box" aria-hidden="true"></i> vers <i class="fa-solid fa-box-open" aria-hidden="true"></i> : la caisse passe dans l'onglet « Vides ».</li>
+      </ol>
+      <p>C'est moi qui le fais, à la main : RE-PLAY ne marque jamais une caisse vide tout seul, même quand la jauge est pleine.</p>
+      <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Fausse manip ? Je rebascule l'interrupteur, la caisse revient « en cours ». Si la jauge est rouge parce que j'avais mal compté, je corrige le nombre de jouets avec le crayon.</p>
+    </div>
+  </section>
+
+  <section class="procedure-step">
+    <span class="procedure-num">8</span>
+    <div>
+      <h2>Mon résultat : le Bon du 1<sup>er</sup> coup du tri</h2>
+      <p>C'est la part des jouets de mes caisses que la valorisation a pu garder. L'objectif est de <strong><%= setting.target_tri %> %</strong>.</p>
+      <ul class="procedure-list">
+        <li><strong>Ça compte contre le tri</strong> : un jouet écarté à l'entrée de la valorisation pour une des <%= tri_causes.size %> raisons de l'étape 2.</li>
+        <li><strong>Ça ne compte pas</strong> : un jouet écarté parce qu'il est incomplet, trop sale, pas en français ou en panne (hors électronique). Je ne peux pas le voir au tri.</li>
+      </ul>
+      <p>Les responsables suivent ce résultat par personne dans le tableau de bord, à partir de <%= setting.min_sample %> jouets sortis de mes caisses.</p>
+    </div>
+  </section>
+</div>

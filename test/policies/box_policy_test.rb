@@ -47,6 +47,11 @@ class BoxPolicyTest < ActiveSupport::TestCase
     assert BoxPolicy.new(last_creator, @box).toggle_empty?, "le dernier créateur peut corriger une fausse manip"
     assert_not BoxPolicy.new(first_creator, @box).toggle_empty?, "un créateur antérieur ne peut plus"
     assert_not BoxPolicy.new(@stranger, @box).toggle_empty?
+
+    # le TRI : celui qui a créé la caisse la marque vide quand il la récupère
+    sorter = create_user
+    touch(@box, sorter, content: "a créé la caisse")
+    assert BoxPolicy.new(sorter, @box).toggle_empty?
   end
 
   test "toggle_empty : refusé à un non-admin sur une caisse sans jouet" do

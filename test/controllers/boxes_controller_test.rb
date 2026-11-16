@@ -23,6 +23,39 @@ class BoxesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "jauge de progression : jouets sortis sur jouets annoncés, tous opérateurs confondus" do
+    box = Box.create!(category: default_category, status: "pending", nb_toys: 4)
+    create_toy(box: box)                       # celui d'un collègue : invisible en liste, compté dans la jauge
+    create_toy(box: box, status: "suppr")      # écarté : sorti quand même
+    mine = create_toy(box: box)
+    touch(mine, @user)
+    Toy.new(box: box, status: "draft").save(validate: false) # brouillon : pas compté
+    sign_in @user
+    get box_path(box)
+    assert_select ".box-progress-head strong", text: "3"
+    assert_select ".box-progress-head", text: %r{3\s*/ 4 jouets}
+    assert_select "h2", text: /Mes jouets · 1/
+    assert_select ".box-progress-fill[style*='width: 75%']"
+    assert_select "a.toy-card", count: 1
+
+    create_toy(box: box)
+    get box_path(box)
+    assert_select ".box-progress--done .fa-circle-check"
+    assert_select ".box-progress--over", count: 0
+
+    # un jouet de plus qu'annoncé : alerte rouge, plus de coche verte
+    create_toy(box: box)
+    get box_path(box)
+    assert_select ".box-progress--over .fa-triangle-exclamation"
+    assert_select ".box-progress .fa-circle-check", count: 0
+    assert_select ".box-progress-fill[style*='width: 100%']"
+    Toy.where(box: box).last.destroy
+
+    # la jauge figure aussi sur la carte de la caisse, dans la liste
+    get boxes_path
+    assert_select "a.box-card[href*='/boxes/#{box.id}'] .box-progress--compact .box-progress-head", text: %r{4\s*/ 4 jouets}
+  end
+
   test "création d'une caisse" do
     sign_in @user
     assert_difference("Box.count", 1) do

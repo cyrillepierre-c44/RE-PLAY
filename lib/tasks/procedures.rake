@@ -68,6 +68,10 @@ namespace :procedures do
     # ── Jouets mis en scène pour les captures ──────────────────────────────
     main_box = box.call(cat.call("Peluches"), sorters[0], days_ago.call(8))
     mixed_box = box.call(cat.call("Jeux de société 0"), sorters[1], days_ago.call(7))
+    main_box.update_columns(nb_toys: 20)
+    # caisse en cours de création par le TRI (étape « étiqueter »)
+    draft_box = Box.create!(category: cat.call("Jeux de construction"), status: "draft")
+    Action.create!(user: sorters[0], actionable: draft_box, content: "#{sorters[0].email} a créé la caisse C#{draft_box.id}")
     featured = {}
 
     featured[:late] = toy.call(box: main_box, category: cat.call("Peluches"), operator: camille, status: "review", price: 6, clean: false,
@@ -174,8 +178,17 @@ namespace :procedures do
       end
     end
 
+    # Nombre de jouets annoncé cohérent avec ce qui est déjà sorti. Les trois caisses les plus
+    # récentes (en tête de liste) montrent les trois états de la jauge : en cours, complète, dépassée.
+    recent = Box.where.not(id: [main_box.id, draft_box.id]).order(created_at: :desc).to_a
+    recent.each_with_index do |record, index|
+      extra = [6, 0, -1][index] || [0, 0, 2, 5].sample(random: rng)
+      record.update_columns(nb_toys: record.toys.not_draft.count + extra)
+    end
+
     QualitySetting.current
-    manifest = featured.transform_values(&:id).merge(main_box: main_box.id, mixed_box: mixed_box.id, password: password)
+    manifest = featured.transform_values(&:id).merge(main_box: main_box.id, mixed_box: mixed_box.id, draft_box: draft_box.id,
+                                                     password: password)
     File.write(Rails.root.join("tmp/procedures_demo.json"), JSON.pretty_generate(manifest))
     puts "Démo prête : #{Toy.count} jouets, #{Box.count} caisses, #{QualityCheck.count} contrôles. Mot de passe : #{password}"
   end
