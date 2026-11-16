@@ -783,8 +783,9 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
 .quality-trend {
   width: 100%; height: auto;
   .quality-trend-axis { font-size: 12px; fill: $quality-ink; }
-  .quality-trend-target { font-size: 13px; font-weight: 800; fill: $navy; }
-  .quality-trend-value { font-size: 13px; font-weight: 800; fill: $navy; }
+  .quality-trend-target { font-size: 12px; font-weight: 800; fill: $navy; }
+  .quality-trend-value { font-size: 14px; font-weight: 800; fill: $navy; paint-order: stroke; stroke: $white; stroke-width: 4px; stroke-linejoin: round; }
+  a { text-decoration: none; }
   a:hover circle:last-of-type, a:focus circle:last-of-type { r: 8; }
 }
 

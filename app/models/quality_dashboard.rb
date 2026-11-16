@@ -76,12 +76,16 @@ class QualityDashboard
     end
   end
 
-  # Bon du 1er coup des WEEKS dernières semaines (jusqu'à la fin de la période).
+  # Bon du 1er coup des WEEKS dernières semaines COMPLÈTES (jusqu'à la fin de la
+  # période). La semaine en cours n'y figure pas : son taux bouge d'heure en heure
+  # en début de semaine, il ne se compare aux autres qu'une fois la semaine finie.
   def weekly
     @weekly ||= begin
-      last_monday = [range.end, Time.current].min.to_date.beginning_of_week(:monday)
+      reference = [range.end, Time.current].min
+      last_monday = reference.to_date.beginning_of_week(:monday)
+      last_monday -= 1.week if (last_monday + 6).end_of_day > Time.current
       first_monday = last_monday - (WEEKS - 1).weeks
-      checks = QualityCheck.rated.where(round: 1, created_at: first_monday.beginning_of_day..range.end)
+      checks = QualityCheck.rated.where(round: 1, created_at: first_monday.beginning_of_day..(last_monday + 6).end_of_day)
                            .pluck(:created_at, :decision)
       by_week = checks.group_by { |created_at, _| created_at.to_date.beginning_of_week(:monday) }
       (0...WEEKS).map do |i|

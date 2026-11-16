@@ -101,7 +101,20 @@ class QualityDashboardTest < ActiveSupport::TestCase
     q = QualityDashboard.new(@range)
     assert q.reliable?(q.valo_total)
     assert q.operator_rows.sole[:reliable]
-    assert_equal 75, q.weekly.last[:fpy]
+    assert q.weekly.all? { |week| week[:fpy].nil? }, "la semaine en cours n'est pas sur la courbe"
+  end
+
+  test "la courbe s'arrête à la dernière semaine complète" do
+    QualitySetting.current.update!(min_sample: 1)
+    monday = Time.find_zone("Europe/Paris").parse("2026-11-16 09:00")
+    toy = check(@alice, "market")
+    toy.quality_checks.sole.update_columns(created_at: monday - 3.days) # vendredi de la semaine 46
+
+    travel_to monday + 1.day do # mardi de la semaine 47
+      weeks = QualityDashboard.new(monday - 30.days..monday + 2.days).weekly
+      assert_equal "S46", weeks.last[:label]
+      assert_equal 100, weeks.last[:fpy]
+    end
   end
 
   test "sans données, rien ne casse" do

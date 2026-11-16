@@ -120,33 +120,42 @@
     <div class="col-12 col-lg-6">
       <div class="detail-card p-4 h-100 quality-card">
         <h3 class="quality-h3">Bon du 1er coup VALO, semaine par semaine</h3>
-        <p class="quality-sub">Touchez un point pour voir les jouets refusés cette semaine-là.</p>
+        <p class="quality-sub">Les <%= QualityDashboard::WEEKS %> dernières semaines complètes ; la semaine en cours n'y est pas. Pointillé = objectif <%= s.target_valo %> %. Touchez un point pour voir les jouets refusés cette semaine-là.</p>
         <% weeks = q.weekly %>
         <% if weeks.all? { |w| w[:fpy].nil? } %>
           <p class="quality-empty mb-0">Pas assez de contrôles par semaine (moins de <%= s.min_sample %>) sur les <%= QualityDashboard::WEEKS %> dernières semaines.</p>
         <% else %>
-          <% floor = [weeks.filter_map { |w| w[:fpy] }.min, s.target_valo].min >= 55 ? 50 : 0 %>
-          <% x = ->(i) { 60 + i * (480.0 / (weeks.size - 1)) } %>
-          <% y = ->(v) { 180 - (v - floor) * 160.0 / (100 - floor) } %>
-          <svg viewBox="0 0 560 215" class="quality-trend" role="img"
-               aria-label="Bon du premier coup par semaine : <%= weeks.map { |w| "#{w[:label]} #{w[:fpy] ? "#{w[:fpy]} %" : 'aucun contrôle'}" }.join(', ') %>">
-            <% [floor, (floor + 100) / 2, 100].each do |tick| %>
-              <line x1="50" x2="550" y1="<%= y.(tick) %>" y2="<%= y.(tick) %>" stroke="#EEF0F3" stroke-width="1"></line>
-              <text x="42" y="<%= y.(tick) + 4 %>" text-anchor="end" class="quality-trend-axis"><%= tick %> %</text>
+          <%# Échelle resserrée sur les valeurs (elle ne part pas de zéro : c'est une courbe, on lit l'évolution). %>
+          <% low = [weeks.filter_map { |w| w[:fpy] }.min, s.target_valo].min %>
+          <% floor = [((low - 6) / 10.0).floor * 10, 0].max %>
+          <% span = (100 - floor).to_f %>
+          <% x = ->(i) { 70 + i * (470.0 / (weeks.size - 1)) } %>
+          <% y = ->(v) { 190 - (v - floor) * 150.0 / span } %>
+          <svg viewBox="0 0 560 225" class="quality-trend" role="img"
+               aria-label="Bon du premier coup par semaine, objectif <%= s.target_valo %> % : <%= weeks.map { |w| "#{w[:label]} #{w[:fpy] ? "#{w[:fpy]} %" : 'trop peu de contrôles'}" }.join(', ') %>">
+            <% [floor, floor + (span / 2).round, 100].each do |tick| %>
+              <line x1="52" x2="550" y1="<%= y.(tick) %>" y2="<%= y.(tick) %>" stroke="#EEF0F3" stroke-width="1"></line>
+              <% unless (tick - s.target_valo).abs * 150.0 / span < 12 %>
+                <text x="46" y="<%= y.(tick) + 4 %>" text-anchor="end" class="quality-trend-axis"><%= tick %> %</text>
+              <% end %>
             <% end %>
-            <line x1="50" x2="550" y1="<%= y.(s.target_valo) %>" y2="<%= y.(s.target_valo) %>" stroke="#1A2B4A" stroke-width="2" stroke-dasharray="6 5"></line>
-            <text x="550" y="<%= y.(s.target_valo) - 6 %>" text-anchor="end" class="quality-trend-target">Objectif <%= s.target_valo %> %</text>
+            <%# L'objectif : un pointillé, et sa valeur en gras sur l'axe (pas d'étiquette au milieu des points). %>
+            <line x1="52" x2="550" y1="<%= y.(s.target_valo) %>" y2="<%= y.(s.target_valo) %>" stroke="#1A2B4A" stroke-width="1.5" stroke-dasharray="5 5"></line>
+            <text x="46" y="<%= y.(s.target_valo) + 4 %>" text-anchor="end" class="quality-trend-target"><%= s.target_valo %> %</text>
             <polyline fill="none" stroke="#0B7F68" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"
                       points="<%= weeks.each_with_index.filter_map { |w, i| "#{x.(i).round(1)},#{y.(w[:fpy]).round(1)}" if w[:fpy] }.join(' ') %>"></polyline>
             <% weeks.each_with_index do |w, i| %>
-              <text x="<%= x.(i) %>" y="205" text-anchor="middle" class="quality-trend-axis"><%= w[:label] %></text>
+              <text x="<%= x.(i) %>" y="215" text-anchor="middle" class="quality-trend-axis"><%= w[:label] %></text>
               <% next unless w[:fpy] %>
+              <%# Étiquette au-dessus du point ; en dessous seulement si le pointillé de l'objectif passe juste au-dessus. %>
+              <% gap = (y.(w[:fpy]) - y.(s.target_valo)) %>
+              <% below = gap.positive? && gap < 26 %>
               <%# Lien SVG : pris en charge par le contrôleur quality-detail (Turbo ne les intercepte pas). %>
               <a href="<%= detail.(week: w[:monday].iso8601) %>"
                  aria-label="<%= w[:label] %> : <%= w[:fpy] %> %, <%= w[:total] %> jouets contrôlés">
-                <circle cx="<%= x.(i) %>" cy="<%= y.(w[:fpy]) %>" r="16" fill="transparent"></circle>
+                <circle cx="<%= x.(i) %>" cy="<%= y.(w[:fpy]) %>" r="18" fill="transparent"></circle>
                 <circle cx="<%= x.(i) %>" cy="<%= y.(w[:fpy]) %>" r="6" fill="#0B7F68" stroke="#FFFFFF" stroke-width="2"></circle>
-                <text x="<%= x.(i) %>" y="<%= y.(w[:fpy]) + (w[:fpy] > 88 ? 22 : -12) %>" text-anchor="middle" class="quality-trend-value"><%= w[:fpy] %> %</text>
+                <text x="<%= x.(i) %>" y="<%= y.(w[:fpy]) + (below ? 22 : -13) %>" text-anchor="middle" class="quality-trend-value"><%= w[:fpy] %> %</text>
               </a>
             <% end %>
           </svg>
