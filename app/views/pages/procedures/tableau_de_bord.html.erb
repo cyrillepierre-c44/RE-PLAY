@@ -68,6 +68,15 @@
           </tbody>
         </table>
       </div>
+      <p>Un jouet compte dans la période où il a été <strong>contrôlé</strong>, pas celle où il a été valorisé. C'est pourquoi le tableau de bord n'affiche aucun pourcentage en dessous de <%= setting.min_sample %> jouets contrôlés : il indique seulement « 9 sur 10 ».</p>
+      <ul class="procedure-list">
+        <li><strong>Au quotidien</strong> (Aujourd'hui, Hier) : suivez les non-conformités ouvertes, celles en rouge, les refus reçus et les jouets retraités dans la journée, par opérateur.</li>
+        <li><strong>À la semaine et au-delà</strong> : lisez le Bon du 1<sup>er</sup> coup, par atelier et par opérateur.</li>
+      </ul>
+      <figure class="procedure-shot procedure-shot--wide">
+        <%= image_tag "procedures/tb-jour.jpg", alt: "Suivi du jour par opérateur : NC ouvertes, refus reçus, retraités, contrôlés", loading: "lazy" %>
+        <figcaption>Sur « Aujourd'hui » ou « Hier » : le suivi du jour, sans pourcentage</figcaption>
+      </figure>
       <p class="procedure-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Un jouet envoyé directement au vrac, au don ou au rebut par le contrôle n'est compté ni en bon ni en non conforme pour la VALO.</p>
     </div>
   </section>
@@ -78,7 +87,7 @@
       <h2>Les cinq chiffres clés de la VALO</h2>
       <ul class="procedure-list">
         <li><strong>Taux de non-conformité</strong> : part des jouets refusés au 1<sup>er</sup> contrôle.</li>
-        <li><strong>Problèmes détectés</strong> : nombre de causes cochées. Un jouet peut en avoir plusieurs.</li>
+        <li><strong>Problèmes détectés</strong> : nombre de causes cochées. Un jouet peut en avoir plusieurs. Un ancien refus sans cause compte pour un problème « Cause non renseignée ».</li>
         <li><strong>Délai de retraitement</strong> : jours ouvrés entre le refus et le retraitement par l'opérateur.</li>
         <li><strong>Délai total</strong> : jours ouvrés entre le refus et la décision finale.</li>
         <li><strong>Taux de 2<sup>e</sup> refus</strong> : part des revalorisations refusées à nouveau.</li>
@@ -91,16 +100,16 @@
     <div>
       <h2>Du chiffre au jouet</h2>
       <figure class="procedure-shot procedure-shot--wide">
-        <%= image_tag "procedures/tb-detail.jpg", alt: "Courbe par semaine et causes ; après un clic sur une cause, le cadre orange liste les jouets avec les commentaires", loading: "lazy" %>
-        <figcaption>Après un clic sur une cause : le cadre orange</figcaption>
+        <%= image_tag "procedures/tb-detail.jpg", alt: "Courbe par semaine et causes ; Après un clic sur une cause, une fenêtre liste les jouets avec les commentaires", loading: "lazy" %>
+        <figcaption>Après un clic sur une cause</figcaption>
       </figure>
-      <p>Presque tout se touche : un point de la courbe, une barre de cause, le nom d'un opérateur, une case du tableau croisé, une tuile du bandeau. La liste des jouets s'ouvre dans le <strong>cadre orange</strong>, sous les deux premiers graphiques, avec pour chacun :</p>
+      <p>Presque tout se touche : un point de la courbe, une barre de cause, le nom d'un opérateur, une case du tableau croisé, une tuile du bandeau. La liste des jouets s'ouvre dans une <strong>fenêtre par-dessus le tableau de bord</strong> (en plein écran sur téléphone), avec pour chacun :</p>
       <ul class="procedure-list">
         <li>l'opérateur, la date et le tour du refus, les causes ;</li>
         <li>le <strong>commentaire du contrôle</strong> et la <strong>réponse de l'opérateur</strong> ;</li>
         <li>l'état : ouverte depuis combien de jours, retraitée en combien de jours, à arbitrer.</li>
       </ul>
-      <p>Le numéro du jouet mène à sa fiche.</p>
+      <p>Le numéro du jouet mène à sa fiche. La croix ferme la fenêtre : vous retrouvez le tableau de bord à l'endroit où vous étiez.</p>
     </div>
   </section>
 
@@ -138,6 +147,7 @@
           <tbody>
             <tr><th scope="row">Bon du 1<sup>er</sup> coup VALO</th><td><%= setting.target_valo %> %</td><td>Déplace le pointillé de la carte VALO, de la courbe et du tableau par opérateur.</td></tr>
             <tr><th scope="row">Bon du 1<sup>er</sup> coup TRI</th><td><%= setting.target_tri %> %</td><td>Déplace le pointillé de la carte TRI et du tableau par responsable.</td></tr>
+            <tr><th scope="row">Pas de % sous</th><td><%= setting.min_sample %> jouets</td><td>Fixe le nombre de jouets contrôlés à partir duquel un pourcentage s'affiche, pour un atelier, un opérateur ou une semaine.</td></tr>
             <tr><th scope="row">Rouge après</th><td><%= setting.red_after_days %> jours ouvrés</td><td>Change le moment où le bandeau « CQ refusé » passe de l'orange au rouge, pour tout le monde.</td></tr>
           </tbody>
         </table>
@@ -151,7 +161,7 @@
     <div>
       <h2>Imprimer en PDF</h2>
       <p>Choisissez la période, puis touchez <span class="procedure-pill procedure-pill--coral-outline">Imprimer en PDF</span>. Dans la fenêtre d'impression, choisissez « Enregistrer au format PDF ». Les boutons, les réglages et la navigation n'apparaissent pas sur le document.</p>
-      <p>Pour imprimer une liste de jouets, ouvrez d'abord le détail voulu : il sera imprimé avec le reste.</p>
+      <p>Pour imprimer une liste de jouets, ouvrez-la puis touchez « Imprimer cette liste » : seule la liste est imprimée.</p>
     </div>
   </section>
 

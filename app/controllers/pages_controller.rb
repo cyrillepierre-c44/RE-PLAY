@@ -138,6 +138,18 @@ class PagesController < ApplicationController
     render layout: false
   end
 
+  PERIOD_NAMES = { "today" => "Aujourd'hui", "prev_day" => "Dernier jour ouvré", "last_week" => "Semaine dernière",
+                   "four_weeks" => "4 dernières semaines", "month" => "Mois en cours", "custom" => "Dates libres" }.freeze
+
+  # Période en clair, pour l'en-tête des documents imprimés.
+  def period_label
+    range = period_range
+    first, last = [range.begin, range.end].map { |time| time.strftime("%d/%m/%Y") }
+    dates = first == last ? "le #{first}" : "du #{first} au #{last}"
+    "#{PERIOD_NAMES.fetch(@period, 'Période')} · #{dates}"
+  end
+  helper_method :period_label
+
   private
 
   def filtered_actions

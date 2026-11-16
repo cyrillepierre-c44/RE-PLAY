@@ -196,6 +196,26 @@ class ToysControllerTest < ActionDispatch::IntegrationTest
     assert_no_difference("Toy.count") { delete toy_path(draft) }
   end
 
+  test "la liste est paginée : 48 cartes par page, flèches et total" do
+    admin = create_user(admin: true)
+    box = create_box
+    50.times { create_toy(box: box) }
+    sign_in admin
+    get toys_path
+    assert_select "a.toy-card", count: 48
+    assert_select ".list-pager-label", text: %r{1\s*/ 2}
+    assert_select ".list-pager a[aria-label='Page suivante'][href*='page=2']"
+    get toys_path(page: 2)
+    assert_select "a.toy-card", count: 3 # 51 jouets avec celui du setup
+    get toys_path(page: 99)
+    assert_select "a.toy-card", count: 3 # page trop grande : la dernière
+    get toys_path(filter: "validated")
+    assert_select ".list-pager", count: 0
+
+    get box_path(box)
+    assert_select "a.toy-card", count: 50 # la fiche d'une caisse montre tous ses jouets
+  end
+
   test "un employé ne peut pas forcer le statut market via le formulaire" do
     sign_in @user
     patch toy_path(@toy), params: { toy: { status: "market", location: "Rayon A" } }

@@ -4,6 +4,7 @@ namespace :quality do
   # (« … a passé le jouet J12 en statut: review »). Cette tâche en tire un
   # QualityCheck par décision pour que le tableau de bord ait un historique.
   # Sans danger à relancer : un jouet qui a déjà des contrôles est ignoré.
+  # Des refus répétés sans retouche entre-temps sont fusionnés en un seul.
   # Limites de la reconstruction : causes déduites des anciens critères cochés,
   # pas de commentaire CQ par tour (l'ancien commentaire va sur le dernier refus),
   # pas de date de retraitement (l'ancien parcours ne la connaissait pas).
@@ -28,6 +29,17 @@ namespace :quality do
         if decision == "refused"
           causes = actions.select { |a| a.content.start_with?("[NC:") && (a.created_at - action.created_at).abs < 10 }
                           .filter_map { |a| old_causes.find { |key, _| a.content.start_with?("[NC:#{key}") }&.last }.uniq
+        end
+        # Plusieurs refus d'affilée sans que personne n'ait retouché au jouet = un seul
+        # refus (bouton cliqué plusieurs fois) : on complète le précédent au lieu d'ouvrir un tour.
+        previous = checks.last
+        if decision == "refused" && previous&.refused?
+          window = previous.created_at..action.created_at
+          retouched = actions.any? { |a| window.cover?(a.created_at) && a.content.match?(/a (modifié|retraité) le jouet/) }
+          unless retouched
+            previous.causes |= causes
+            next
+          end
         end
         checks.last&.resolved_at ||= action.created_at
         checks << QualityCheck.new(toy: toy, round: [checks.size + 1, 2].min, decision: decision, causes: causes,

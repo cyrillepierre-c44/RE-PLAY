@@ -106,7 +106,7 @@
     <div class="col-12 col-md-8 col-lg-9">
       <div class="d-flex align-items-center justify-content-between mb-3">
         <h2 class="toy-show-title" style="font-size:1.4rem;">
-          <%= toys_icon(html_class: "me-2") %><%= @toys.count %> jouet<%= 's' if @toys.count > 1 %>
+          <%= toys_icon(html_class: "me-2") %><%= @toys.size %> jouet<%= 's' if @toys.size > 1 %>
         </h2>
       </div>
 
@@ -114,7 +114,7 @@
 
       <% unless @toys.empty? %>
         <div class="row g-3">
-          <% @toys.order(created_at: :desc).each do |toy| %>
+          <% @toys.each do |toy| %>
             <div class="col-12 col-sm-6 col-xl-4">
               <%= link_to toy_path(toy), class: "toy-card d-block text-decoration-none #{'toy-card--sold' if toy.sold?}" do %>
                 <div class="toy-card-photo-wrap">

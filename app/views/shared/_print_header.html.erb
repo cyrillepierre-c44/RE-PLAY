@@ -1,0 +1,9 @@
+<%# Bandeau d'en-tête des documents imprimés (invisible à l'écran). locals : title, subtitle %>
+<div class="print-header" aria-hidden="true">
+  <span class="print-header-brand">RE-PLAY</span>
+  <span class="print-header-titles">
+    <strong><%= title %></strong>
+    <% if local_assigns[:subtitle].present? %><span><%= subtitle %></span><% end %>
+  </span>
+  <span class="print-header-date">Imprimé le <%= Time.current.in_time_zone(WorkingDays::ZONE).strftime("%d/%m/%Y à %H h %M") %></span>
+</div>

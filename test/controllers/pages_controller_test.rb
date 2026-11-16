@@ -46,6 +46,16 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
       get dashboard_path(period: period)
       assert_response :success, "période #{period}"
     end
+    # 2 jouets contrôlés : sous le seuil, pas de pourcentage ; sur une journée, vue « suivi du jour »
+    get dashboard_path(period: "today")
+    assert_select ".quality-hero", count: 0
+    assert_select ".quality-small-sample", text: /Moins de 20 jouets/
+    assert_select "h3", text: /suivi du jour/
+    assert_select ".quality-table th", text: "Retraités"
+    get dashboard_path(period: "four_weeks")
+    assert_select ".quality-small-sample", text: "1 sur 2"
+
+    QualitySetting.current.update!(min_sample: 1)
     get dashboard_path(period: "today")
     assert_select ".quality-hero", text: "50 %"
     assert_select ".quality-bar-row", text: /Nettoyage/
@@ -62,8 +72,8 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     get dashboard_quality_detail_path(period: "today", week: Date.current.beginning_of_week(:monday).iso8601)
     assert_response :success
 
-    patch quality_setting_path, params: { quality_setting: { target_valo: 85, target_tri: 97, red_after_days: 2 } }
-    assert_equal [85, 97, 2], QualitySetting.current.then { |s| [s.target_valo, s.target_tri, s.red_after_days] }
+    patch quality_setting_path, params: { quality_setting: { target_valo: 85, target_tri: 97, red_after_days: 2, min_sample: 15 } }
+    assert_equal [85, 97, 2, 15], QualitySetting.current.then { |s| [s.target_valo, s.target_tri, s.red_after_days, s.min_sample] }
     patch quality_setting_path, params: { quality_setting: { target_valo: 150 } }
     assert_equal 85, QualitySetting.current.target_valo
   end

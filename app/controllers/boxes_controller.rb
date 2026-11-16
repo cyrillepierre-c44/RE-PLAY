@@ -21,6 +21,7 @@ class BoxesController < ApplicationController
     else
       @boxes = base_scope.active.order(created_at: :desc)
     end
+    @boxes = paginate(@boxes) unless params[:q].present?
     own = if current_user.admin?
             Box
           else
@@ -41,7 +42,9 @@ class BoxesController < ApplicationController
 
     # Tout le monde voit toutes les caisses, mais un employé ne voit que les
     # jouets qu'il a créés dedans (l'admin voit tout) — idem pour la timeline.
-    @toys = policy_scope(@box.toys).not_draft.includes(:quality_checks)
+    # includes/with_attached_photo : la vue lit la catégorie et la photo de chaque carte (N+1 sinon).
+    @toys = policy_scope(@box.toys).not_draft.includes(:quality_checks, :category).with_attached_photo
+                                   .order(created_at: :desc).load
     @drafts = policy_scope(@box.toys).draft.order(:id)
     @timeline = Action.where(actionable: @box)
                       .or(Action.where(actionable: @toys))

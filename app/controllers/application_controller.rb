@@ -1,4 +1,8 @@
 class ApplicationController < ActionController::Base
+  # Les listes n'affichent que PER_PAGE cartes à la fois : avec ~1 900 jouets en
+  # attente (nov. 2026), tout afficher d'un coup demandait 5 s et 3,8 Mo.
+  PER_PAGE = 48
+
   before_action :authenticate_user!
   include Pundit::Authorization
 
@@ -22,6 +26,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def paginate(records)
+    @total = records.is_a?(Array) ? records.size : records.count
+    @pages = [(@total / PER_PAGE.to_f).ceil, 1].max
+    @page = params[:page].to_i.clamp(1, @pages)
+    offset = (@page - 1) * PER_PAGE
+    records.is_a?(Array) ? records.slice(offset, PER_PAGE) || [] : records.offset(offset).limit(PER_PAGE).load
+  end
 
   def user_not_authorized
     flash[:alert] = "Vous n'êtes pas autorisé à effectuer cette action."

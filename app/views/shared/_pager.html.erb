@@ -1,0 +1,20 @@
+<%# Pagination des listes : deux grosses flèches et « page / total ». Rien s'il n'y a qu'une page. %>
+<% if @pages.to_i > 1 %>
+  <nav class="list-pager" aria-label="Pages">
+    <% if @page > 1 %>
+      <%= link_to url_for(request.query_parameters.merge(page: @page - 1)), class: "list-pager-btn", "aria-label": "Page précédente" do %>
+        <i class="fa-solid fa-circle-arrow-left" aria-hidden="true"></i>
+      <% end %>
+    <% else %>
+      <span class="list-pager-btn is-disabled" aria-hidden="true"><i class="fa-solid fa-circle-arrow-left"></i></span>
+    <% end %>
+    <span class="list-pager-label"><strong><%= @page %></strong> / <%= @pages %><small><%= @total %> au total</small></span>
+    <% if @page < @pages %>
+      <%= link_to url_for(request.query_parameters.merge(page: @page + 1)), class: "list-pager-btn", "aria-label": "Page suivante" do %>
+        <i class="fa-solid fa-circle-arrow-right" aria-hidden="true"></i>
+      <% end %>
+    <% else %>
+      <span class="list-pager-btn is-disabled" aria-hidden="true"><i class="fa-solid fa-circle-arrow-right"></i></span>
+    <% end %>
+  </nav>
+<% end %>

@@ -7,6 +7,11 @@
 # - Bon du 1er coup TRI = jouets sortis des caisses qui n'ont PAS été jetés à
 #   l'entrée pour une cause que le TRI devait écarter (QualityCause::TRI_KEYS)
 #   ÷ jouets sortis des caisses. Le TRI d'une caisse = la personne qui l'a créée.
+# - Un jouet est rangé dans la période où il a été CONTRÔLÉ, pas valorisé : sur une
+#   journée, le taux d'un opérateur ne dit rien de son travail du jour, et un
+#   échantillon de 10 jouets bascule de 10 points à chaque refus. D'où le seuil
+#   `min_sample` (réglable) sous lequel aucun pourcentage n'est affiché, et la
+#   vue du jour (`daily?`) qui suit le stock : NC ouvertes, reçues, retraitées.
 # - Délais en jours ouvrés (WorkingDays).
 # - « En ce moment » ne dépend pas de la période : c'est l'état de l'atelier.
 class QualityDashboard
@@ -19,6 +24,12 @@ class QualityDashboard
     @range = range
     @setting = QualitySetting.current
   end
+
+  # Assez de jouets pour qu'un pourcentage ait un sens ?
+  def reliable?(total) = total.to_i >= setting.min_sample
+
+  # Période d'une journée (Aujourd'hui, Hier, ou deux dates identiques).
+  def daily? = (range.end - range.begin) <= 1.day
 
   # ── En ce moment ────────────────────────────────────────────────────────
   def open_checks
@@ -37,7 +48,10 @@ class QualityDashboard
   def valo_ok = first_round.count(&:accepted?)
   def fpy_valo = rate(valo_ok, valo_total)
   def nc_rate = fpy_valo && (100 - fpy_valo)
-  def problems_count = refusals.sum { |check| check.causes.size }
+  def problems_count = refusals.sum { |check| causes_of(check).size }
+
+  # Causes d'un refus ; un refus sans cause (historique) vaut un problème « non renseigné ».
+  def causes_of(check) = check.causes.presence || [QualityCause::UNKNOWN.key]
 
   def second_round = @second_round ||= QualityCheck.rated.where(round: 2, created_at: range).to_a
   def second_refusal_rate = rate(second_round.count(&:refused?), second_round.size)
@@ -48,12 +62,13 @@ class QualityDashboard
   # [{ cause:, count:, share: (largeur de barre), cumulative:, delay: }] du plus fréquent au plus rare
   def cause_rows
     @cause_rows ||= begin
-      counts = refusals.flat_map(&:causes).tally
+      counts = refusals.flat_map { |check| causes_of(check) }.tally
       max = counts.values.max.to_f
       running = 0
-      QualityCause::CQ.select { |cause| counts[cause.key] }.sort_by { |cause| -counts[cause.key] }.map do |cause|
+      all_causes = QualityCause::CQ + [QualityCause::UNKNOWN]
+      all_causes.select { |cause| counts[cause.key] }.sort_by { |cause| -counts[cause.key] }.map do |cause|
         running += counts[cause.key]
-        reworked = refusals.select { |c| c.reworked_at && c.causes.include?(cause.key) }
+        reworked = refusals.select { |c| c.reworked_at && causes_of(c).include?(cause.key) }
         { cause: cause, count: counts[cause.key], share: (counts[cause.key] / max * 100).round,
           cumulative: rate(running, problems_count),
           delay: average_days(reworked) { |c| WorkingDays.elapsed(c.created_at, c.reworked_at) } }
@@ -73,7 +88,7 @@ class QualityDashboard
         monday = first_monday + i.weeks
         rows = by_week[monday] || []
         { monday: monday, label: "S#{monday.cweek}", total: rows.size,
-          fpy: rate(rows.count { |_, decision| decision == "accepted" }, rows.size) }
+          fpy: (rate(rows.count { |_, decision| decision == "accepted" }, rows.size) if reliable?(rows.size)) }
       end
     end
   end
@@ -81,19 +96,26 @@ class QualityDashboard
   # Une ligne par valorisateur, du meilleur Bon du 1er coup au moins bon.
   def operator_rows
     @operator_rows ||= begin
-      ids = (first_round.map(&:operator_id) + refusals.map(&:operator_id) + open_checks.map(&:operator_id)).uniq
+      reworked = QualityCheck.refused.where(reworked_at: range).group(:operator_id).count
+      ids = (first_round.map(&:operator_id) + refusals.map(&:operator_id) + open_checks.map(&:operator_id) + reworked.keys).uniq
       users = User.where(id: ids.compact).index_by(&:id)
       rows = ids.map do |id|
         firsts = first_round.select { |c| c.operator_id == id }
         mine = refusals.select { |c| c.operator_id == id }
         opened = open_checks.select { |c| c.operator_id == id }
         { user: users[id], id: id, total: firsts.size, ok: firsts.count(&:accepted?),
-          fpy: rate(firsts.count(&:accepted?), firsts.size), problems: mine.sum { |c| c.causes.size },
-          causes: mine.flat_map(&:causes).tally,
+          fpy: rate(firsts.count(&:accepted?), firsts.size), refused: mine.size,
+          problems: mine.sum { |c| causes_of(c).size }, causes: mine.flat_map { |c| causes_of(c) }.tally,
           delay: average_days(mine.select(&:reworked_at)) { |c| WorkingDays.elapsed(c.created_at, c.reworked_at) },
-          open: opened.size, late: opened.count { |c| c.late?(setting.red_after_days) } }
+          open: opened.size, late: opened.count { |c| c.late?(setting.red_after_days) },
+          reworked: reworked[id].to_i, reliable: reliable?(firsts.size) }
       end
-      rows.sort_by { |row| [-(row[:fpy] || -1), -row[:total]] }
+      # Vue du jour : ceux qui ont le plus de retard d'abord. Sinon : les taux fiables, du meilleur au moins bon.
+      if daily?
+        rows.sort_by { |row| [-row[:late], -row[:open], -row[:refused]] }
+      else
+        rows.sort_by { |row| [row[:reliable] ? 0 : 1, -(row[:fpy] || -1), -row[:total]] }
+      end
     end
   end
 
@@ -127,9 +149,10 @@ class QualityDashboard
       users = User.where(id: creators.values.uniq).index_by(&:id)
       rows = toys_out.group_by { |toy| creators[toy[:box_id]] }.map do |user_id, toys|
         rejected = toys.count { |toy| toy[:causes].intersect?(QualityCause::TRI_KEYS) }
-        { user: users[user_id], id: user_id, total: toys.size, rejected: rejected, fpy: rate(toys.size - rejected, toys.size) }
+        { user: users[user_id], id: user_id, total: toys.size, rejected: rejected, fpy: rate(toys.size - rejected, toys.size),
+          reliable: reliable?(toys.size) }
       end
-      rows.sort_by { |row| [-(row[:fpy] || -1), -row[:total]] }
+      rows.sort_by { |row| [row[:reliable] ? 0 : 1, -(row[:fpy] || -1), -row[:total]] }
     end
   end
 
@@ -155,7 +178,10 @@ class QualityDashboard
   def valo_detail(filter)
     checks = QualityCheck.refused.where(created_at: range).includes(toy: %i[operator assignee quality_checks])
     titles = []
-    if (cause = QualityCause.cq(filter[:cause].to_s))
+    if filter[:cause].to_s == QualityCause::UNKNOWN.key
+      checks = checks.where(causes: [])
+      titles << QualityCause::UNKNOWN.label
+    elsif (cause = QualityCause.cq(filter[:cause].to_s))
       checks = checks.where("? = ANY(causes)", cause.key)
       titles << cause.label
     end

@@ -739,6 +739,7 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
   .quality-hero-sub { font-size: 0.9rem; font-weight: 700; }
   .quality-late { color: darken($danger-red, 12%); font-weight: 800; }
   .quality-none { color: $quality-ink; font-style: italic; }
+  .quality-small-sample { color: $quality-ink; font-size: 0.85rem; font-weight: 700; }
 }
 
 .quality-now {
@@ -829,26 +830,102 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
   .quality-cell--5 { background: $navy; color: $white; }
 }
 
-.quality-detail-hint {
-  border: 2px dashed rgba($navy, 0.2); border-radius: $border-radius-xl;
-  padding: 0.9rem 1rem; font-size: 0.9rem; font-weight: 700; color: $quality-ink;
+// Fenêtre de détail : liste des jouets derrière un chiffre.
+.quality-detail-modal {
+  .modal-content { border: 0; border-radius: $border-radius-xl; background: $white; }
+  .modal-header { border-bottom: 1px solid #EEF0F3; gap: 0.75rem; justify-content: space-between; }
+  .btn-close { width: 44px; height: 44px; padding: 0; margin: 0; background-size: 1rem; opacity: 0.8; }
+  .modal-body { padding: 1rem 1.25rem 1.5rem; }
+  .quality-table { min-width: 720px; }
 }
-.quality-detail { border: 3px solid $coral; }
+
+// Sur téléphone, une liste de détail se lit en fiches empilées plutôt qu'en tableau à faire défiler.
+@media screen and (max-width: 767px) {
+  .quality-table--stack {
+    min-width: 0 !important;
+    thead { display: none; }
+    tbody tr { display: block; padding: 0.7rem 0; }
+    tbody th, tbody td { display: block; padding: 0.15rem 0; }
+    tbody th { font-size: 1.15rem; }
+    tbody td::before {
+      content: attr(data-label) " : "; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.04em; color: $quality-ink; font-style: normal;
+    }
+    td br { display: none; }
+    td small::before { content: " · "; }
+  }
+}
 .quality-settings summary { font-weight: 800; color: $navy; cursor: pointer; min-height: 44px; display: flex; align-items: center; }
 
-// Impression / PDF : on garde le volet qualité, sans navigation ni filtres.
+// ── Impression / PDF ───────────────────────────────────────────────────────
+// Bandeau d'en-tête des documents imprimés, aux couleurs de RE-PLAY.
+.print-header { display: none; }
+
 @media print {
-  .navbar, footer, .quality-settings, .quality-detail-hint,
+  .print-header {
+    display: flex; align-items: center; gap: 5mm;
+    background: $navy; color: $white; border-radius: 3mm; padding: 3.5mm 5mm; margin-bottom: 4mm;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact; break-after: avoid;
+  }
+  .print-header-brand { font-family: $headers-font; font-size: 15pt; letter-spacing: -0.5px; color: $coral; }
+  .print-header-titles { display: flex; flex-direction: column; flex: 1; min-width: 0;
+    strong { font-family: $headers-font; font-weight: 400; font-size: 13pt; }
+    span { font-size: 8.5pt; color: #E3E7EE; } }
+  .print-header-date { font-size: 7.5pt; color: $yellow; text-align: right; white-space: nowrap; }
+
+  // Tableau de bord : A4 portrait, tout le volet qualité, sans navigation, filtres ni journal.
+  :root:has(.quality-dash) { font-size: 10.5px; }
+  .navbar, .bottom-tab-bar, footer, .quality-settings, .quality-help-link, .dashboard-screen-title,
   form[action$="/dashboard"] { display: none !important; }
-  body { background: #FFFFFF !important; }
-  .quality-dash .detail-card, .quality-now { box-shadow: none !important; break-inside: avoid; }
-  .quality-now { background: #FFFFFF; color: $navy; border: 2px solid $navy; }
-  .quality-now .quality-now-tile { color: $navy; border: 1px solid #D9DDE4; small { color: $quality-ink; } }
-  .quality-now .quality-now-title small { color: $quality-ink; }
-  .quality-split-ok, .quality-split-ko, .quality-rate-fill, .quality-bar-fill, .quality-cell {
+  body { background: $white !important; }
+  .container:has(.quality-dash) { max-width: none; padding: 0 !important; > *:not(.quality-dash):not(.print-header) { display: none !important; } }
+
+  .quality-dash {
+    .onb-section-title { display: none; }
+    .detail-card, .kpi-card, .quality-now { box-shadow: none !important; border: 1px solid #D9DDE4; break-inside: avoid; }
+    .detail-card { padding: 4mm !important; }
+    .row { --bs-gutter-x: 3mm; --bs-gutter-y: 3mm; margin-bottom: 3mm !important; }
+    // À l'impression la page est plus étroite que les seuils de la grille : on impose les colonnes.
+    .row > .col-lg-6 { flex: 0 0 50%; width: 50%; }
+    .row > .col-lg-7 { flex: 0 0 56%; width: 56%; }
+    .row > .col-lg-5 { flex: 0 0 44%; width: 44%; }
+    .row > .col-md { flex: 1 0 0; width: auto; }
+    .table-responsive { overflow: visible; }
+    .quality-table, .quality-matrix { min-width: 0; }
+    .quality-hero { font-size: 2.6rem; }
+    a { text-decoration: none; }
+  }
+  .quality-now {
+    background: $white; color: $navy; border: 1.5px solid $navy !important; padding: 3mm; margin-bottom: 3mm !important;
+    .quality-now-title small, .quality-now-tile small { color: $quality-ink; }
+    .quality-now-tile { background: #F4F5F7; color: $navy; border: 1px solid #D9DDE4; padding: 2.5mm; }
+    .quality-now-tile--late { border: 2px solid $danger-red; background: $white; }
+    .quality-now-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .quality-split-ok, .quality-split-ko, .quality-rate-fill, .quality-rate-track, .quality-bar-fill, .quality-bar-track,
+  .quality-cell, .quality-now-tile, .quality-trend {
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-  .quality-dash { break-after: page; }
+
+  // Fenêtre de détail ouverte : on n'imprime que la liste, en tableau pleine largeur.
+  body.modal-open {
+    .container > *:not(.quality-dash), .quality-dash > *:not(.modal), .modal-backdrop, .modal-header { display: none !important; }
+    .modal { position: static !important; display: block !important; overflow: visible !important; padding: 0 !important; }
+    .modal-dialog { max-width: none; width: auto; height: auto; margin: 0; transform: none !important; }
+    .modal-content, .modal-body { height: auto !important; max-height: none !important; overflow: visible !important; padding: 0; border: 0; }
+    .quality-detail .quality-h3 { display: none; } // le titre est déjà dans le bandeau
+    .quality-table { min-width: 0; font-size: 9pt;
+      thead { display: table-header-group; } // en-têtes répétés sur chaque page
+      thead th { color: $navy; border-bottom: 1.5px solid $navy; }
+      tbody tr { break-inside: avoid; }
+      th, td { padding: 1.4mm 1.5mm; }
+      // Date, tour et état sur une seule ligne : les lignes restent basses, on en met plus par page.
+      thead th, td[data-label="Refusé le"], td[data-label="État"], td[data-label="Le"], td[data-label="Opérateur"] { white-space: nowrap; }
+      td br { display: none; }
+      td small::before { content: " · "; }
+      td[data-label="Commentaire CQ"], td[data-label="Réponse de l'opérateur"], td[data-label="Note de l'opérateur"] { width: 27%; }
+      a { color: $navy; text-decoration: none; } }
+  }
 }
 
 // Pastilles : choix de la période (marine = active) et bouton d'impression.

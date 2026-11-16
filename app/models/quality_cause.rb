@@ -57,6 +57,11 @@ class QualityCause
       help: "Jouet non électronique qui ne marche pas." }
   ].map { |attrs| Cause.new(**attrs) }.freeze
 
+  # Refus sans cause : n'existe que dans l'historique reconstruit (avant le suivi
+  # qualité, on pouvait refuser sans rien cocher). Jamais proposé à la saisie.
+  UNKNOWN = Cause.new(key: "inconnue", label: "Cause non renseignée", icon: "fa-circle-question",
+                      help: "Refus d'avant le suivi qualité, sans cause enregistrée.").freeze
+
   CQ_KEYS = CQ.map(&:key).freeze
   DISCARD_KEYS = DISCARD.map(&:key).freeze
   TRI_KEYS = DISCARD.select(&:tri).map(&:key).freeze

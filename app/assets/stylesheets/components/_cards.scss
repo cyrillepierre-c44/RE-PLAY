@@ -1051,3 +1051,18 @@ a.toy-card {
 }
 .reassign-label { display: block; font-size: 0.85rem; font-weight: 700; color: $navy; margin-bottom: 0.35rem; }
 .reassign-note { font-size: 0.8rem; color: #5B6472; margin-top: 0.35rem; }
+
+// ── Pagination des listes : deux grosses flèches, « page / total » ───────────
+.list-pager {
+  display: flex; align-items: center; justify-content: center; gap: 1.25rem; margin: 1.5rem 0 0.5rem;
+
+  .list-pager-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 56px; min-height: 56px; font-size: 2.6rem; color: $coral; text-decoration: none;
+    &.is-disabled { color: rgba($navy, 0.18); }
+  }
+  .list-pager-label {
+    display: flex; flex-direction: column; align-items: center; font-size: 1.2rem; color: $navy;
+    small { font-size: 0.75rem; color: #5B6472; }
+  }
+}

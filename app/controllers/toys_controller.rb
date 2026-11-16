@@ -45,6 +45,7 @@ class ToysController < ApplicationController
         created_at: :desc
       )
     end
+    @toys = paginate(@toys) unless params[:q].present?
     own = if current_user.admin?
             Toy
           else

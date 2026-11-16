@@ -70,6 +70,40 @@ class QualityDashboardTest < ActiveSupport::TestCase
     assert_equal [%w[sans_ce]], toys.map(&:discard_causes)
   end
 
+  test "un refus sans cause (historique) compte comme un problème non renseigné" do
+    toy = create_toy(operator: @alice)
+    QualityCheck.new(toy: toy, round: 1, decision: "refused", causes: [], operator: @alice, checker: @admin).save!(validate: false)
+
+    q = QualityDashboard.new(@range)
+    assert_equal 1, q.problems_count
+    assert_equal ["inconnue"], q.cause_rows.map { |row| row[:cause].key }
+    row = q.operator_rows.sole
+    assert_equal [1, 1, { "inconnue" => 1 }], [row[:refused], row[:problems], row[:causes]]
+    title, rows = q.detail(cause: "inconnue")
+    assert_match(/non renseignée/, title)
+    assert_equal [toy.id], rows.map(&:toy_id)
+  end
+
+  test "seuil de fiabilité : pas de pourcentage sous min_sample, vue du jour sur une journée" do
+    3.times { check(@alice, "market") }
+    refused = check(@alice, "review", causes: %w[photo], comment: "Floue")
+    refused.quality_checks.sole.update!(reworked_at: Time.current)
+
+    q = QualityDashboard.new(@range)
+    row = q.operator_rows.sole
+    assert_not q.reliable?(q.valo_total)
+    assert_equal [false, 3, 4, 1], [row[:reliable], row[:ok], row[:total], row[:reworked]]
+    assert q.weekly.all? { |week| week[:fpy].nil? }, "pas de point sur la courbe sous le seuil"
+    assert_not q.daily?
+    assert QualityDashboard.new(Time.current.beginning_of_day..Time.current.end_of_day).daily?
+
+    QualitySetting.current.update!(min_sample: 4)
+    q = QualityDashboard.new(@range)
+    assert q.reliable?(q.valo_total)
+    assert q.operator_rows.sole[:reliable]
+    assert_equal 75, q.weekly.last[:fpy]
+  end
+
   test "sans données, rien ne casse" do
     q = QualityDashboard.new(@range)
     assert_nil q.fpy_valo
