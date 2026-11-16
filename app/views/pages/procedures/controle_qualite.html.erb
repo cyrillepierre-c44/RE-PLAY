@@ -10,14 +10,14 @@
     <div>
       <h2>L'écran de contrôle</h2>
       <figure class="procedure-shot procedure-shot--phone">
-        <%= image_tag "procedures/cq-premier-tour.jpg", alt: "Écran de contrôle au 1er tour : note de l'opérateur, onze causes à cocher, commentaire et boutons de décision", loading: "lazy" %>
+        <%= image_tag "procedures/cq-premier-tour.jpg", alt: "Écran de contrôle au 1er tour : note de l'opérateur, causes à cocher, commentaire et boutons de décision", loading: "lazy" %>
         <figcaption>1er tour</figcaption>
       </figure>
       <p>Depuis la liste des jouets, ouvrez un jouet puis touchez la loupe <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>. Sous les critères, la catégorie, le prix et l'emplacement, vous trouvez maintenant :</p>
       <ul class="procedure-list">
         <li><strong>Les tours précédents</strong>, dans un cadre gris en lecture seule : causes, note de l'opérateur et commentaire du contrôle.</li>
         <li><strong>La note de l'opérateur</strong> pour le tour en cours. « Aucun commentaire » signifie qu'il n'a rien écrit.</li>
-        <li><strong>Les problèmes détectés</strong> : onze causes à cocher, avec une légende dépliable.</li>
+        <li><strong>Les problèmes détectés</strong> : <%= QualityCause::CQ.size %> causes de refus à cocher, avec une légende dépliable.</li>
         <li><strong>Le commentaire du contrôle qualité</strong>.</li>
       </ul>
     </div>
@@ -47,7 +47,8 @@
   <section class="procedure-step">
     <span class="procedure-num">3</span>
     <div>
-      <h2>Les onze causes de refus</h2>
+      <h2>Les <%= QualityCause::CQ.size %> causes de refus du contrôle qualité</h2>
+      <p>Ce sont les causes que vous cochez quand vous refusez un jouet. À ne pas confondre avec les <%= QualityCause::DISCARD.size %> raisons qu'un opérateur choisit pour écarter un jouet à la sortie de la caisse : c'est une autre liste, décrite dans la procédure opérateur.</p>
       <%= render "pages/procedures/causes", causes: QualityCause::CQ %>
     </div>
   </section>
