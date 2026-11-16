@@ -15,7 +15,7 @@
     </h1>
   </div>
 
-  <%= simple_form_for(@toy, url: confirm_verify_toy_path(@toy), method: :patch) do |f| %>
+  <%= simple_form_for(@toy, url: confirm_verify_toy_path(@toy), method: :patch, html: { data: { controller: "cause-criteria" } }) do |f| %>
 
     <div class="row g-3">
 
@@ -143,7 +143,7 @@
             <div class="quality-round-text <%= 'is-empty' if @toy.operator_note.blank? %>"><%= @toy.operator_note.presence || "Aucun commentaire" %></div>
 
             <div class="quality-round-label mt-2"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Problèmes détectés (en cas de refus)</div>
-            <%= render "shared/cause_chips", causes: QualityCause::CQ, name: "quality[causes][]", selected: input[:causes], prefix: "cq_cause" %>
+            <%= render "shared/cause_chips", causes: QualityCause::CQ, name: "quality[causes][]", selected: input[:causes], prefix: "cq_cause", tone: :cq %>
           <% end %>
 
           <label for="cq_comment_field" class="quality-round-label mt-2">

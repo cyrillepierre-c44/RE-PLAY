@@ -48,6 +48,8 @@
     <span class="procedure-num">3</span>
     <div>
       <h2>Les <%= QualityCause::CQ.size %> causes de refus du contrôle qualité</h2>
+      <p><strong>Trois listes, trois usages.</strong> Les six <em>critères</em> en haut de l'écran décrivent le jouet (vert = respecté, rouge = pas respecté). Les <%= QualityCause::CQ.size %> <em>causes</em> ci-dessous disent pourquoi vous le refusez : grises au départ, <span class="procedure-pill procedure-pill--orange">orange</span> une fois cochées.</p>
+      <p>Six causes recoupent un critère : Complétude, Nettoyage, Ne fonctionne pas, Sécurité, CE / marque, Pas en français. Quand vous en cochez une, le critère correspondant se décoche tout seul. L'opérateur verra ainsi la case en rouge sur sa carte, et la recochera après avoir repris le jouet.</p>
       <p>Ce sont les causes que vous cochez quand vous refusez un jouet. À ne pas confondre avec les <%= QualityCause::DISCARD.size %> raisons qu'un opérateur choisit pour écarter un jouet à la sortie de la caisse : c'est une autre liste, décrite dans la procédure opérateur.</p>
       <%= render "pages/procedures/causes", causes: QualityCause::CQ %>
     </div>
@@ -109,7 +111,7 @@
         <%= image_tag "procedures/cq-confier.jpg", alt: "Bloc « Confier ce jouet à » sous les boutons de la fiche", loading: "lazy" %>
         <figcaption>En bas de la fiche du jouet</figcaption>
       </figure>
-      <p>Quand un opérateur est absent, vous pouvez confier ses jouets un par un. Le bloc <strong>« Confier ce jouet à »</strong> <i class="fa-solid fa-people-arrows" aria-hidden="true"></i> se trouve en bas de la fiche du jouet et de l'écran de contrôle, pour un jouet refusé, en attente ou non terminé.</p>
+      <p>Quand un opérateur est absent, vous pouvez confier ses jouets un par un. Le bloc <strong>« Confier ce jouet à »</strong> <i class="fa-solid fa-people-arrows" aria-hidden="true"></i> se trouve en bas de la fiche du jouet et de l'écran de contrôle, pour un jouet refusé, en attente ou non terminé : choisissez la personne puis touchez le bouton « Confier ».</p>
       <ul class="procedure-list">
         <li>Le nouvel opérateur voit le jouet dans sa liste et peut le traiter.</li>
         <li>L'opérateur d'origine ne l'a plus dans « À reprendre ».</li>

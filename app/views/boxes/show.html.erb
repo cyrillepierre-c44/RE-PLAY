@@ -210,10 +210,10 @@
               <p style="font-size:0.9rem; font-weight:700; color:#1A2B4A; margin-bottom:0.75rem;">
                 Pourquoi ce jouet est-il jeté ?
               </p>
-              <%= render "shared/cause_chips", causes: QualityCause::DISCARD, name: "toy[discard_causes][]", selected: [], prefix: "qd_cause" %>
+              <%= render "shared/cause_chips", causes: QualityCause::DISCARD, name: "toy[discard_causes][]", selected: [], prefix: "qd_cause", tone: :discard %>
 
               <p style="font-size:0.9rem; font-weight:700; color:#1A2B4A; margin:1rem 0 0.5rem;">Où va-t-il ?</p>
-              <div class="cause-chips discard-destinations">
+              <div class="cause-chips cause-chips--choice discard-destinations">
                 <% [["rebut", "fa-trash-can", "Poubelle"], ["don", "fa-hand-holding-heart", "Don"], ["vrac", "fa-puzzle-piece", "Vrac"]].each do |value, icon, label| %>
                   <input type="radio" name="toy[destination]" value="<%= value %>" id="qd_dest_<%= value %>"
                          class="condition-toggle-input" <%= 'checked' if value == "rebut" %>>

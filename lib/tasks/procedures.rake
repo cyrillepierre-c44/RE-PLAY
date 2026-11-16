@@ -70,11 +70,11 @@ namespace :procedures do
     mixed_box = box.call(cat.call("Jeux de société 0"), sorters[1], days_ago.call(7))
     featured = {}
 
-    featured[:late] = toy.call(box: main_box, category: cat.call("Peluches"), operator: camille, status: "review", price: 6,
+    featured[:late] = toy.call(box: main_box, category: cat.call("Peluches"), operator: camille, status: "review", price: 6, clean: false,
                                photo: "peluche", created_at: days_ago.call(7))
     check.call(featured[:late], 1, "refused", days_ago.call(6), causes: %w[nettoyage],
                                                                 comment: "La peluche est encore tachée sous une patte.", note: "Lavée en machine.")
-    featured[:orange] = toy.call(box: mixed_box, category: cat.call("Puzzle"), operator: camille, status: "review", price: 8,
+    featured[:orange] = toy.call(box: mixed_box, category: cat.call("Puzzle"), operator: camille, status: "review", price: 8, complete: false,
                                  photo: "mosaique", created_at: days_ago.call(3))
     check.call(featured[:orange], 1, "refused", days_ago.call(2), causes: %w[completude abime],
                                                                   comment: "Il manque des pions rouges et un coin de la boîte est déchiré.", note: "Boîte vérifiée.")

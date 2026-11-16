@@ -47,7 +47,11 @@ class QualityControl
     Toy.transaction do
       @check = build_check(decision, current_round, causes, comment) if record
       toy.assign_attributes(attributes.merge(status: status))
-      toy.operator_note = nil if decision == "refused" # libère la note du tour suivant
+      if decision == "refused"
+        toy.operator_note = nil # libère la note du tour suivant
+        # Une cause qui recoupe un critère le décoche : la carte du jouet dit la même chose que le refus.
+        QualityCause::CRITERIA.slice(*Array(causes)).each_value { |criterion| toy[criterion] = false }
+      end
       saved = toy.valid? && (!record || @check.valid?)
       copy_check_errors if record
       if status == "market" && (toy.location.blank? || toy.location == Toy::WAITING_LOCATION)

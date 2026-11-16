@@ -1,5 +1,8 @@
-<%# Admins : confier un jouet non terminé ou refusé à un autre opérateur (opérateur absent). %>
-<% if policy(toy).reassign? && (toy.draft? || toy.pending? || toy.review?) %>
+<%# Admins : confier un jouet non terminé ou refusé à un autre opérateur (opérateur absent).
+    Pas sur son propre brouillon : pendant qu'un admin crée un jouet, ce bloc n'a pas de sens
+    et son bouton se confondait avec « enregistrer » (jouet J7177 perdu ainsi le 16/11/2026). %>
+<% own_draft = toy.draft? && toy.holder == current_user %>
+<% if policy(toy).reassign? && (toy.draft? || toy.pending? || toy.review?) && !own_draft %>
   <%= form_with url: reassign_toy_path(toy), method: :patch, class: "reassign-box mt-3" do %>
     <label for="reassign_user_id" class="reassign-label">
       <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
@@ -9,8 +12,9 @@
       <%= select_tag :user_id,
             options_from_collection_for_select(User.where(disabled: false).order(:email), :id, :email, toy.holder&.id),
             id: "reassign_user_id", class: "form-select verify-select" %>
-      <button type="submit" class="btn btn-primary" aria-label="Confier le jouet">
-        <i class="fa-solid fa-check" aria-hidden="true"></i>
+      <%# Bouton marine avec son libellé : jamais le ✓ orange, réservé à l'enregistrement du jouet. %>
+      <button type="submit" class="btn reassign-btn">
+        <i class="fa-solid fa-people-arrows me-1" aria-hidden="true"></i>Confier
       </button>
     </div>
     <% if toy.assignee %>

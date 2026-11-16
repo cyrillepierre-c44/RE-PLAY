@@ -2,32 +2,38 @@
 # (tableur « Jouets à revaloriser » du client + critères historiques de l'appli
 # + consignes du TRI). Les clés sont stockées en base : ne pas les renommer.
 #
-# - CQ : problèmes détectés au contrôle qualité (refus → revalorisation).
+# - CQ : problèmes détectés au contrôle qualité (refus → revalorisation). Six
+#   d'entre elles recoupent un des six critères du jouet (`criterion`) : cocher la
+#   cause décoche le critère, pour que la carte du jouet dise la même chose que
+#   le refus (un jouet refusé pour « Nettoyage » ne reste pas affiché « Propre »).
 # - DISCARD : causes du jet à l'entrée de la VALO. `tri: true` = le TRI aurait dû
 #   écarter le jouet (affiche « Objets non acceptés au TRI ») : compte contre le
 #   Bon du 1er coup du TRI. `tri: false` = découvert à la VALO, le TRI ne le
 #   vérifie pas (complétude, propreté, langue…).
 class QualityCause
-  Cause = Struct.new(:key, :label, :icon, :help, :tri, keyword_init: true)
+  Cause = Struct.new(:key, :label, :icon, :help, :tri, :criterion, keyword_init: true)
 
   CQ = [
-    { key: "completude",  label: "Complétude",        icon: "fa-list-check",
+    { key: "completude",  criterion: :complete, label: "Complétude", icon: "fa-list-check",
       help: "Il manque des pièces, la règle ou un élément du jeu." },
-    { key: "abime",       label: "Abîmé / déchiré",   icon: "fa-heart-crack",          help: "Jouet ou boîte abîmé, déchiré, décollé." },
-    { key: "nettoyage",   label: "Nettoyage",         icon: "fa-soap",                 help: "Le jouet ou la boîte est encore sale." },
-    { key: "panne",       label: "Ne fonctionne pas", icon: "fa-gamepad",
+    { key: "abime",       label: "Abîmé / déchiré", icon: "fa-heart-crack", help: "Jouet ou boîte abîmé, déchiré, décollé." },
+    { key: "nettoyage",   criterion: :clean, label: "Nettoyage", icon: "fa-soap",
+      help: "Le jouet ou la boîte est encore sale." },
+    { key: "panne",       criterion: :playable, label: "Ne fonctionne pas", icon: "fa-gamepad",
       help: "Le jouet ne marche pas ou n'est pas jouable." },
     { key: "incoherence", label: "Incohérence",       icon: "fa-shuffle",
       help: "Le lot mélange des éléments qui ne vont pas ensemble." },
     { key: "photo",       label: "Photo",             icon: "fa-camera",
       help: "Photo absente, floue ou qui ne montre pas le jouet." },
     { key: "prix",        label: "Prix",              icon: "fa-euro-sign", help: "Le prix ne correspond pas au jouet." },
-    { key: "securite",    label: "Sécurité",          icon: "fa-triangle-exclamation",
+    { key: "securite",    criterion: :safe, label: "Sécurité", icon: "fa-triangle-exclamation",
       help: "Danger pour l'enfant : coupant, petites pièces, rouille." },
     { key: "categorie",   label: "Catégorie",         icon: "fa-tag",
       help: "Le jouet n'est pas dans la bonne catégorie." },
-    { key: "ce",          label: "CE / marque",       icon: "fa-award",                help: "Pas de marquage CE ni de marque connue." },
-    { key: "langue",      label: "Pas en français",   icon: "fa-flag",                 help: "Le jeu ou le livre n'est pas en français." }
+    { key: "ce",          criterion: :ce_mark, label: "CE / marque", icon: "fa-award",
+      help: "Pas de marquage CE ni de marque connue." },
+    { key: "langue",      criterion: :french, label: "Pas en français", icon: "fa-flag",
+      help: "Le jeu ou le livre n'est pas en français." }
   ].map { |attrs| Cause.new(**attrs) }.freeze
 
   DISCARD = [
@@ -63,6 +69,8 @@ class QualityCause
                       help: "Refus d'avant le suivi qualité, sans cause enregistrée.").freeze
 
   CQ_KEYS = CQ.map(&:key).freeze
+  # cause du CQ → critère du jouet à décocher
+  CRITERIA = CQ.select(&:criterion).to_h { |cause| [cause.key, cause.criterion] }.freeze
   DISCARD_KEYS = DISCARD.map(&:key).freeze
   TRI_KEYS = DISCARD.select(&:tri).map(&:key).freeze
 

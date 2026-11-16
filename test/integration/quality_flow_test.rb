@@ -102,6 +102,22 @@ class QualityFlowTest < ActionDispatch::IntegrationTest
     assert_select "a.toy-card[href*='/toys/#{@toy.id}']"
   end
 
+  test "une cause liée à un critère le décoche, même si le contrôle l'avait laissé coché" do
+    @toy.update_columns(clean: true, complete: true, playable: true)
+    sign_in @admin
+    patch confirm_verify_toy_path(@toy),
+          params: { status: "review", quality: { causes: %w[nettoyage photo], comment: "Sale, photo floue" },
+                    toy: { clean: "1", complete: "1", playable: "1" } }
+    @toy.reload
+    assert @toy.review?
+    assert_not @toy.clean?, "refusé pour Nettoyage : le jouet ne doit plus être affiché Propre"
+    assert @toy.complete?
+    assert @toy.playable?
+    get verify_toy_path(@toy)
+    assert_select "input[name='quality[causes][]'][value=nettoyage][data-criterion=clean]"
+    assert_select "input[name='quality[causes][]'][value=photo][data-criterion]", count: 0
+  end
+
   test "2e tour validé avec commentaire" do
     sign_in @admin
     decide(@toy, "review", causes: %w[photo], comment: "Photo floue")
@@ -185,6 +201,20 @@ class QualityFlowTest < ActionDispatch::IntegrationTest
     # le valorisateur d'origine ne l'a plus dans sa liste « à reprendre »
     post user_session_path, params: { user: { email: @operator.email, password: "motdepasse" } }
     assert_redirected_to root_path
+  end
+
+  test "le bloc Confier n'apparaît pas pendant qu'un admin crée son propre jouet" do
+    sign_in @admin
+    get new_box_toy_path(create_box)
+    follow_redirect!
+    assert_select ".reassign-box", count: 0
+
+    # mais il apparaît sur le brouillon laissé par un opérateur absent, et sur un jouet enregistré
+    draft = create_toy(operator: @operator, status: "draft")
+    get edit_toy_path(draft, new: true)
+    assert_select ".reassign-box button", text: /Confier/
+    get toy_path(@toy)
+    assert_select ".reassign-box button", text: /Confier/
   end
 
   test "réattribution refusée à un opérateur" do
