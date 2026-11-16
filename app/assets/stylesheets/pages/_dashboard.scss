@@ -872,7 +872,7 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
 // vraies marges et un pied de page numéroté.
 @page document {
   size: A4;
-  margin: 12mm 11mm 14mm;
+  margin: 10mm 10mm 12mm;
   @bottom-left { content: "RE-PLAY"; font-family: "Nunito", sans-serif; font-size: 8pt; color: #5B6472; }
   @bottom-right { content: counter(page) " / " counter(pages); font-family: "Nunito", sans-serif; font-size: 8pt; color: #5B6472; }
 }

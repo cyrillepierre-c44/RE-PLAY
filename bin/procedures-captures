@@ -21,7 +21,7 @@ cleanup() {
 }
 trap cleanup EXIT
 
-dropdb --if-exists re_play_demo 2>/dev/null
+dropdb --if-exists --force re_play_demo
 createdb re_play_demo
 bin/rails db:schema:load >/dev/null
 bin/rails procedures:seed_demo

@@ -321,7 +321,6 @@
     .procedure-shot--phone { float: right; margin: 0 0 0.6rem 1.1rem; }
     .procedure-step > div::after { content: ""; display: block; clear: both; }
   }
-  .procedure-gallery { display: none; }
 }
 
 .procedure-card {
@@ -358,19 +357,9 @@
   .procedure-page .procedure-shot--phone { width: 58mm; float: right; margin: 0 0 2mm 4mm; }
   .procedure-page .procedure-shot--wide { margin-bottom: 2.5mm; }
 
-  // Procédure opérateur : une page A4 d'affiche, puis une page « en images ».
+  // Procédure opérateur : une page A4 à afficher dans l'atelier, chaque capture dans son étape.
   .procedure-page--onepage {
-    .procedure-step .procedure-shot { display: none; }
-    .procedure-gallery {
-      display: block; break-before: page;
-      h2 { font-family: $headers-font; font-size: 15pt; color: $navy; margin: 0 0 4mm; }
-    }
-    .procedure-gallery-grid {
-      display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4mm; align-items: start;
-      figure { margin: 0; break-inside: avoid; }
-      img { display: block; width: 100%; height: auto; border: 1px solid #D9DDE4; border-radius: 2.5mm; }
-      figcaption { font-size: 8.5pt; line-height: 1.3; font-weight: 700; color: $navy; margin-top: 1.5mm; }
-    }
+    .procedure-step .procedure-shot--phone { width: 27mm; margin: 0 0 1mm 2.5mm; figcaption { display: none; } img { border-radius: 2mm; } }
     .procedure-header { padding: 3mm 4.5mm; margin-bottom: 2mm; h1 { font-size: 15pt; margin: 0.5mm 0; } .procedure-lead { font-size: 9pt; } }
     .procedure-brand { font-size: 12pt; }
     .procedure-kicker { font-size: 6.5pt; }
@@ -385,9 +374,9 @@
     .procedure-num { width: 5.5mm; height: 5.5mm; font-size: 8.5pt; }
     .procedure-pill { font-size: 7.5pt; padding: 0 1.6mm; border-width: 1px; }
     .procedure-banner { font-size: 6.5pt; padding: 0.4mm 1.4mm; }
-    .procedure-causes { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.6mm 2.5mm; li { font-size: 7.8pt; line-height: 1.22; gap: 1.4mm; } }
+    .procedure-causes { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.1mm 2.5mm; li { font-size: 7.4pt; line-height: 1.18; gap: 1.3mm; } }
+    .procedure-legend { break-inside: avoid !important; }
     .procedure-cause-icon { width: 5.4mm; height: 5.4mm; font-size: 8pt; border-radius: 1.4mm; }
     .procedure-legend { margin-bottom: 0; }
-    .procedure-gallery-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
 }

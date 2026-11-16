@@ -119,20 +119,4 @@
       <%= render "pages/procedures/causes", causes: QualityCause::DISCARD %>
     </div>
   </section>
-
-  <%# 2e page imprimée : les écrans en images (à l'écran, les captures sont déjà dans les étapes). %>
-  <section class="procedure-gallery" aria-hidden="true">
-    <h2>Les écrans en images</h2>
-    <div class="procedure-gallery-grid">
-      <% [["op-a-reprendre", "2 · Ma liste « À reprendre » : rouge = en retard, orange = à reprendre."],
-          ["op-reprise", "3 · Le cadre gris dit quoi corriger. Le bouton orange renvoie le jouet au contrôle."],
-          ["op-ecarter", "5 · Écarter un jouet : je touche la raison, puis poubelle, don ou vrac."],
-          ["op-a-terminer", "6 · « À terminer » : le crayon pour continuer, la poubelle pour effacer."]].each do |name, caption| %>
-        <figure>
-          <%= image_tag "procedures/#{name}.jpg", alt: "" %>
-          <figcaption><%= caption %></figcaption>
-        </figure>
-      <% end %>
-    </div>
-  </section>
 </div>

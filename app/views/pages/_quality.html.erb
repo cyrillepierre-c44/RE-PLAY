@@ -136,7 +136,10 @@
             <% weeks.each_with_index do |w, i| %>
               <text x="<%= x.(i) %>" y="205" text-anchor="middle" class="quality-trend-axis"><%= w[:label] %></text>
               <% next unless w[:fpy] %>
-              <a href="<%= detail.(week: w[:monday].iso8601) %>" data-turbo-frame="quality-detail" aria-label="<%= w[:label] %> : <%= w[:fpy] %> %, <%= w[:total] %> jouets contrôlés">
+              <%# Turbo n'intercepte pas les liens SVG : on charge le cadre de détail à la main. %>
+              <a href="<%= detail.(week: w[:monday].iso8601) %>"
+                 onclick="event.preventDefault(); document.getElementById('quality-detail').src = this.getAttribute('href');"
+                 aria-label="<%= w[:label] %> : <%= w[:fpy] %> %, <%= w[:total] %> jouets contrôlés">
                 <circle cx="<%= x.(i) %>" cy="<%= y.(w[:fpy]) %>" r="16" fill="transparent"></circle>
                 <circle cx="<%= x.(i) %>" cy="<%= y.(w[:fpy]) %>" r="6" fill="#0B7F68" stroke="#FFFFFF" stroke-width="2"></circle>
                 <text x="<%= x.(i) %>" y="<%= y.(w[:fpy]) + (w[:fpy] > 88 ? 22 : -12) %>" text-anchor="middle" class="quality-trend-value"><%= w[:fpy] %> %</text>
