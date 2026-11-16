@@ -740,6 +740,23 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
   .quality-late { color: darken($danger-red, 12%); font-weight: 800; }
   .quality-none { color: $quality-ink; font-style: italic; }
   .quality-small-sample { color: $quality-ink; font-size: 0.85rem; font-weight: 700; }
+
+  // Suivi du jour : le stock de chaque opérateur en barre, rouge (en retard) puis orange (dans les délais).
+  .quality-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; font-size: 0.8rem; font-weight: 700; color: $quality-ink; margin-bottom: 0.5rem; }
+  .quality-legend-swatch { display: inline-block; width: 0.9rem; height: 0.9rem; border-radius: 3px; margin-right: 0.35rem; vertical-align: -1px; }
+  .quality-stock { display: flex; align-items: center; gap: 0.6rem; }
+  .quality-stock-bar { display: flex; gap: 2px; height: 26px; min-width: 2.2rem; }
+  .quality-stock-bar span {
+    display: flex; align-items: center; justify-content: center; min-width: 1.6rem;
+    font-size: 0.85rem; font-weight: 800; border-radius: 4px;
+  }
+  .quality-stock-late { background: darken($danger-red, 6%); color: $white; }
+  .quality-stock-ontime { background: #F97316; color: $navy; }
+  .quality-stock-total { font-size: 1.05rem; font-weight: 800; color: $navy; min-width: 1.5rem; }
+  .quality-stock-none { color: $quality-ok; font-weight: 700; font-size: 0.85rem; }
+  .quality-zero { color: rgba($navy, 0.3); }
+  .quality-day-checked { color: $quality-ink; white-space: nowrap; }
+  .quality-table--day tbody td { vertical-align: middle; }
 }
 
 .quality-now {
@@ -821,7 +838,11 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
   thead th { font-size: 0.7rem; font-weight: 800; color: $quality-ink; text-transform: uppercase; }
   tbody th { text-align: left; font-weight: 800; white-space: nowrap; }
   .quality-cell { border-radius: 8px; font-weight: 800; padding: 0; }
-  .quality-cell a, .quality-cell span { display: block; padding: 0.7rem 0.3rem; color: inherit; text-decoration: none; }
+  .quality-cell a, .quality-cell span { display: block; padding: 0.55rem 0.3rem; color: inherit; text-decoration: none; line-height: 1.15; }
+  // Le taux en grand, le nombre brut en petit dessous.
+  small { display: block; font-size: 0.7rem; font-weight: 700; opacity: 0.8; }
+  .quality-matrix-total { font-weight: 700; white-space: nowrap; }
+  .quality-matrix-unreliable { color: $quality-ink; th { font-weight: 700; } .quality-cell { font-weight: 700; } }
   // Rampe séquentielle une seule teinte (marine), du clair au foncé.
   .quality-cell--0 { background: #F4F5F7; color: $quality-ink; }
   .quality-cell--1 { background: #DCE3EE; }
@@ -904,6 +925,7 @@ $quality-ink: #5B6472;     // texte secondaire (contraste AA sur blanc)
     .quality-now-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   }
   .quality-split-ok, .quality-split-ko, .quality-rate-fill, .quality-rate-track, .quality-bar-fill, .quality-bar-track,
+  .quality-stock-bar span, .quality-legend-swatch,
   .quality-cell, .quality-now-tile, .quality-trend {
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }

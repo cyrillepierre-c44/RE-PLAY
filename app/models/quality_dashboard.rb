@@ -108,6 +108,7 @@ class QualityDashboard
         mine = refusals.select { |c| c.operator_id == id }
         opened = open_checks.select { |c| c.operator_id == id }
         { user: users[id], id: id, total: firsts.size, ok: firsts.count(&:accepted?),
+          controls: firsts.size + second_round.count { |c| c.operator_id == id },
           fpy: rate(firsts.count(&:accepted?), firsts.size), refused: mine.size,
           problems: mine.sum { |c| causes_of(c).size }, causes: mine.flat_map { |c| causes_of(c) }.tally,
           delay: average_days(mine.select(&:reworked_at)) { |c| WorkingDays.elapsed(c.created_at, c.reworked_at) },
@@ -124,7 +125,22 @@ class QualityDashboard
   end
 
   def matrix_causes = cause_rows.first(TOP_CAUSES).map { |row| row[:cause] }
-  def matrix_max = operator_rows.flat_map { |row| row[:causes].values }.max.to_i
+
+  # Tableau opérateurs × causes, en problèmes pour 100 contrôles (1er et 2e tours,
+  # puisque les problèmes des deux tours sont comptés) et non en nombre brut :
+  # sinon celui qui traite le plus de jouets paraît le plus en difficulté. Les opérateurs sous le seuil de fiabilité gardent leurs nombres
+  # bruts, sans couleur, en bas du tableau.
+  def matrix_rows
+    @matrix_rows ||= begin
+      rows = operator_rows.select { |row| row[:problems].positive? }.map do |row|
+        rates = row[:reliable] ? row[:causes].transform_values { |count| count * 100.0 / row[:controls] } : {}
+        row.merge(rates: rates, problem_rate: (row[:problems] * 100.0 / row[:controls] if row[:reliable]))
+      end
+      rows.sort_by { |row| [row[:reliable] ? 0 : 1, -(row[:problem_rate] || 0), -row[:problems]] }
+    end
+  end
+
+  def matrix_max_rate = matrix_rows.flat_map { |row| row[:rates].values_at(*matrix_causes.map(&:key)).compact }.max.to_f
 
   # ── TRI ─────────────────────────────────────────────────────────────────
   def toys_out

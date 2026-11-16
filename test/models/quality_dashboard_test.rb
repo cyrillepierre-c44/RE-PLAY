@@ -117,6 +117,22 @@ class QualityDashboardTest < ActiveSupport::TestCase
     end
   end
 
+  test "tableau opérateurs × causes : en taux pour 100 jouets, pas en nombre brut" do
+    QualitySetting.current.update!(min_sample: 5)
+    18.times { check(@alice, "market") }
+    2.times { check(@alice, "review", causes: %w[completude], comment: "Incomplet") } # 2 problèmes sur 20 = 10 %
+    3.times { check(@bob, "market") }
+    2.times { check(@bob, "review", causes: %w[completude], comment: "Incomplet") }   # 2 problèmes sur 5 = 40 %
+    carl = create_user(email: "carl@example.com")
+    check(carl, "review", causes: %w[completude], comment: "Incomplet")               # 1 jouet : sous le seuil
+
+    rows = QualityDashboard.new(@range).matrix_rows
+    assert_equal %w[bob alice carl], rows.map { |row| row[:user].email.split("@").first }, "le plus fort taux d'abord, pas le plus gros volume"
+    assert_equal [40.0, 10.0, nil], rows.map { |row| row[:rates]["completude"] }
+    assert_equal [40.0, 10.0, nil], rows.map { |row| row[:problem_rate] }
+    assert_equal 40.0, QualityDashboard.new(@range).matrix_max_rate
+  end
+
   test "sans données, rien ne casse" do
     q = QualityDashboard.new(@range)
     assert_nil q.fpy_valo

@@ -52,6 +52,7 @@ class PagesControllerTest < ActionDispatch::IntegrationTest
     assert_select ".quality-small-sample", text: /Moins de 20 jouets/
     assert_select "h3", text: /suivi du jour/
     assert_select ".quality-table th", text: "Retraités"
+    assert_select ".quality-stock-bar .quality-stock-ontime", text: "1" # le refus du jour, dans les délais
     get dashboard_path(period: "four_weeks")
     assert_select ".quality-small-sample", text: "1 sur 2"
 

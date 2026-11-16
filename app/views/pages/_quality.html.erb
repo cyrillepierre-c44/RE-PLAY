@@ -197,28 +197,44 @@
     <% if q.operator_rows.empty? %>
       <p class="quality-empty mb-0">Aucun contrôle sur la période.</p>
     <% elsif q.daily? %>
+      <% max_open = [q.operator_rows.map { |row| row[:open] }.max.to_i, 1].max %>
+      <p class="quality-legend">
+        <span><i class="quality-legend-swatch quality-stock-late" aria-hidden="true"></i>en retard : plus de <%= s.red_after_days %> jours ouvrés</span>
+        <span><i class="quality-legend-swatch quality-stock-ontime" aria-hidden="true"></i>dans les délais</span>
+      </p>
       <div class="table-responsive">
-        <table class="quality-table">
+        <table class="quality-table quality-table--day">
           <thead>
             <tr>
               <th scope="col">Opérateur</th>
-              <th scope="col" class="text-end">NC ouvertes</th>
-              <th scope="col" class="text-end">Refus reçus</th>
-              <th scope="col" class="text-end">Retraités</th>
+              <th scope="col" style="width:46%;">Non-conformités à reprendre</th>
+              <th scope="col" class="text-center"><i class="fa-solid fa-rotate-left me-1" aria-hidden="true"></i>Refus reçus</th>
+              <th scope="col" class="text-center"><i class="fa-solid fa-check me-1" aria-hidden="true"></i>Retraités</th>
               <th scope="col" class="text-end">Contrôlés</th>
             </tr>
           </thead>
           <tbody>
             <% q.operator_rows.each do |row| %>
+              <% on_time = row[:open] - row[:late] %>
               <tr>
                 <th scope="row"><%= link_to short.(row[:user]), detail.(operator_id: row[:id]), data: frame %></th>
-                <td class="text-end">
-                  <strong><%= row[:open] %></strong>
-                  <% if row[:late].positive? %><span class="quality-late"> · <%= row[:late] %> rouge<%= 's' if row[:late] > 1 %></span><% end %>
+                <td>
+                  <% if row[:open].zero? %>
+                    <span class="quality-stock-none"><i class="fa-solid fa-circle-check me-1" aria-hidden="true"></i>rien à reprendre</span>
+                  <% else %>
+                    <div class="quality-stock">
+                      <div class="quality-stock-bar" style="width: <%= (row[:open] * 100.0 / max_open).round %>%;"
+                           role="img" aria-label="<%= row[:open] %> à reprendre, dont <%= row[:late] %> en retard">
+                        <% if row[:late].positive? %><span class="quality-stock-late" style="flex: <%= row[:late] %>;"><%= row[:late] %></span><% end %>
+                        <% if on_time.positive? %><span class="quality-stock-ontime" style="flex: <%= on_time %>;"><%= on_time %></span><% end %>
+                      </div>
+                      <span class="quality-stock-total"><%= row[:open] %></span>
+                    </div>
+                  <% end %>
                 </td>
-                <td class="text-end"><%= row[:refused] %></td>
-                <td class="text-end"><%= row[:reworked] %></td>
-                <td class="text-end"><%= row[:total].zero? ? "–" : "#{row[:ok]} sur #{row[:total]}" %></td>
+                <td class="text-center"><%= row[:refused].zero? ? tag.span("–", class: "quality-zero") : tag.strong(row[:refused]) %></td>
+                <td class="text-center"><%= row[:reworked].zero? ? tag.span("–", class: "quality-zero") : tag.strong(row[:reworked]) %></td>
+                <td class="text-end quality-day-checked"><%= row[:total].zero? ? "–" : "#{row[:ok]} sur #{row[:total]}" %></td>
               </tr>
             <% end %>
           </tbody>
@@ -274,42 +290,54 @@
   </div>
 
   <%# ── Opérateur × cause ── %>
-  <% if q.operator_rows.any? && q.matrix_causes.any? %>
+  <% if q.matrix_rows.any? && q.matrix_causes.any? %>
+    <% pct = ->(rate) { "#{number_with_precision(rate, precision: rate < 10 ? 1 : 0, separator: ',', strip_insignificant_zeros: true)} %" } %>
     <div class="detail-card p-4 mb-3 quality-card">
       <h3 class="quality-h3">Qui a besoin d'aide, et sur quoi ?</h3>
-      <p class="quality-sub">Problèmes par opérateur et par cause (les <%= q.matrix_causes.size %> causes principales). Plus la case est foncée, plus il y en a. Touchez une case pour le détail.</p>
+      <p class="quality-sub">Problèmes <strong>pour 100 contrôles</strong>, par opérateur et par cause (les <%= q.matrix_causes.size %> causes principales) : un opérateur qui traite beaucoup de jouets n'est pas pénalisé. Plus la case est foncée, plus le taux est élevé. Le petit chiffre est le nombre de problèmes. Touchez une case pour le détail.</p>
       <div class="table-responsive">
         <table class="quality-matrix">
           <thead>
             <tr>
               <td></td>
+              <th scope="col">Contrôles</th>
               <% q.matrix_causes.each do |cause| %>
                 <th scope="col"><i class="fa-solid <%= cause.icon %>" aria-hidden="true"></i><br><%= cause.label %></th>
               <% end %>
-              <th scope="col">Total</th>
+              <th scope="col">Tous problèmes</th>
             </tr>
           </thead>
           <tbody>
-            <% q.operator_rows.select { |row| row[:problems].positive? }.each do |row| %>
-              <tr>
+            <% q.matrix_rows.each do |row| %>
+              <tr class="<%= 'quality-matrix-unreliable' unless row[:reliable] %>">
                 <th scope="row"><%= short.(row[:user]) %></th>
+                <td class="quality-matrix-total"><%= row[:controls] %></td>
                 <% q.matrix_causes.each do |cause| %>
                   <% n = row[:causes][cause.key].to_i %>
-                  <% level = n.zero? ? 0 : [(n * 5.0 / q.matrix_max).ceil, 5].min %>
+                  <% rate = row[:rates][cause.key] %>
+                  <% level = rate && q.matrix_max_rate.positive? ? [(rate * 5.0 / q.matrix_max_rate).ceil, 5].min : 0 %>
                   <td class="quality-cell quality-cell--<%= level %>">
                     <% if n.zero? %>
                       <span aria-label="0">·</span>
                     <% else %>
-                      <%= link_to n, detail.(operator_id: row[:id], cause: cause.key), data: frame %>
+                      <%= link_to detail.(operator_id: row[:id], cause: cause.key), data: frame,
+                            "aria-label": (rate ? "#{pct.(rate)}, soit #{n} problème#{'s' if n > 1} sur #{row[:controls]} contrôles" : "#{n} problème#{'s' if n > 1}") do %>
+                        <% if rate %><%= pct.(rate) %><small><%= n %></small><% else %><%= n %><% end %>
+                      <% end %>
                     <% end %>
                   </td>
                 <% end %>
-                <td><strong><%= row[:problems] %></strong></td>
+                <td class="quality-matrix-total">
+                  <% if row[:problem_rate] %><strong><%= pct.(row[:problem_rate]) %></strong><small><%= row[:problems] %></small><% else %><%= row[:problems] %><% end %>
+                </td>
               </tr>
             <% end %>
           </tbody>
         </table>
       </div>
+      <% if q.matrix_rows.any? { |row| !row[:reliable] } %>
+        <p class="quality-hint mt-2 mb-0">En gris, sans pourcentage : moins de <%= s.min_sample %> jouets contrôlés sur la période, seul le nombre de problèmes est affiché.</p>
+      <% end %>
     </div>
   <% end %>
 
